@@ -7,5 +7,13 @@
             "-c, --file": "您的菜单的配置文件路径。"
         },
         "executor": "startMenu"
+    },
+    {
+        "command": "plist",
+        "description": "根据配置文件生成：增删查改搜完整模块",
+        "options": {
+            "-c, --file": "您的模块配置文件路径。"
+        },
+        "executor": "createPlist"
     }
 ]

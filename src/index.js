@@ -7,10 +7,10 @@ const executor = require('./executor');
 const appInfo = require('./../package.json');
 program.allowUnknownOption();
 program.version(appInfo.version);
-log.info(`Zero AI 代码生成器`);
+log.info(`Zero AI 代码生成器, ` + `https://github.com/silentbalanceyh/vertx-ui`.blue);
 log.info(`当前版本: ` + `${appInfo.version}`.red);
-log.info(`下载地址: ` + `https://github.com/silentbalanceyh/vertx-ui`.blue);
 log.warn("确认您的Node版本 ( >= 10.x ) 支持ES6.");
+log.info("------------------- Zero AI Start ---------------------");
 
 const menus = require(__dirname + "/zero/init.json");
 menus.forEach(menu => {

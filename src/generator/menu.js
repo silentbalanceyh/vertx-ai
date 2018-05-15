@@ -1,12 +1,11 @@
-const args = require('../zero/args');
-const io = require('../zero/io');
-const log = require('../zero/log');
+const ai = require('../zero/zero');
+const {args, log, io, config} = ai;
 const fs = require("fs");
 exports.startMenu = function () {
     const argv = args.parseArgs(4);
-    const configFile = argv['-c'] || argv['--config'];
+    const inputFile = argv['-c'] || argv['--config'];
     const inputFolder = argv['-f'] || argv['--folder'];
-    if (fs.existsSync(configFile)) {
+    config.execFileExist(inputFile, (configFile) => {
         log.info(`从配置文件初始化组件，配置文件路径: ${configFile}.`);
         const item = fs.lstatSync(configFile);
         if (!item.isDirectory()) {
@@ -31,7 +30,7 @@ exports.startMenu = function () {
                 path.forEach(each => {
                     const folder = each.substring(0, each.lastIndexOf('/'));
                     const target = inputFolder + '/' + folder;
-                    io.mkdirs(target);
+                    io.dirsMake(target);
                     if (!fs.existsSync(each)) {
                         log.info(each);
                         fs.writeFileSync(each, fromContent);
@@ -63,7 +62,5 @@ exports.startMenu = function () {
                 log.info("Successfully!".blue + " 生成成功！");
             })
         }
-    } else {
-        log.error(`配置文件路径不存在: ${configFile}`);
-    }
+    });
 };

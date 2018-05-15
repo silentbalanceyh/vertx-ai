@@ -19,7 +19,8 @@ const parseArgs = (ensure) => {
         }
         return config;
     } else {
-        console.info(log.error(`Arguments missing, expected: ${ensure / 2} argument.`))
+        log.error(`参数丢失，期望参数: ${ensure / 2} 个.`);
+        process.exit();
     }
 };
 module.exports = {

@@ -12,7 +12,7 @@ const dirTree = (pathes = []) => {
     }
     return targetPath;
 };
-const mkdirs = (dirpath) => {
+const dirsMake = (dirpath) => {
     const pathes = dirpath.split("/");
     const targetPath = dirTree(pathes);
     for (let idx = 0; idx < targetPath.length; idx++) {
@@ -23,6 +23,6 @@ const mkdirs = (dirpath) => {
     }
 };
 module.exports = {
-    mkdirs,
+    dirsMake,
     dirTree
 };
