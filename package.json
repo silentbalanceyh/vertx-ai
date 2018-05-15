@@ -1,0 +1,37 @@
+{
+    "name": "vertx-ai",
+    "version": "0.1.2",
+    "description": "Zero UI/Zero Generator",
+    "main": "src/index.js",
+    "bin": {
+        "ai": "./src/index.js"
+    },
+    "scripts": {
+        "test": "src/index.test.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/silentbalanceyh/vertx-ai.git"
+    },
+    "keywords": [
+        "Zero",
+        "UI"
+    ],
+    "author": "Lang",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/silentbalanceyh/vertx-ai/issues"
+    },
+    "dependencies": {
+        "bluebird": "^3.4.1",
+        "co": "^4.6.0",
+        "colors": "^1.2.5",
+        "commander": "^2.9.0",
+        "dox": "^0.9.0",
+        "handlebars": "^4.0.5",
+        "immutable": "^3.8.2",
+        "linebyline": "^1.3.0",
+        "mkdirp": "^0.5.1"
+    },
+    "homepage": "https://github.com/silentbalanceyh/vertx-ai#readme"
+}

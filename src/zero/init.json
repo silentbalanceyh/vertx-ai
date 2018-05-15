@@ -1,0 +1,11 @@
+[
+    {
+        "command": "menu",
+        "description": "根据配置文件生成整站菜单信息",
+        "options": {
+            "-f, --folder": "您的Zero UI项目根目录。",
+            "-c, --file": "您的菜单的配置文件路径。"
+        },
+        "executor": "startMenu"
+    }
+]
