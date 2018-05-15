@@ -1,15 +1,17 @@
 const args = require('../zero/args');
 const io = require('../zero/io');
+const log = require('../zero/log');
 const fs = require("fs");
 exports.startMenu = function () {
     const argv = args.parseArgs(4);
-    const mockFile = argv['-c'] || argv['--config'];
-    if (fs.existsSync(mockFile)) {
-        console.info(`[Zero] Start to initialize menus from file: ${mockFile}`);
-        const item = fs.lstatSync(mockFile);
+    const configFile = argv['-c'] || argv['--config'];
+    const inputFolder = argv['-f'] || argv['--folder'];
+    if (fs.existsSync(configFile)) {
+        log.info(`从配置文件初始化组件，配置文件路径: ${configFile}.`);
+        const item = fs.lstatSync(configFile);
         if (!item.isDirectory()) {
             const path = [];
-            fs.readFile(mockFile, {}, (err, content) => {
+            fs.readFile(configFile, {}, (err, content) => {
                 if (!err) {
                     const json = JSON.parse(content);
                     if (json.data && 0 < json.data.length) {
@@ -22,20 +24,46 @@ exports.startMenu = function () {
                     }
                 }
                 // 回调中处理Path
-                console.info("[Zero] Start to generate entry file UI.js....");
-                console.info("[Zero] Read tpl file from shell/tpl/init/UI.js");
-                const fromContent = fs.readFileSync("shell/tpl/init/UI.js");
+                log.info("开始生成入口文件 UI.js....");
+                log.info("读取模板文件 ./tpl/init/UI.js");
+                log.info("生成入口代码：".blue);
+                const fromContent = fs.readFileSync(__dirname + "/tpl/menu/UI.zt");
                 path.forEach(each => {
                     const folder = each.substring(0, each.lastIndexOf('/'));
-                    io.mkdirs(folder);
+                    const target = inputFolder + '/' + folder;
+                    io.mkdirs(target);
                     if (!fs.existsSync(each)) {
+                        log.info(each);
                         fs.writeFileSync(each, fromContent);
                     }
                 });
-                console.info("[Zero] Generate files successfully!");
+                // 读取targetPath中的最后一个路径，生成namespace
+                log.info("生成名空间链接器：".blue);
+                path.forEach(path => {
+                    const targetPath = io.dirTree(path.split('/'));
+                    let ns = null;
+                    for (let idx = targetPath.length - 1; idx >= 0; idx--) {
+                        const file = targetPath[idx];
+                        if (fs.existsSync(file)) {
+                            const stat = fs.statSync(file);
+                            if (stat.isDirectory()) {
+                                ns = file;
+                                break;
+                            }
+                        }
+                    }
+                    const nsData = {};
+                    nsData['ns'] = ns.replace(/src\//g, "");
+                    const targetNs = ns + "/Cab.json";
+                    if (!fs.existsSync(targetNs)) {
+                        log.info(targetNs);
+                        fs.writeFileSync(targetNs, JSON.stringify(nsData));
+                    }
+                });
+                log.info("Successfully!".blue + " 生成成功！");
             })
         }
     } else {
-        console.error(`[Zero] The path file does not exist: ${mockFile}`)
+        log.error(`配置文件路径不存在: ${configFile}`);
     }
 };

@@ -1,4 +1,6 @@
-const startMenu = require('./generator/menu.js');
+const menu = require('./generator/menu.js');
+const pageList = require('./generator/page-list');
 module.exports = {
-    ...startMenu
+    ...menu,
+    ...pageList
 };
