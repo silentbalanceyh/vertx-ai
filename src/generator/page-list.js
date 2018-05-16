@@ -144,6 +144,88 @@ const createUIListJson = (tplFolder, cabPath, module = {}) => {
 const createUIFormJson = (tplFolder, cabPath, module = {}) => {
     createFile(cabPath + '/UI.Form.json', () => getFormJson(module, tplFolder), "资源文件");
 };
+// 资源文件
+const createConfigJson = (folder, cabPath, module) => {
+    // 构造UI.json
+    createUIJson(folder, cabPath, module);
+    // 构造UI.Filter.json
+    createUIFilterJson(folder, cabPath, module);
+    // 构造UI.List.json
+    createUIListJson(folder, cabPath, module);
+    // 构造UI.Form.json
+    createUIFormJson(folder, cabPath, module);
+};
+// Cab.json/Cab.less
+const createCabData = (codePath, comPath) => {
+    createFile(comPath + "/Cab.less", () => fs.readFileSync(codePath + "/Cab.less.zt", "utf-8"), "风格文件", false);
+    createFile(comPath + "/Cab.json", () => {
+        const ns = {};
+        ns.ns = comPath.replace(/src\//g, '');
+        return JSON.stringify(ns);
+    }, "名空间文件")
+};
+// Act.Types.js/Act.Epic.js
+const createReduxFiles = (codePath, comPath, module) => {
+    createFile(comPath + "/Act.Types.js", () => {
+        let content = fs.readFileSync(codePath + "/Act.Types.zt", "utf-8");
+        content = content.replace(/#CODE#/g, module.code);
+        content = content.replace(/#UPCODE#/g, module.code.toLocaleUpperCase());
+        return content;
+    }, "Redux类型文件", false);
+    createFile(comPath + "/Act.Epic.js", () => {
+        let content = fs.readFileSync(codePath + "/Act.Epic.zt", "utf-8");
+        content = content.replace(/#CODE#/g, module.code);
+        content = content.replace(/#DWCODE#/g, module.code.toLocaleLowerCase());
+        return content;
+    }, "Epic文件", false)
+};
+// Op.ts/Op.Form.ts
+const createOpFiles = (codePath, comPath, module) => {
+    createFile(comPath + "/Op.ts", () => fs.readFileSync(codePath + "/Op.zt", "utf-8"), "Ts Op入口文件", false);
+    createFile(comPath + "/Op.Form.ts", () => {
+        let content = fs.readFileSync(codePath + "/Op.Form.zt", "utf-8");
+        content = content.replace(/#DWCODE#/g, module.code.toLocaleLowerCase());
+        return content;
+    }, "Ts按钮事件文件", false)
+};
+// UI.js/UI.List.js/UI.Filter.js/UI.Form.js
+const createPageFiles = (codePath, comPath, module) => {
+    // UI.js
+    createFile(comPath + "/UI.js", () => fs.readFileSync(codePath + "/UI.zt", "utf-8"), "UI入口文件", false);
+    // UI.List.js
+    createFile(comPath + "/UI.List.js", () => {
+        let content = fs.readFileSync(codePath + "/UI.List.zt", "utf-8");
+        content = content.replace(/#CODE#/g, module.code);
+        return content;
+    }, "UI.List文件", false);
+    // UI.Filter.js
+    createFile(comPath + "/UI.Filter.js", () => {
+        let content = fs.readFileSync(codePath + "/UI.Filter.zt", "utf-8");
+        let filters = "";
+        config.eachField(module, (field) => {
+            const ant = field.config['ant'] ? field.config['ant'] : "Input";
+            if (field.isFilter) {
+                filters += `\n    ${field.name}:` + "(reference, jsx = {}) => (<" + ant + " {...jsx}/>),";
+            }
+        });
+        content = content.replace(/#COND#/g, filters);
+        return content;
+    }, "UI.Filter文件", false);
+    // UI.Form.js
+    createFile(comPath + "/UI.Form.js", () => {
+        let content = fs.readFileSync(codePath + "/UI.Form.zt", "utf-8");
+        let fields = "";
+        config.eachField(module, (field) => {
+            const ant = field.config['ant'] ? field.config['ant'] : "Input";
+            if (field.isField) {
+                fields += `\n    ${field.name}:` + "(reference, jsx = {}) => (<" + ant + " {...jsx}/>),";
+            }
+        });
+        content = content.replace(/#INPUT#/g, fields);
+        content = content.replace(/#CODE#/g, module.code);
+        return content;
+    }, "UI.Form文件", false);
+};
 // mock 数据
 const createMockData = (tplFolder, codePath, module) => {
     createFile(tplFolder + '/fnAdd.json', () => getMockJson(module), "模拟数据");
@@ -180,16 +262,18 @@ exports.createPlist = function () {
             const folder = __dirname + `/tpl/page-list/cab/${language}/`;
             const codePath = __dirname + `/tpl/page-list/components/`;
             // --------------  生成配置文件
-            // 构造UI.json
-            createUIJson(folder, cabPath, module);
-            // 构造UI.Filter.json
-            createUIFilterJson(folder, cabPath, module);
-            // 构造UI.List.json
-            createUIListJson(folder, cabPath, module);
-            // 构造UI.Form.json
-            createUIFormJson(folder, cabPath, module);
+            createConfigJson(folder, cabPath, module);
             // --------------  生成mock数据文件
             createMockData(mockPath, codePath, module);
+            // --------------  名空间Cab系列
+            createCabData(codePath, comPath);
+            // --------------  Act行为事件系列
+            createReduxFiles(codePath, comPath, module);
+            // --------------  Op事件文件
+            createOpFiles(codePath, comPath, module);
+            // --------------  UI界面文件
+            createPageFiles(codePath, comPath, module);
+            log.info("Successfully!" + module.name + "(code =" + module.code + ")模块生成完成！")
         } else {
             log.error(`数据格式不合法，请检查配置文件${configPath}`);
             process.exit();
