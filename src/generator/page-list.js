@@ -1,34 +1,14 @@
 const ai = require('../zero/zero');
 const {args, log, io, config} = ai;
 const fs = require("fs");
-const Field = require('./model/field');
 const Grid = require('./model/grid');
-
-const eachField = (module = {}, callback) => {
-    if (module['fields']) {
-        module['fields'].forEach((field, index) => {
-            try {
-                const obj = new Field(field);
-                if (callback) callback(obj, index === module['fields'].length - 1);
-            } catch (error) {
-                log.error(`${module.code} -> 字段表达式无法解析！`);
-                console.error(error);
-                process.exit();
-            }
-        });
-    } else {
-        log.error(`${module.code} -> 配置数据有问题，没有\`fields\`节点！`);
-        process.exit();
-    }
-
-};
 
 const getFilterJson = (module = {}, cab = "") => {
     const moduleTpl = fs.readFileSync(cab + '/UI.Filter.zt', 'utf-8');
     const fieldTpl = cab + '/UI.Filter.Field.zt';
     // 遍历字段
     const content = [];
-    eachField(module, (field) => {
+    config.eachField(module, (field) => {
         if (field.isFilter) {
             const lineTpl = fs.readFileSync(fieldTpl, "utf-8");
             const lineCtx = lineTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
@@ -46,7 +26,7 @@ const getListJson = (module = {}, cab = "") => {
     // 遍历字段
     const content = [];
     const condition = {};
-    eachField(module, (field) => {
+    config.eachField(module, (field) => {
         if (field.isColumn) {
             const colTpl = fs.readFileSync(columnTpl, "utf-8");
             const colData = colTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
@@ -83,7 +63,7 @@ const getFormJson = (module = {}, cab = "") => {
     const fieldTpl = cab + '/UI.Form.Field.zt';
     const content = [];
     const rules = module.rules;
-    eachField(module, (field) => {
+    config.eachField(module, (field) => {
         if (field.isField) {
             const colTpl = fs.readFileSync(fieldTpl, "utf-8");
             const colData = colTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
@@ -116,12 +96,32 @@ const getFormJson = (module = {}, cab = "") => {
         .replace(/#MODULE#/g, module.name)
         .replace(/#FIELDS#/g, JSON.stringify(grid.matrix))
 };
-const createFile = (targetFile, fnContent, prefix) => {
+const getMockJson = (module, multi = false) => {
+    const mock = {};
+    mock.mock = true;
+    if (multi) {
+        const dataRecord = [];
+        for (let idx = 0; idx < multi; idx++) {
+            dataRecord.push(config.execData(module));
+        }
+        mock.data = {
+            count: dataRecord.length,
+            list: dataRecord
+        };
+    } else {
+        mock.data = config.execData(module);
+    }
+    return JSON.stringify(mock, null, 2);
+};
+const getMockEntry = (folder) => fs.readFileSync(folder + "/mock/index.zt", "utf-8");
+const createFile = (targetFile, fnContent, prefix, json = true) => {
     const content = fnContent();
     if (content) {
         fs.writeFileSync(targetFile, content);
-        const json = JSON.parse(fs.readFileSync(targetFile, "utf-8"));
-        fs.writeFileSync(targetFile, JSON.stringify(json, null, 4));
+        if (json) {
+            const json = JSON.parse(fs.readFileSync(targetFile, "utf-8"));
+            fs.writeFileSync(targetFile, JSON.stringify(json, null, 4));
+        }
         log.info(`${prefix}：${targetFile}`);
     }
 };
@@ -144,6 +144,15 @@ const createUIListJson = (tplFolder, cabPath, module = {}) => {
 const createUIFormJson = (tplFolder, cabPath, module = {}) => {
     createFile(cabPath + '/UI.Form.json', () => getFormJson(module, tplFolder), "资源文件");
 };
+// mock 数据
+const createMockData = (tplFolder, codePath, module) => {
+    createFile(tplFolder + '/fnAdd.json', () => getMockJson(module), "模拟数据");
+    createFile(tplFolder + '/fnRead.json', () => getMockJson(module), "模拟数据");
+    createFile(tplFolder + '/fnRemove.json', () => getMockJson(module), "模拟数据");
+    createFile(tplFolder + '/fnSave.json', () => getMockJson(module), "模拟数据");
+    createFile(tplFolder + '/fnSearch.json', () => getMockJson(module, 6), "模拟数据");
+    createFile(tplFolder + '/index.js', () => getMockEntry(codePath), "入口模拟", false);
+};
 exports.createPlist = function () {
     const argv = args.parseArgs(2);
     const inputFile = argv['-c'] || argv['--config'];
@@ -164,7 +173,13 @@ exports.createPlist = function () {
             const comPath = `src/components${path}`;
             io.dirsMake(comPath);
             log.info(`组件目录创建成功：${comPath}`);
+            // 构造Mock文件夹
+            const mockPath = `src/components${path}/mock`;
+            io.dirsMake(mockPath);
+            log.info(`Mock数据文件目录创建橙色：${mockPath}`);
             const folder = __dirname + `/tpl/page-list/cab/${language}/`;
+            const codePath = __dirname + `/tpl/page-list/components/`;
+            // --------------  生成配置文件
             // 构造UI.json
             createUIJson(folder, cabPath, module);
             // 构造UI.Filter.json
@@ -173,8 +188,9 @@ exports.createPlist = function () {
             createUIListJson(folder, cabPath, module);
             // 构造UI.Form.json
             createUIFormJson(folder, cabPath, module);
-        }
-        else {
+            // --------------  生成mock数据文件
+            createMockData(mockPath, codePath, module);
+        } else {
             log.error(`数据格式不合法，请检查配置文件${configPath}`);
             process.exit();
         }
