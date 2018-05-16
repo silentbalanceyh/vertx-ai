@@ -9,6 +9,12 @@ module.exports = class Grid {
                 rdx++;
             }
         }
+        this.rdx = rdx;
         this.matrix = matrix;
+    }
+
+    appendLine(object) {
+        this.matrix[this.rdx] = [object];
+        this.rdx++;
     }
 };

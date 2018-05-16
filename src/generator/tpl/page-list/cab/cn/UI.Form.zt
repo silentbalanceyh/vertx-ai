@@ -1,14 +1,6 @@
 {
     "_form": {
-        "ui": [
-            #FIELDS#,
-            [
-                {
-                    "field": "$button",
-                    "hidden": true
-                }
-            ]
-        ]
+        "ui": #FIELDS#
     },
     "_modal": {
         "type": "success",

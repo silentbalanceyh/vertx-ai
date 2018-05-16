@@ -107,9 +107,14 @@ const getFormJson = (module = {}, cab = "") => {
             content.push(fieldObj);
         }
     });
+    const grid = new Grid(1, content);
+    grid.appendLine({
+        "field": "$button",
+        "hidden": true
+    });
     return moduleTpl
         .replace(/#MODULE#/g, module.name)
-        .replace(/#FIELDS#/g, JSON.stringify(content))
+        .replace(/#FIELDS#/g, JSON.stringify(grid.matrix))
 };
 const createFile = (targetFile, fnContent, prefix) => {
     const content = fnContent();
