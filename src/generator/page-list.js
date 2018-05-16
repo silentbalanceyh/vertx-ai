@@ -23,7 +23,7 @@ const eachField = (module = {}, callback) => {
 
 };
 
-const getFilter = (module = {}, cab = "") => {
+const getFilterJson = (module = {}, cab = "") => {
     const moduleTpl = fs.readFileSync(cab + '/UI.Filter.zt', 'utf-8');
     const fieldTpl = cab + '/UI.Filter.Field.zt';
     // 遍历字段
@@ -40,7 +40,7 @@ const getFilter = (module = {}, cab = "") => {
     return moduleTpl.replace(/#ROW#/g, grid.matrix);
 };
 
-const getList = (module = {}, cab = "") => {
+const getListJson = (module = {}, cab = "") => {
     const moduleTpl = fs.readFileSync(cab + "/UI.List.zt", "utf-8");
     const columnTpl = cab + '/UI.List.Column.zt';
     // 遍历字段
@@ -78,6 +78,39 @@ const getList = (module = {}, cab = "") => {
         .replace(/#COND#/g, JSON.stringify(condition));
 };
 
+const getFormJson = (module = {}, cab = "") => {
+    const moduleTpl = fs.readFileSync(cab + "/UI.Form.zt", "utf-8");
+    const fieldTpl = cab + '/UI.Form.Field.zt';
+    const content = [];
+    const rules = module.rules;
+    eachField(module, (field) => {
+        if (field.isField) {
+            const colTpl = fs.readFileSync(fieldTpl, "utf-8");
+            const colData = colTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
+            const fieldObj = JSON.parse(colData);
+            // prop处理
+            if (field.config['prop']) {
+                fieldObj['optionConfig'].valuePropName = field.config['prop'];
+            }
+            // 验证处理，包含了验证
+            if (rules[field.name]) {
+                const ruleConfig = rules[field.name].split(',');
+                const rulesCfg = [];
+                ruleConfig.forEach(each => {
+                    each = each.replace(/ /g, '');
+                    const ruleData = fs.readFileSync(cab + "/rules/" + each + ".zt", "utf-8");
+                    const ruleItem = JSON.parse(ruleData.replace(/#NAME#/g, field.display));
+                    rulesCfg.push(ruleItem);
+                });
+                fieldObj['optionConfig'].rules = rulesCfg;
+            }
+            content.push(fieldObj);
+        }
+    });
+    return moduleTpl
+        .replace(/#MODULE#/g, module.name)
+        .replace(/#FIELDS#/g, JSON.stringify(content))
+};
 const createFile = (targetFile, fnContent, prefix) => {
     const content = fnContent();
     if (content) {
@@ -96,11 +129,15 @@ const createUIJson = (tplFolder, cabPath, module = {}) => {
 };
 // UI.Filter.json
 const createUIFilterJson = (tplFolder, cabPath, module = {}) => {
-    createFile(cabPath + '/UI.Filter.json', () => getFilter(module, tplFolder), "资源文件");
+    createFile(cabPath + '/UI.Filter.json', () => getFilterJson(module, tplFolder), "资源文件");
 };
 // UI.List.json
 const createUIListJson = (tplFolder, cabPath, module = {}) => {
-    createFile(cabPath + '/UI.List.json', () => getList(module, tplFolder), "资源文件");
+    createFile(cabPath + '/UI.List.json', () => getListJson(module, tplFolder), "资源文件");
+};
+// UI.Form.json
+const createUIFormJson = (tplFolder, cabPath, module = {}) => {
+    createFile(cabPath + '/UI.Form.json', () => getFormJson(module, tplFolder), "资源文件");
 };
 exports.createPlist = function () {
     const argv = args.parseArgs(2);
@@ -129,6 +166,8 @@ exports.createPlist = function () {
             createUIFilterJson(folder, cabPath, module);
             // 构造UI.List.json
             createUIListJson(folder, cabPath, module);
+            // 构造UI.Form.json
+            createUIFormJson(folder, cabPath, module);
         }
         else {
             log.error(`数据格式不合法，请检查配置文件${configPath}`);
