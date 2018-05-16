@@ -25,6 +25,8 @@ module.exports = class Field {
                 }
             }
             this.config = attrs;
+        } else {
+            this.config = {};
         }
     }
 };
