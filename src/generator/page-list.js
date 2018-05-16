@@ -12,12 +12,12 @@ const getFilterJson = (module = {}, cab = "") => {
         if (field.isFilter) {
             const lineTpl = fs.readFileSync(fieldTpl, "utf-8");
             const lineCtx = lineTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
-            content.push(lineCtx);
+            content.push(JSON.parse(lineCtx));
         }
     });
-    content.push(`{\n\t"field":"$button"\n}`);
+    content.push({field: "$button"});
     const grid = new Grid(3, content);
-    return moduleTpl.replace(/#ROW#/g, grid.matrix);
+    return moduleTpl.replace(/#ROW#/g, JSON.stringify(grid.matrix));
 };
 
 const getListJson = (module = {}, cab = "") => {
