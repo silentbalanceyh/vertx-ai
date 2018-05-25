@@ -1,0 +1,12 @@
+{
+    "_form": {
+        "ui": #FIELDS#
+    },
+    "_modal": {
+        "type": "success",
+        "message": {
+            "add": "您的#MODULE#添加成功！",
+            "edit": "您的#MODULE#保存成功！"
+        }
+    }
+}

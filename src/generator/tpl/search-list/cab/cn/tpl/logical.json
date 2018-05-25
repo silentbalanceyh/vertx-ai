@@ -1,0 +1,7 @@
+{
+    "$render": "LOGICAL",
+    "$mapping": {
+        "true": "启用",
+        "false": "禁用"
+    }
+}
