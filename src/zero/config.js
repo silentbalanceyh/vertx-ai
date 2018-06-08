@@ -32,6 +32,7 @@ const eachField = (module = {}, callback) => {
 const dataGenerator = {
     "Code": () => Random.string('ABCDEFGHIJKLMNOPQRSTUVWXYZ.', 6),
     "CnCompany": () => Random.ctitle() + "企业",
+    "CnTitle": () => Random.ctitle(2, 4) + "部",
     "EnCompany": () => Random.title(1, 3) + " Company",
     "CnUser": () => Random.cname(),
     "HeadCount": () => Random.natural(10, 1000),
@@ -41,8 +42,19 @@ const dataGenerator = {
     "CnAddress": () => Random.region() + Random.county(true) + Random.ctitle(),
     "EnAddress": () => Random.first() + ', State ' + Random.title(1) + ", Street " + Random.last(),
     "Mobile": () => "1" + Random.string("123456789", 10),
-    "Phone": () => "(0" + Random.string("0123456789", 2) + ") " + Random.string("0123456789", 4) + " " + Random.string("0123456789", 4)
+    "Phone": () => "(0" + Random.string("0123456789", 2) + ") " + Random.string("0123456789", 4) + " " + Random.string("0123456789", 4),
+    "CnText": () => Random.cparagraph(),
+    "EnText": () => Random.paragraph(),
+    "Bool": () => Random.bool(),
+    "StringGender": () => Random.string("男女", 1),
+    "IpV4": () => Random.natural(0, 255) + "." + Random.natural(0, 255) + "." + Random.natural(0, 255) + "." + Random.natural(0, 255),
+    "Date": () => Random.date(),
+    "DateTime": () => Random.datetime()
 };
+for (let idx = 0; idx < 20; idx++) {
+    dataGenerator[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
+    dataGenerator[`String${idx + 1}`] = () => Random.string(idx + 1);
+}
 const execData = (module) => {
     const record = {};
     record.key = v4();
@@ -52,6 +64,15 @@ const execData = (module) => {
                 const generator = module.data[key];
                 if (dataGenerator[generator]) {
                     record[key] = dataGenerator[generator]()
+                } else {
+                    if (Array.prototype.isPrototypeOf(generator)) {
+                        const index = generator.length - 1;
+                        const hit = Random.natural(0, index);
+                        console.info(hit);
+                        record[key] = generator[hit];
+                    } else {
+                        record[key] = generator + Random.string(2);
+                    }
                 }
             }
         }
