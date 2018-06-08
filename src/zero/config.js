@@ -51,7 +51,7 @@ const dataGenerator = {
     "Date": () => Random.date(),
     "DateTime": () => Random.datetime(),
     "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),
-    "PercentFloat": () => Random.float(0, 1),
+    "PercentFloat": () => Random.float(0, 0, 1, 99).toFixed(2),
     "CnTitle": () => Random.ctitle(3, 8),
 };
 for (let idx = 0; idx < 20; idx++) {

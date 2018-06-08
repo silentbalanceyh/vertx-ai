@@ -3,23 +3,6 @@ const {args, log, io, config} = ai;
 const fs = require("fs");
 const Grid = require('./model/grid');
 
-const getFilterJson = (module = {}, cab = "") => {
-    const moduleTpl = fs.readFileSync(cab + '/UI.Filter.zt', 'utf-8');
-    const fieldTpl = cab + '/UI.Filter.Field.zt';
-    // 遍历字段
-    const content = [];
-    config.eachField(module, (field) => {
-        if (field.isFilter) {
-            const lineTpl = fs.readFileSync(fieldTpl, "utf-8");
-            const lineCtx = lineTpl.replace(/#NAME#/g, field.name).replace(/#DISPLAY#/g, field.display);
-            content.push(JSON.parse(lineCtx));
-        }
-    });
-    content.push({field: "$button"});
-    const grid = new Grid(3, content);
-    return moduleTpl.replace(/#ROW#/g, JSON.stringify(grid.matrix));
-};
-
 const getListJson = (module = {}, cab = "") => {
     const moduleTpl = fs.readFileSync(cab + "/UI.List.zt", "utf-8");
     const columnTpl = cab + '/UI.List.Column.zt';
@@ -55,7 +38,10 @@ const getListJson = (module = {}, cab = "") => {
         .replace(/#REST#/g, rest)
         .replace(/#MODULE#/g, moduleName)
         .replace(/#COLUMN#/g, columns)
-        .replace(/#COND#/g, JSON.stringify(condition));
+        .replace(/#COND#/g, JSON.stringify(condition))
+        .replace(/#LTAB#/g, module.tab.list)
+        .replace(/#ATAB#/g, module.tab.add)
+        .replace(/#ETAB#/g, module.tab.edit);
 };
 
 const getFormJson = (module = {}, cab = "") => {
@@ -133,12 +119,9 @@ const createFile = (targetFile, fnContent, prefix, json = true) => {
 const createUIJson = (tplFolder, cabPath, module = {}) => {
     createFile(cabPath + "/UI.json", () => {
         const index = fs.readFileSync(tplFolder + 'UI.zt', 'utf-8');
-        return index.replace(/#MODULE#/g, `${module.name}管理`);
+        const title = module.title ? module.title : `${module.name}管理`;
+        return index.replace(/#MODULE#/g, title);
     }, "资源文件");
-};
-// UI.Filter.json
-const createUIFilterJson = (tplFolder, cabPath, module = {}) => {
-    createFile(cabPath + '/UI.Filter.json', () => getFilterJson(module, tplFolder), "资源文件");
 };
 // UI.List.json
 const createUIListJson = (tplFolder, cabPath, module = {}) => {
@@ -152,8 +135,6 @@ const createUIFormJson = (tplFolder, cabPath, module = {}) => {
 const createConfigJson = (folder, cabPath, module) => {
     // 构造UI.json
     createUIJson(folder, cabPath, module);
-    // 构造UI.Filter.json
-    createUIFilterJson(folder, cabPath, module);
     // 构造UI.List.json
     createUIListJson(folder, cabPath, module);
     // 构造UI.Form.json
@@ -186,13 +167,14 @@ const createReduxFiles = (codePath, comPath, module) => {
 // Op.ts/Op.Form.ts
 const createOpFiles = (codePath, comPath, module) => {
     createFile(comPath + "/Op.ts", () => fs.readFileSync(codePath + "/Op.zt", "utf-8"), "Ts Op入口文件", false);
+    createFile(comPath + "/Op.Bar.ts", () => fs.readFileSync(codePath + "/Op.Bar.zt", "utf-8"), "Ts Op工具栏专用文件", false);
     createFile(comPath + "/Op.Form.ts", () => {
         let content = fs.readFileSync(codePath + "/Op.Form.zt", "utf-8");
         content = content.replace(/#DWCODE#/g, module.code.toLocaleLowerCase());
         return content;
     }, "Ts按钮事件文件", false)
 };
-// UI.js/UI.List.js/UI.Filter.js/UI.Form.js
+// UI.js/UI.List.js/UI.Form.js
 const createPageFiles = (codePath, comPath, module) => {
     // UI.js
     createFile(comPath + "/UI.js", () => fs.readFileSync(codePath + "/UI.zt", "utf-8"), "UI入口文件", false);
@@ -202,19 +184,6 @@ const createPageFiles = (codePath, comPath, module) => {
         content = content.replace(/#CODE#/g, module.code);
         return content;
     }, "UI.List文件", false);
-    // UI.Filter.js
-    createFile(comPath + "/UI.Filter.js", () => {
-        let content = fs.readFileSync(codePath + "/UI.Filter.zt", "utf-8");
-        let filters = "";
-        config.eachField(module, (field) => {
-            const ant = field.config['ant'] ? field.config['ant'] : "Input";
-            if (field.isFilter) {
-                filters += `\n    ${field.name}:` + "(reference, jsx = {}) => (<" + ant + " {...jsx}/>),";
-            }
-        });
-        content = content.replace(/#COND#/g, filters);
-        return content;
-    }, "UI.Filter文件", false);
     // UI.Form.js
     createFile(comPath + "/UI.Form.js", () => {
         let content = fs.readFileSync(codePath + "/UI.Form.zt", "utf-8");
@@ -244,7 +213,7 @@ const createMockData = (tplFolder, codePath, module) => {
     createFile(tplFolder + '/fnSearch.json', () => getMockJson(module, 6), "模拟数据");
     createFile(tplFolder + '/index.js', () => getMockEntry(codePath), "入口模拟", false);
 };
-exports.createPlist = function () {
+exports.createTlist = function () {
     const argv = args.parseArgs(2);
     const inputFile = argv['-c'] || argv['--config'];
     const inputPath = `./.zero/module/${inputFile}`;
@@ -268,8 +237,8 @@ exports.createPlist = function () {
             const mockPath = `src/components${path}/mock`;
             io.dirsMake(mockPath);
             log.info(`Mock数据文件目录创建橙色：${mockPath}`);
-            const folder = __dirname + `/tpl/page-list/cab/${language}/`;
-            const codePath = __dirname + `/tpl/page-list/components/`;
+            const folder = __dirname + `/tpl/tab-list/cab/${language}/`;
+            const codePath = __dirname + `/tpl/tab-list/components/`;
             // --------------  生成配置文件
             createConfigJson(folder, cabPath, module);
             // --------------  生成mock数据文件
@@ -289,4 +258,3 @@ exports.createPlist = function () {
         }
     })
 }
-;

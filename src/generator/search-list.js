@@ -87,7 +87,12 @@ const getFormJson = (module = {}, cab = "") => {
             content.push(fieldObj);
         }
     });
-    const grid = new Grid(1, content);
+
+    let gridCol = "1";
+    if (module.form && module.form.column) {
+        gridCol = module.form.column + "";
+    }
+    const grid = new Grid(Number(gridCol), content);
     grid.appendLine({
         "field": "$button",
         "hidden": true
@@ -129,7 +134,8 @@ const createFile = (targetFile, fnContent, prefix, json = true) => {
 const createUIJson = (tplFolder, cabPath, module = {}) => {
     createFile(cabPath + "/UI.json", () => {
         const index = fs.readFileSync(tplFolder + 'UI.zt', 'utf-8');
-        return index.replace(/#MODULE#/g, `${module.name}管理`);
+        const title = module.title ? module.title : `${module.name}管理`;
+        return index.replace(/#MODULE#/g, title);
     }, "资源文件");
 };
 // UI.List.json
@@ -203,6 +209,11 @@ const createPageFiles = (codePath, comPath, module) => {
                 fields += `\n    ${field.name}:` + "(reference, jsx = {}) => (<" + ant + " {...jsx}/>),";
             }
         });
+        let gridCol = "1";
+        if (module.form && module.form.column) {
+            gridCol = module.form.column + "";
+        }
+        content = content.replace(/#GRIDCOL#/g, gridCol);
         content = content.replace(/#INPUT#/g, fields);
         content = content.replace(/#CODE#/g, module.code);
         return content;
