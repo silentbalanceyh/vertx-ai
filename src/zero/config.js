@@ -41,8 +41,8 @@ const execData = (module) => {
         }
     }
     // 特殊内容处理
-    record.createTime = new Date().toISOString().split('.')[0];
-    record.updateTime = new Date().toISOString().split('.')[0];
+    record.createDate = new Date().toISOString().split('.')[0];
+    record.lastModifiedDate = new Date().toISOString().split('.')[0];
     record.active = true;
     return record;
 };
