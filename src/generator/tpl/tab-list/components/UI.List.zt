@@ -14,8 +14,11 @@ const {zero} = Ux;
     connect: {
         s2p: state => Ux
             .dataIn(state)
-            .rework({query: ["filters"]})
-            .rinit(["filters"])
+            .rework({
+                query: ["filters"],
+                datum: ["record"]
+            })
+            .rinit(["filters","record"])
             .to(),
         d2p: {
             fn#CODE#List: Types.fn#CODE#List,
@@ -44,7 +47,7 @@ const {zero} = Ux;
 class Component extends React.PureComponent {
 
     render() {
-        const {$data} = this.props;
+        const {$data, $record} = this.props;
         const table = Ux.fromHoc(this, "table");
         const tabs = Ux.fromHoc(this, "tabs");
         const op = Ux.fromHoc(this, "button");
@@ -55,7 +58,9 @@ class Component extends React.PureComponent {
                 {...Ux.toPageList(this, Form)}
                 $extra={(
                     <Button.Group>
-                        <Button type="primary">{op.save}</Button>
+                        <Button type="primary"
+                            onClick={() => Ux.connectId($record._("key") ? "btnSave" : "btnAdd")}>
+                            {op.save}</Button>
                     </Button.Group>
                 )}
                 $table={table['plist']}

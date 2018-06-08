@@ -8,8 +8,15 @@ const fnAdd = (reference: any) => (event: any) => {
 
         promise.then(data => {
             Ux.showMessage(reference, "add");
-            Ux.fadeOut(reference);
-            Ux.writeTree(reference, {"datum.data": undefined});
+            // Ux.fadeOut(reference);
+            const {fnClose} = reference.props;
+            if (fnClose) {
+                fnClose();
+            }
+            Ux.writeTree(reference, {
+                "datum.data": undefined,
+                "datum.record": undefined
+            });
         });
     });
 };
@@ -19,7 +26,10 @@ const fnSave = (reference: any) => (event: any) => {
         const promise = Ux.ajaxPut("/api/#DWCODE#/:key", values, Mock.fnSave);
         promise.then(data => {
             Ux.showMessage(reference, "edit");
-            Ux.fadeOut(reference);
+            const {fnClose} = reference.props;
+            if (fnClose) {
+                fnClose();
+            }
             Ux.writeTree(reference, {
                 "datum.data": undefined,
                 "datum.record": data
