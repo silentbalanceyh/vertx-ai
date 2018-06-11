@@ -210,7 +210,7 @@ const createMockData = (tplFolder, codePath, module) => {
     createFile(tplFolder + '/fnRead.json', () => getMockJson(module), "模拟数据");
     createFile(tplFolder + '/fnRemove.json', () => getMockJson(module), "模拟数据");
     createFile(tplFolder + '/fnSave.json', () => getMockJson(module), "模拟数据");
-    createFile(tplFolder + '/fnSearch.json', () => getMockJson(module, 6), "模拟数据");
+    createFile(tplFolder + '/fnSearch.json', () => getMockJson(module, module.count ? module.count : 11), "模拟数据");
     createFile(tplFolder + '/index.js', () => getMockEntry(codePath), "入口模拟", false);
 };
 exports.createTlist = function () {
