@@ -74,7 +74,11 @@ const execData = (module) => {
                         const hit = Random.natural(0, index);
                         record[key] = generator[hit];
                     } else {
-                        record[key] = generator + Random.string(2);
+                        if (generator.startsWith("Fixed:")) {
+                            record[key] = generator.substring(6);
+                        } else {
+                            record[key] = generator + Random.string(2);
+                        }
                     }
                 }
             }
