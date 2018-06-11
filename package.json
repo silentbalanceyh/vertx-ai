@@ -1,6 +1,6 @@
 {
     "name": "vertx-ai",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "Zero UI/Zero Generator",
     "main": "src/index.js",
     "bin": {
