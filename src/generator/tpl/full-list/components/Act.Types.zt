@@ -1,0 +1,6 @@
+import Ux from 'ux'
+
+export default {
+    fn#CODE#List: Ux.createAction("/RX/MODULE/#UPCODE#"),
+    fn#CODE#: Ux.createAction("/RX/MODULE/#UPCODE#/GET")
+}

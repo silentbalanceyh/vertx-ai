@@ -1,0 +1,9 @@
+{
+    "field": "#NAME#",
+    "optionItem": {
+        "label": "#DISPLAY#"
+    },
+    "optionJsx": {
+        "placeholder": "请输入"
+    }
+}
