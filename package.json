@@ -1,10 +1,11 @@
 {
     "name": "vertx-ai",
     "version": "0.1.19",
-    "description": "Zero UI/Zero Generator",
+    "description": "Zero Ai Coder",
     "main": "src/index.js",
     "bin": {
-        "ai": "./src/index.js"
+        "ai": "./src/index.js",
+        "aj": "./src/aj.js"
     },
     "scripts": {
         "test": "src/index.test.js"
@@ -23,18 +24,19 @@
         "url": "https://github.com/silentbalanceyh/vertx-ai/issues"
     },
     "dependencies": {
-        "bluebird": "^3.4.1",
+        "bluebird": "^3.5.1",
         "co": "^4.6.0",
         "colors": "^1.3.0",
-        "commander": "^2.9.0",
+        "commander": "^2.16.0",
         "dox": "^0.9.0",
-        "handlebars": "^4.0.5",
+        "handlebars": "^4.0.11",
         "immutable": "^3.8.2",
         "linebyline": "^1.3.0",
         "mkdirp": "^0.5.1",
         "mockjs": "^1.0.1-beta3",
         "random-js": "^1.0.8",
-        "uuid": "^3.2.1"
+        "underscore": "^1.9.1",
+        "uuid": "^3.3.2"
     },
     "homepage": "https://github.com/silentbalanceyh/vertx-ai#readme"
 }

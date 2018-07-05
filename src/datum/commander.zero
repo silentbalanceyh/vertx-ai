@@ -1,0 +1,3 @@
+A;
+command,executor,description,option1,option2
+key,applyKey, 为数据模板添加key属性，key为UUID格式, d=您的数据文件路径, f=【key】标识key的字段

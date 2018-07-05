@@ -16,12 +16,11 @@ const jsx = {#COND#
     }
 };
 
-@zero({
-    form: true,
-    "i18n.cab": require("./Cab.json"),
-    "i18n.name": "UI.Filter",
-    logger: Logger.form
-})
+@zero(Ux.rxEtat(require('./Cab.json'))
+    .cab("UI.Filter")
+    .form().logger(Logger.form)
+    .to()
+)
 class Component extends React.PureComponent {
     render = () => Ux.uiFieldForm(this, jsx, 3);
 }
