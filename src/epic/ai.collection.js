@@ -1,5 +1,7 @@
 const Log = require('./ai.log');
+const Fx = require('./ai.fx');
 const U = require('underscore');
+const fs = require('fs');
 const inflect = require('i')();
 
 const _eachExec = (executor, callback, method = "") => {
@@ -12,8 +14,8 @@ const _eachExec = (executor, callback, method = "") => {
 
 const itPair = (first = [], second = [], executor = () => {
 }) => {
+    const length = first.length > second.length ? first.length : second.length;
     _eachExec(executor, () => {
-        const length = first.length > second.length ? first.length : second.length;
         for (let idx = 0; idx < length; idx++) {
             const firstArg = first[idx];
             const secondArg = second[idx];
@@ -39,13 +41,25 @@ const itObject = (object = {}, executor = () => {
 const itArray = (array = [], executor = () => {
 }) => {
     const target = [];
-    _eachExec(executor, () => {
-        array.forEach((item, index) => {
-            const each = executor(item, index);
-            target.push(each);
-        })
-    }, "itArray");
+    _eachExec(executor, () => array.forEach((item, index) => {
+        const each = executor(item, index);
+        target.push(each);
+    }), "itArray");
     return target;
+};
+
+const itFileSync = (path = "", callback) => {
+    const etat = fs.statSync(path);
+    if (etat.isDirectory()) {
+        const dir = fs.readdirSync(path);
+        itArray(dir, (item) => Fx.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
+            let divider = path.endsWith('/') ? '/' : "";
+            let hitFile = path + divider + item;
+            itFileSync(hitFile, callback);
+        }))
+    } else {
+        callback(path);
+    }
 };
 
 const itCompress = (object = {}, prefix = "") => {
@@ -58,15 +72,16 @@ const itCompress = (object = {}, prefix = "") => {
             result[key] = value;
         }
     });
-    if (0 < items.length) {
+    Fx.fxContinue(0 < items.length, () => {
         const prefixes = inflect.pluralize(prefix);
         result[prefixes] = items;
-    }
+    });
     return result;
 };
 module.exports = {
     itPair,
     itCompress,
+    itFileSync,
     itObject,
     itArray
 };

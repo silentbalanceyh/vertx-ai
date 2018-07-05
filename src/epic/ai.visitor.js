@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Immutable = require('immutable');
 const U = require('underscore');
 const Sure = require('./ai.sure');
 const E = require('./ai.error');
@@ -44,6 +45,8 @@ const _parseArray = (lines = []) => {
         const valueArr = line.toString().split(',');
         const entity = {};
         It.itPair(fieldArr, valueArr, (first, second) => {
+            first = first ? first.trim() : first;
+            second = second ? second.trim() : second;
             if (first.startsWith('option')) {
                 entity[first] = _parseOption(second);
             } else {
@@ -68,6 +71,40 @@ const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;']) => {
     Fx.fxTerminal(!U.isFunction(parser), E.fn10003(fileType));
     return parser(lines);
 };
+const zeroData = (object = {}, path = "") => {
+    if (!U.isArray(path)) {
+        path = path.split('.');
+    }
+    const $data = Immutable.fromJS(object);
+    let hitted = $data.getIn(path);
+    if (hitted) {
+        if (U.isFunction(hitted.toJS)) {
+            hitted = hitted.toJS();
+        } else {
+            hitted = "";
+        }
+    }
+    return hitted;
+};
+const visitJObject = (object = {}, path = "") => {
+    let hitValue = zeroData(object, path);
+    if ("object" !== typeof hitValue) {
+        hitValue = {};
+    }
+    return hitValue;
+};
+const writeJObject = (object = {}, path = "", data) => {
+    let $object = Immutable.fromJS(object);
+    if (data) {
+        if (!U.isArray(path)) {
+            path = path.split('.');
+        }
+        $object = $object.setIn(path, data);
+    }
+    return $object.toJS();
+};
 module.exports = {
-    zeroParse
+    zeroParse,
+    visitJObject,
+    writeJObject
 };

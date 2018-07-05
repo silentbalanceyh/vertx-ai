@@ -70,7 +70,6 @@ const executeBody = (commanders = [], Executor = {}) => {
 
 const executeEnd = () => {
     program.parse(process.argv);
-    Log.info("Zero AI 系统停止! ".cyan);
 };
 module.exports = {
     executeHeader,
