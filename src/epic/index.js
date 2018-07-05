@@ -4,11 +4,13 @@ const sure = require('./ai.sure');
 const fx = require('./ai.fx');
 const meta = require('./ai.meta');
 const visitor = require('./ai.visitor');
+const collection = require('./ai.collection');
 module.exports = {
     ...log,
     ...io,
     ...sure,
     ...fx,
     ...meta,
-    ...visitor
+    ...visitor,
+    ...collection
 };

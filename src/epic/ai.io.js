@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Root = require('app-root-path');
 const Sure = require('./ai.sure');
 
 const toJObject = (content = "") => {
@@ -10,6 +11,7 @@ const toJArray = (content = "") => {
     return JSON.parse(content);
 };
 
+const ioRoot = () => Root;
 const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
 
@@ -22,6 +24,7 @@ module.exports = {
 
     ioJArray,
     ioJObject,
+    ioRoot,
 
     isFile,
     isDirectory
