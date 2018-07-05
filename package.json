@@ -4,8 +4,8 @@
     "description": "Zero Ai Coder",
     "main": "src/index.js",
     "bin": {
-        "ai": "./src/index.js",
-        "aj": "./src/aj.js"
+        "aj": "./src/index.js",
+        "ai": "./src/ai.js"
     },
     "scripts": {
         "test": "src/index.test.js"

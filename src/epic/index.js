@@ -5,6 +5,7 @@ const fx = require('./ai.fx');
 const meta = require('./ai.meta');
 const visitor = require('./ai.visitor');
 const collection = require('./ai.collection');
+const console = require('./ai.console');
 module.exports = {
     ...log,
     ...io,
@@ -12,5 +13,6 @@ module.exports = {
     ...fx,
     ...meta,
     ...visitor,
-    ...collection
+    ...collection,
+    ...console,
 };
