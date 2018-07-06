@@ -22,7 +22,7 @@ const _parseExpr = (item = "") => {
 const _parseProp = (lines) => {
     const data = {};
     lines.forEach(line => {
-        const parsed = _parseExpr(line);
+        const parsed = _parseExpr(line.trim());
         data[parsed[0]] = parsed[1];
     });
     return data;
@@ -34,6 +34,7 @@ const _parseOption = (item = "", name = "option") => {
     const pair = {};
     pair[kv[0]] = kv[1];
     if (prop[kv[0]]) pair[prop[kv[0]]] = kv[1];
+    delete pair[undefined];
     return pair;
 };
 
@@ -42,13 +43,16 @@ const _parseArray = (lines = []) => {
     const fieldArr = fields.split(',');
     const result = [];
     lines.forEach(line => {
-        const valueArr = line.toString().split(',');
+        const valueArr = line.toString().trim().split(',');
         const entity = {};
         It.itPair(fieldArr, valueArr, (first, second) => {
             first = first ? first.trim() : first;
             second = second ? second.trim() : second;
             if (first.startsWith('option')) {
-                entity[first] = _parseOption(second);
+                const optionValue = _parseOption(second);
+                if (0 < Object.keys(optionValue).length) {
+                    entity[first] = optionValue;
+                }
             } else {
                 entity[first] = second;
             }

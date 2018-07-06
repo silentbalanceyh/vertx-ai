@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const Root = require('app-root-path');
 const Sure = require('./ai.sure');
 const Log = require('./ai.log');
@@ -16,7 +15,7 @@ const toJArray = (content = "") => {
 const ioRoot = () => Root;
 const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
-const writeJson = (paths, content) => {
+const outJson = (paths, content) => {
     if (content) {
         fs.writeFile(paths, JSON.stringify(content, null, 4), () => {
             Log.info(`成功将数据写入到文件：${paths}！`.cyan);
@@ -34,7 +33,7 @@ module.exports = {
     ioJObject,
     ioRoot,
 
-    writeJson,
+    outJson,
 
     isFile,
     isDirectory

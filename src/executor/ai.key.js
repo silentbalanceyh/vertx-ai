@@ -1,6 +1,5 @@
 const Ux = require('../epic');
 const U = require('underscore');
-const Immutable = require('immutable');
 const uuid = require('uuid');
 const _applyUUID = (data = {}, field) => {
     if (!data.hasOwnProperty('$REF$') &&
@@ -26,19 +25,21 @@ const _applyEach = (data = {}, field = 'key') => {
     }
 };
 const executeKey = () => {
-    const args = Ux.readArgs([['-d', '--data']]);
-    const actual = Ux.formatArgs(args, [
+    const actual = Ux.executeInput(
         ['-d', '--data'],
-        ['-f', '--field', 'key'],
-        ['-p', '--path', 'data']
-    ]);
+        [
+            ['-d', '--data'],
+            ['-f', '--field', 'key'],
+            ['-p', '--path', 'data']
+        ]
+    );
     Ux.cxExist(actual.data);
     Ux.itFileSync(actual.data, (item) => {
         const config = Ux.ioJObject(item);
         const body = Ux.visitJObject(config, actual.path);
         _applyEach(body, actual.field);
         const content = Ux.writeJObject(config, actual.path, body);
-        Ux.writeJson(actual.data, content);
+        Ux.outJson(actual.data, content);
     });
 };
 module.exports = {

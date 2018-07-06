@@ -5,12 +5,14 @@ const uuid = require("uuid");
 
 const applyKey = (data = {}, field = 'key') => {
     for (const key in data) {
-        const value = data[key];
-        if ("object" === typeof value) {
-            if (Array.prototype.isPrototypeOf(value)) {
-                value.forEach(item => applyKey(item, field));
-            } else {
-                applyKey(value, field);
+        if (data.hasOwnProperty(key)) {
+            const value = data[key];
+            if ("object" === typeof value) {
+                if (Array.prototype.isPrototypeOf(value)) {
+                    value.forEach(item => applyKey(item, field));
+                } else {
+                    applyKey(value, field);
+                }
             }
         }
     }

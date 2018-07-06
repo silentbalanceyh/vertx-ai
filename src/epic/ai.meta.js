@@ -6,6 +6,7 @@ const Log = require('./ai.log');
 const It = require('./ai.collection');
 const Fx = require('./ai.fx');
 const E = require('./ai.error');
+const Input = require('./ai.console');
 
 const executeHeader = () => {
     const appInfo = require('./../../package.json');
@@ -25,17 +26,19 @@ const _buildOption = (options = []) => {
     options.forEach((option, index) => {
         const keys = Object.keys(option);
         const key0 = keys[0].toString();
-        const key1 = keys[1].toString();
-        const short = key0.length < key1.length ? key0 : key1;
-        const long = key0.length > key1.length ? key0 : key1;
-        const key = `-${short}, --${long}`;
-        const opt = {};
-        opt.key = key;
-        opt.desc = option[short] ? option[short] : option[long];
-        optionItem.push(opt);
-        optionStr += key;
-        if (index < options.length - 1) {
-            optionStr += ' | ';
+        const key1 = keys[1] ? keys[1].toString() : undefined;
+        if (key1) {
+            const short = key0.length < key1.length ? key0 : key1;
+            const long = key0.length > key1.length ? key0 : key1;
+            const key = `-${short}, --${long}`;
+            const opt = {};
+            opt.key = key;
+            opt.desc = option[short] ? option[short] : option[long];
+            optionItem.push(opt);
+            optionStr += key;
+            if (index < options.length - 1) {
+                optionStr += ' | ';
+            }
         }
     });
     return {
@@ -61,7 +64,10 @@ const executeBody = (commanders = [], Executor = {}) => {
             .usage(`[options] [${option.usage}]`);
         Fx.fxContinue(0 < commander.options.length, () => {
             It.itArray(commander.options, (item, index) => {
-                cmd.option(option.item[index].key, option.item[index].desc);
+                const optionItem = option.item[index];
+                if (optionItem) {
+                    cmd.option(optionItem.key, optionItem.desc);
+                }
             })
         });
         cmd.action(() => co(executor));
@@ -71,8 +77,13 @@ const executeBody = (commanders = [], Executor = {}) => {
 const executeEnd = () => {
     program.parse(process.argv);
 };
+const executeInput = (required = [], params = []) => {
+    const args = Input.readArgs([required]);
+    return Input.formatArgs(args, params)
+};
 module.exports = {
     executeHeader,
     executeBody,
     executeEnd,
+    executeInput,
 };

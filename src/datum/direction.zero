@@ -3,3 +3,5 @@ name=名称
 code=代码
 serial=编号
 sequence=序号
+createTime=创建时间
+createBy=创建人
