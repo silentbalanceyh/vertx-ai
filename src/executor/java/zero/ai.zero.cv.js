@@ -35,12 +35,12 @@ const goCv = (config = {}, root = "") => {
     const meta = _calcPath(config, root);
     if (fs.existsSync(meta.file)) {
         // 修改
+        const reference = Java.loadInterface(meta.file);
     } else {
         // 重新创建
         const reference = Java.createInterface(meta.package, meta.name);
         // 变量处理
         const vars = _calcAddrVar(config);
-        reference.addMember(vars.name, vars.value);
         reference.addMember(vars.name, vars.value);
         Ux.outString(meta.file, reference.to());
     }

@@ -14,7 +14,7 @@ colors.setTheme({
 });
 
 const error = (message) => console.error(`[Zero AI] `.red.bold + `ERR : ${message}`.red);
-const info = (message) => console.warn(`[Zero AI]`.green.bold + ` ${message}`);
+const info = (message) => console.info(`[Zero AI]`.green.bold + ` ${message}`);
 const warn = (message) => console.warn(`[Zero AI]`.yellow.bold + ` ${message}`.yellow);
 module.exports = {
     info,

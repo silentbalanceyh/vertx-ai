@@ -63,6 +63,7 @@ const cycleChildren = (path, includeCurrent = true) => {
 };
 const ioJObject = (path) => isFile(path) ? toJObject(fs.readFileSync(path, "utf-8")) : {};
 const ioJArray = (path) => isFile(path) ? toJArray(fs.readFileSync(path, "utf-8")) : [];
+const ioString = (path) => isFile(path) ? fs.readFileSync(path, "utf-8") : "";
 
 module.exports = {
     cycleParent,
@@ -75,6 +76,7 @@ module.exports = {
 
     ioJArray,
     ioJObject,
+    ioString,
     ioRoot,
 
     outJson,
