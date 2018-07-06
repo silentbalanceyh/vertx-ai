@@ -9,5 +9,9 @@ module.exports = {
 
     fn10007: (arg) => `[AI-10007] The file '${arg}' does not exist or it's a directory.`,
     fn10008: (arg) => `[AI-10008] The directory '${arg}' does not exist or it's a file.`,
-    fn10009: (arg) => `[AI-10009] The path '${arg}' does not exist.`
+    fn10009: (arg) => `[AI-10009] The path '${arg}' does not exist.`,
+
+    fn10010: (arg = []) => `[AI-10010] The tool detect more than one project folders, found '${arg.length}', please switch.`,
+    fn10011: (arg) => `[AI-10011] 'api' attribute has been missed in current config ${JSON.stringify(arg)}`,
+    fn10012: (arg, entity) => `[AI-10012] Duplicated member '${arg}' found in class '${entity}', please check.`
 };

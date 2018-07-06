@@ -62,11 +62,25 @@ const _parseArray = (lines = []) => {
     return result;
 };
 
+const _parseKv = (lines = []) => {
+    let content = "";
+    lines.forEach(line => content += line);
+    const pairs = content.split(',');
+    const result = {};
+    pairs.forEach(pair => {
+        const input = pair.trim();
+        const kv = _parseExpr(input);
+        result[kv[0]] = kv[1];
+    });
+    return result;
+};
+
 const PARSER = {
     "P;": _parseProp, "P": _parseProp,
-    "A;": _parseArray, "A": _parseArray
+    "A;": _parseArray, "A": _parseArray,
+    "KV;": _parseKv, "KV": _parseKv,
 };
-const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;']) => {
+const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;']) => {
     const content = fs.readFileSync(path, "utf-8").trim();
     const lines = content.split(/\n/g);
     const fileType = lines.shift();

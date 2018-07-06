@@ -6,6 +6,9 @@ const meta = require('./ai.meta');
 const visitor = require('./ai.visitor');
 const collection = require('./ai.collection');
 const console = require('./ai.console');
+const java = require('./ai.java');
+const text = require('./ai.text');
+const E = require('./ai.error');
 module.exports = {
     ...log,
     ...io,
@@ -15,4 +18,7 @@ module.exports = {
     ...visitor,
     ...collection,
     ...console,
+    ...java,
+    ...text,
+    E,
 };

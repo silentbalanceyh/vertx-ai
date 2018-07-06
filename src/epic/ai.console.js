@@ -23,7 +23,7 @@ const readArgs = (required = []) => {
     }
     const $keys = Immutable.fromJS(Object.keys(config));
     It.itArray(required, (each) => Fx.fxTerminal(
-        !($keys.contains(each[0]) || $keys.contains(each[1])),
+        1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1]))),
         E.fn10006(each)));
     return config;
 };
