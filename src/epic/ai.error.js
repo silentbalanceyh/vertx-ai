@@ -15,5 +15,6 @@ module.exports = {
     fn10011: (arg) => `[AI-10011] 'api' attribute has been missed in current config ${JSON.stringify(arg)}`,
     fn10012: (arg, entity) => `[AI-10012] Duplicated member '${arg}' found in class '${entity}', please check.`,
     fn10013: (arg) => `[AI-10013] Zero system could not analyze the code line type, type = ${arg} is Unknown`,
-    fn10014: (arg) => `[AI-10014] More than one 'package' sentence found.${JSON.stringify(arg)}`
+    fn10014: (arg) => `[AI-10014] More than one 'package' sentence found.${JSON.stringify(arg)}`,
+    fn10015: (arg, entity) => `[AI-10012] Duplicated method '${arg}' found in class '${entity}', please check.`,
 };

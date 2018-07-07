@@ -68,7 +68,7 @@ const _calcAgentI = (config = {}, root = "") => {
 const goCv = (config = {}, root = "") => {
     // 最终定位的常量文件
     const meta = _calcAddr(config, root);
-    Ux.info(`常量文件处理：${meta.file}`.green);
+    Ux.info(`Addr常量文件处理：${meta.file}`.gray);
     let reference = null;
     if (fs.existsSync(meta.file)) {
         // 修改
@@ -85,7 +85,7 @@ const goCv = (config = {}, root = "") => {
 const goAgent = (config = {}, root = "") => {
     // 最终定义的文件
     const meta = _calcAgentI(config, root);
-    Ux.info(`Agent文件处理：${meta.file}`.green);
+    Ux.info(`Agent文件处理：${meta.file}`.gray);
     let reference = null;
     if (fs.existsSync(meta.file)) {
         // 修改

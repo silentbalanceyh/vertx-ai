@@ -71,17 +71,36 @@ const zeroDefineWithAnnotation = (sorted = []) => {
     }
 };
 const zeroAMethodWithAnnotation = (sorted = []) => {
-    const methodsLines = [];
+    const methodLines = [];
     let methodLine = [];
+    let method = {};
     sorted.forEach((each, index) => {
         if ("ABSTRACT_METHOD" === each.type) {
             methodLine.push('    ' + each.line + ';');
             zeroAnnotation(index, sorted, methodLine, '    ');
-            methodsLines.push(Ux.joinLines(methodLine.reverse()));
+            methodLines.push(Ux.joinLines(methodLine.reverse()));
+            const methodName = zeroMethodName(each.line);
+            if (methodName) method[methodName] = methodName;
             methodLine = [];
         }
     });
-    return methodsLines;
+    return {
+        methodLines, method
+    };
+};
+const zeroMethodName = (item = "") => {
+    let name = null;
+    const end = item.indexOf('(');
+    for (let idx = end; idx > 0; idx--) {
+        const char = item.charAt(idx);
+        if (' ' === char) {
+            const method = item.substring(idx, end);
+            Ux.info(`代码分析：找到已定义的方法${method.blue}`);
+            name = method.trim();
+            break;
+        }
+    }
+    return name;
 };
 const zeroProcess = (meta = []) => {
     const sorted = meta.sort((left, right) => left.lineIndex - right.lineIndex);
@@ -98,7 +117,7 @@ const zeroProcess = (meta = []) => {
     let importLines = [];
     importLine.forEach(line => importLines.push(line.line + ';'));
     // 方法专用
-    const methodLines = zeroAMethodWithAnnotation(sorted);
+    const {methodLines, method} = zeroAMethodWithAnnotation(sorted);
     // Annotation
     const annoLine = sorted.filter(item => item.type === "ANNOTATION");
     let annoLines = [];
@@ -122,6 +141,7 @@ const zeroProcess = (meta = []) => {
         name,
         pkg,
         member,
+        method,
         pkgLines,
         bodyLines,
         memberLines,

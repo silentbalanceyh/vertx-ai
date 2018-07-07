@@ -82,7 +82,7 @@ const writeMethod = (lines, method, annotations = [], reference) => {
     // 方法添加
     let content = "    ";
     content += method.returnValue;
-    Ux.info(`-> 方法：${method.name}`.blue);
+    Ux.info(`添加新方法：${method.name.green}`);
     content += ' ' + method.name + '(';
     // 参数表生成
     content += writeParams(method.params, method.ws, reference);

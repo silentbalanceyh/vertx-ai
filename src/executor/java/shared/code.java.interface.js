@@ -15,6 +15,7 @@ class _JavaInterface {
             this.member = {};
             this.annoLines = [];
             this.methodLines = [];
+            this.method = {};
         } else {
             const file = arguments[0];
             const content = Ux.ioString(file);
@@ -28,6 +29,7 @@ class _JavaInterface {
             this.importLines = result.importLines;
             this.annoLines = result.annoLines;
             this.methodLines = result.methodLines;
+            this.method = result.method;
         }
     }
 
@@ -62,10 +64,14 @@ class _JavaInterface {
     }
 
     addMethod(method, annotations = []) {
-        // 添加Annotation
-        annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
-        // 方法添加
-        Seg.writeMethod(this.methodLines, method, annotations, this);
+        if (!this.method[method.name]) {
+            // 添加Annotation
+            annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
+            // 方法添加
+            Seg.writeMethod(this.methodLines, method, annotations, this);
+        } else {
+            Ux.warn(Ux.E.fn10015(method.name, this.name))
+        }
         return this;
     }
 
