@@ -16,6 +16,13 @@ class _JavaInterface {
             const file = arguments[0];
             const content = Ux.ioString(file);
             const result = codeParser(content);
+            this.pkg = result.pkg;
+            this.name = result.name;
+            this.pkgLines = result.pkgLines;
+            this.bodyLines = result.bodyLines;
+            this.member = result.member;
+            this.memberLines = result.memberLines;
+            this.importLines = [];
         }
     }
 

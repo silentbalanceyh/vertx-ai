@@ -24,7 +24,6 @@
         "url": "https://github.com/silentbalanceyh/vertx-ai/issues"
     },
     "dependencies": {
-        "antlr4": "^4.7.1",
         "app-root-path": "^2.1.0",
         "bluebird": "^3.5.1",
         "co": "^4.6.0",
