@@ -2,6 +2,16 @@ const U = require('underscore');
 const Immutable = require('immutable');
 const Ux = require('../../../../epic');
 _extractLineComment = (idx, content) => findLine(idx, content, '\n');
+_extractLineBlock = (idx, content) => {
+    const end = content.indexOf("*/") + 2;
+    return content.substring(idx, end);
+};
+_extractAnno = (idx, content) => {
+    const start = findLineIndex(idx, content, '@');
+    const end = findLineIndex(start, content, '\n');
+    return content.substring(start - 1, end);
+};
+_extractAbstract = (idx, content) => findLine(idx, content, ';');
 _extractSentence = (idx, content) => findLine(idx, content, ';');
 _extractDefine = (idx, content) => findLine(idx, content, '{');
 const IDENTIFIERS = {
@@ -9,7 +19,10 @@ const IDENTIFIERS = {
     "PACKAGE": _extractSentence,
     "IMPORT": _extractSentence,
     "DEFINE": _extractDefine,
-    "MEMBER_VAR": _extractSentence
+    "MEMBER_VAR": _extractSentence,
+    "BLOCK_COMMENT": _extractLineBlock,
+    "ANNOTATION": _extractAnno,
+    "ABSTRACT_METHOD": _extractAbstract
 };
 const isSpace = (char) => ' ' === char;
 const isNewLine = (char) => '\n' === char;
@@ -56,18 +69,23 @@ const findUnitl = (current, content, char = ' ') => {
 
 const findLine = (current, content, char) => {
     if (char) {
-        let end;
         const start = current;
-        let found = null;
-        do {
-            found = content.charAt(current);
-            current++;
-        } while (char !== found && current < content.length);
-        end = current;
+        let end = findLineIndex(current, content, char);
         if (end && start < end) {
             return content.substring(start, end - 1);
         }
     }
+};
+
+const findLineIndex = (current, content, char) => {
+    let end;
+    let found = null;
+    do {
+        found = content.charAt(current);
+        current++;
+    } while (char !== found && current < content.length);
+    end = current;
+    return end;
 };
 
 const findKeywordUntil = (current, content) => {
@@ -96,6 +114,9 @@ const analyzeType = (previous, currentIndex, next, content) => {
         if ('/' === char && '*' === next) {
             return "BLOCK_COMMENT";
         }
+        if ('@' === char && isLetter(next)) {
+            return "ANNOTATION";
+        }
         const word = findUnitl(currentIndex, content);
         if ("package" === word) {
             // package语句
@@ -112,10 +133,14 @@ const analyzeType = (previous, currentIndex, next, content) => {
         } else if (isLetter(char)) {
             // 完整语句
             let whole = findLine(currentIndex, content, ';');
-            // 从语句中去掉字符串部分
-            whole = whole.replace(/"*"/g, '');
-            if (0 >= whole.indexOf('(') && 0 >= whole.indexOf(')')) {
-                return "MEMBER_VAR"
+            if (0 <= whole.indexOf('(') && 0 <= whole.indexOf(')')) {
+                return "ABSTRACT_METHOD";
+            } else {
+                // 从语句中去掉字符串部分
+                whole = whole.replace(/"*"/g, '');
+                if (0 >= whole.indexOf('(') && 0 >= whole.indexOf(')')) {
+                    return "MEMBER_VAR"
+                }
             }
         }
     }

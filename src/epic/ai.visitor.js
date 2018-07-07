@@ -70,7 +70,7 @@ const _parseKv = (lines = []) => {
     pairs.forEach(pair => {
         const input = pair.trim();
         const kv = _parseExpr(input);
-        result[kv[0]] = kv[1];
+        result[kv[0].trim()] = kv[1];
     });
     return result;
 };

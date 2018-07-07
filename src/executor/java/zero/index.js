@@ -1,4 +1,4 @@
-const cv = require('./ai.zero.cv');
+const api = require('./ai.zero.api');
 module.exports = {
-    ...cv
+    ...api
 };

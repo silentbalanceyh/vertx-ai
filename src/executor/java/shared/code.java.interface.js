@@ -3,6 +3,7 @@ const Seg = require('./code.segment');
 const codeParser = require('./parser/java.parser');
 
 class _JavaInterface {
+
     constructor(pkg, name) {
         if (2 === arguments.length) {
             this.pkg = pkg;
@@ -12,6 +13,8 @@ class _JavaInterface {
             this.bodyLines = [];
             this.memberLines = [];
             this.member = {};
+            this.annoLines = [];
+            this.methodLines = [];
         } else {
             const file = arguments[0];
             const content = Ux.ioString(file);
@@ -22,7 +25,9 @@ class _JavaInterface {
             this.bodyLines = result.bodyLines;
             this.member = result.member;
             this.memberLines = result.memberLines;
-            this.importLines = [];
+            this.importLines = result.importLines;
+            this.annoLines = result.annoLines;
+            this.methodLines = result.methodLines;
         }
     }
 
@@ -46,6 +51,24 @@ class _JavaInterface {
         return this;
     }
 
+    addImport(clazz) {
+        Seg.writeImportLine(this.importLines, clazz);
+        return this;
+    }
+
+    addAnnotation(line) {
+        Seg.writeAnnotation(this.annoLines, line);
+        return this;
+    }
+
+    addMethod(method, annotations = []) {
+        // 添加Annotation
+        annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
+        // 方法添加
+        Seg.writeMethod(this.methodLines, method, annotations, this);
+        return this;
+    }
+
     to() {
         let lines = [];
         lines = lines.concat(this.pkgLines);
@@ -57,6 +80,9 @@ class _JavaInterface {
         lines.push(this.bodyLines[0]);
         if (0 < this.memberLines.length) {
             lines = lines.concat(this.memberLines);
+        }
+        if (0 < this.methodLines.length) {
+            lines = lines.concat(this.methodLines);
         }
         lines.push(this.bodyLines[1]);
         return Ux.joinLines(lines);

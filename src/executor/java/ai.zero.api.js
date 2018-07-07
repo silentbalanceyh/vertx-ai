@@ -15,6 +15,8 @@ const zeroApi = () => {
     Ux.fxTerminal(!configData.api, Ux.E.fn10011(configData));
     Zero.goCv(configData, folder);
     // 执行Api Agent处理
+    Zero.goAgent(configData, folder);
+    
 };
 module.exports = {
     zeroApi

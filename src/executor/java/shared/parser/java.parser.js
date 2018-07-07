@@ -42,6 +42,47 @@ const zeroVar = (line) => {
         return member;
     }
 };
+const zeroAnnotation = (index, sorted = [], array = [], indent = '') => {
+    for (let idx = index - 1; idx > 0; idx--) {
+        const previous = sorted[idx];
+        if ("ANNOTATION" === previous.type || 0 < previous.type.indexOf("COMMENT")) {
+            array.push(indent + previous.line);
+        } else {
+            break;
+        }
+    }
+};
+const zeroDefineWithAnnotation = (sorted = []) => {
+    const bodyLines = [];
+    let name = null;
+    const defineLine = [];
+    sorted.forEach((each, index) => {
+        if ("DEFINE" === each.type) {
+            name = zeroName(each.line);
+            defineLine.push(each.line + '{');
+            zeroAnnotation(index, sorted, defineLine);
+        }
+    });
+    bodyLines.push(Ux.joinLines(defineLine.reverse()));
+    bodyLines.push('}');
+    return {
+        bodyLines,
+        name
+    }
+};
+const zeroAMethodWithAnnotation = (sorted = []) => {
+    const methodsLines = [];
+    let methodLine = [];
+    sorted.forEach((each, index) => {
+        if ("ABSTRACT_METHOD" === each.type) {
+            methodLine.push('    ' + each.line + ';');
+            zeroAnnotation(index, sorted, methodLine, '    ');
+            methodsLines.push(Ux.joinLines(methodLine.reverse()));
+            methodLine = [];
+        }
+    });
+    return methodsLines;
+};
 const zeroProcess = (meta = []) => {
     const sorted = meta.sort((left, right) => left.lineIndex - right.lineIndex);
     // 包语句
@@ -51,9 +92,17 @@ const zeroProcess = (meta = []) => {
     const pkg = pkgLine[0].line.split(' ')[1];
     Ux.info(`代码分析：找到定义的包${pkg.blue}`);
     // 定义语句
-    const bodyLine = sorted.filter(item => item.type === "DEFINE");
-    const bodyLines = [bodyLine[0].line + '{', '}'];
-    const name = zeroName(bodyLine[0].line);
+    const {bodyLines, name} = zeroDefineWithAnnotation(sorted);
+    // Import语句
+    const importLine = sorted.filter(item => item.type === "IMPORT");
+    let importLines = [];
+    importLine.forEach(line => importLines.push(line.line + ';'));
+    // 方法专用
+    const methodLines = zeroAMethodWithAnnotation(sorted);
+    // Annotation
+    const annoLine = sorted.filter(item => item.type === "ANNOTATION");
+    let annoLines = [];
+    annoLine.forEach(line => annoLines.push(line.line));
     // Member处理
     const memberLines = [];
     const member = {};
@@ -75,7 +124,10 @@ const zeroProcess = (meta = []) => {
         member,
         pkgLines,
         bodyLines,
-        memberLines
+        memberLines,
+        importLines,
+        annoLines,
+        methodLines
     }
 };
 const zeroJava = (content) => {
@@ -96,6 +148,7 @@ const zeroJava = (content) => {
             meta.push(metaItem);
         }
     }
+    // meta.forEach(item => console.info(item))
     return zeroProcess(meta);
 };
 module.exports = zeroJava;
