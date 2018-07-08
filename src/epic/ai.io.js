@@ -16,6 +16,7 @@ const toJArray = (content = "") => {
 const ioRoot = () => Root;
 const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
+const isExist = (path) => fs.existsSync(path);
 const _outFile = (paths, content) => {
     fs.writeFile(paths, content, () => {
         Log.info(`成功将数据写入到文件：${paths}！`.cyan);
@@ -65,10 +66,37 @@ const ioJObject = (path) => isFile(path) ? toJObject(fs.readFileSync(path, "utf-
 const ioJArray = (path) => isFile(path) ? toJArray(fs.readFileSync(path, "utf-8")) : [];
 const ioString = (path) => isFile(path) ? fs.readFileSync(path, "utf-8") : "";
 const ioStream = (path) => isFile(path) ? fs.readFileSync(path) : null;
+const ioProp = (path) => {
+    if (isFile(path)) {
+        const content = ioString(path);
+        const lines = content.split('\n');
+        const result = {};
+        lines.forEach(line => {
+            const kv = line.split('=');
+            const key = kv[0] ? kv[0].trim() : undefined;
+            const value = kv[1] ? kv[1].trim() : undefined;
+            if (key && value) {
+                result[key] = value;
+            }
+        });
+        return result;
+    } else {
+        return {};
+    }
+};
+
+const makeDirs = (path = "") => {
+    const folders = cycleParent(path, true);
+    // 查找第一个存在的目录
+    const lefts = folders.filter(item => !isExist(item)).sort((left, right) => left.length - right.length);
+    lefts.filter(item => '' !== item).forEach(left => fs.mkdirSync(left));
+    return true;
+};
 
 module.exports = {
     cycleParent,
     cycleChildren,
+    makeDirs,
 
     resolveDirectory,
 
@@ -79,11 +107,13 @@ module.exports = {
     ioJObject,
     ioString,
     ioStream,
+    ioProp,
     ioRoot,
 
     outJson,
     outString,
 
     isFile,
-    isDirectory
+    isDirectory,
+    isExist
 };

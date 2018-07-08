@@ -1,4 +1,5 @@
 const api = require('./ai.zero.api');
-module.exports = {
+const exported = {
     ...api
 };
+module.exports = exported;

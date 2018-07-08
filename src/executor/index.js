@@ -1,8 +1,11 @@
 const key = require('./ai.key');
 const data = require('./ai.data');
 const java = require('./java/ai.java');
-module.exports = {
+const react = require('./react/ai.react');
+const exported = {
     ...key,
     ...data,
-    ...java
+    ...java,
+    ...react
 };
+module.exports = exported;

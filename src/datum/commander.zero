@@ -3,3 +3,4 @@ command,    executor,       description,                            option1,opti
 key,        executeKey,     为数据模板添加key属性，key为UUID格式,      d=您的数据文件路径, f=【key】标识key的字段名，默认为key, p=【data】需要设置的数据节点路径
 data,       executeData,    根据字段名称生成数据信息,                  c=您的配置文件路径, o=【.】输出的数据文件路径（包括文件名）, j=【false】是否为JsonArray，默认生成JsonObject, n=【23】如果是Array则表示生成数据条数
 jz.api,     zeroApi,        生成Java Api中的全套内容,                 c=您的配置文件名，最终会加上.zero后缀, f=【.zero/java】配置文件路径
+ui,         jsUi,           生成UI.js根节点专用文件,                  n=前端专用组件名，无默认值

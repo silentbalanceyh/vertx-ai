@@ -6,6 +6,7 @@ class _JavaDefine {
 
     constructor(pkg, name) {
         if (2 === arguments.length) {
+            // 新建
             this.pkg = pkg;
             this.name = name;
             this.pkgLines = [];
@@ -17,6 +18,7 @@ class _JavaDefine {
             this.methodLines = [];
             this.method = {};
         } else {
+            // 修改
             const file = arguments[0];
             const content = Ux.ioString(file);
             const result = codeParser(content);
@@ -109,7 +111,7 @@ class _JavaDefine {
             lines = lines.concat(this.methodLines);
         }
         lines.push(this.bodyLines[1]);
-        return Ux.joinLines(lines);
+        return Ux.javaJoinLines(lines);
     }
 }
 

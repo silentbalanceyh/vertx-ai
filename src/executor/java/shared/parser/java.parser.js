@@ -63,7 +63,7 @@ const zeroDefineWithAnnotation = (sorted = []) => {
             zeroAnnotation(index, sorted, defineLine);
         }
     });
-    bodyLines.push(Ux.joinLines(defineLine.reverse()));
+    bodyLines.push(Ux.javaJoinLines(defineLine.reverse()));
     bodyLines.push('}');
     return {
         bodyLines,
@@ -78,14 +78,14 @@ const zeroAMethodWithAnnotation = (sorted = []) => {
         if ("ABSTRACT_METHOD" === each.type) {
             methodLine.push('    ' + each.line + ';');
             zeroAnnotation(index, sorted, methodLine, '    ');
-            methodLines.push(Ux.joinLines(methodLine.reverse()));
+            methodLines.push(Ux.javaJoinLines(methodLine.reverse()));
             const methodName = zeroMethodName(each.line);
             if (methodName) method[methodName] = methodName;
             methodLine = [];
         } else if ("METHOD" === each.type) {
             methodLine.push('    ' + each.line);
             zeroAnnotation(index, sorted, methodLine, '    ');
-            methodLines.push(Ux.joinLines(methodLine.reverse()));
+            methodLines.push(Ux.javaJoinLines(methodLine.reverse()));
             const methodName = zeroMethodName(each.line);
             if (methodName) method[methodName] = methodName;
             methodLine = [];

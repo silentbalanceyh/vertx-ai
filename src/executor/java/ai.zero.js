@@ -15,7 +15,7 @@ const zeroApi = () => {
     Ux.fxTerminal(!configData.api, Ux.E.fn10011(configData));
     // 方法解析处理，多处使用
     if (configData.method) {
-        configData.method = Ux.parseMethod(configData.method);
+        configData.method = Ux.javaParseMethod(configData.method);
     }
     Zero.goCv(configData, folder);
     // 执行Api Agent处理

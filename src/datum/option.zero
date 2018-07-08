@@ -5,4 +5,5 @@ p=path
 c=config
 j=json
 n=number
-cf=configFile
+o=out
+n=name

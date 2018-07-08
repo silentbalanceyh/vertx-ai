@@ -56,6 +56,7 @@ const _validateArgs = (keys = []) => {
 const executeBody = (commanders = [], Executor = {}) => {
     _validateArgs(commanders.map(commander => commander.command));
     It.itArray(commanders, (commander) => {
+        if (!commander.options) commander.options = [];
         const executor = Executor[commander.executor];
         Fx.fxTerminal(!U.isFunction(executor), E.fn10004(commander.command));
         const option = _buildOption(commander.options);

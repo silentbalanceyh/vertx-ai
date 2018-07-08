@@ -16,5 +16,8 @@ module.exports = {
     fn10012: (arg, entity) => `[AI-10012] Duplicated member '${arg}' found in class '${entity}', please check.`,
     fn10013: (arg) => `[AI-10013] Zero system could not analyze the code line type, type = ${arg} is Unknown`,
     fn10014: (arg) => `[AI-10014] More than one 'package' sentence found.${JSON.stringify(arg)}`,
-    fn10015: (arg, entity) => `[AI-10012] Duplicated method '${arg}' found in class '${entity}', please check.`,
+    fn10015: (arg, entity) => `[AI-10015] Duplicated method '${arg}' found in class '${entity}', please check.`,
+
+    fn10016: (arg) => `[AI-10016] Zero UI specification wrong, you could not execute in '${arg}'`,
+    fn10017: (arg) => `[AI-10017] Current folder '${arg}' is not project folder, please switch to project root directory`
 };

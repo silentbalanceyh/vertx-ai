@@ -1,5 +1,5 @@
-const zeroApi = require('./ai.zero.api');
-
-module.exports = {
+const zeroApi = require('./ai.zero');
+const exported = {
     ...zeroApi
 };
+module.exports = exported;

@@ -6,19 +6,24 @@ const meta = require('./ai.meta');
 const visitor = require('./ai.visitor');
 const collection = require('./ai.collection');
 const console = require('./ai.console');
-const java = require('./ai.java');
-const text = require('./ai.text');
 const E = require('./ai.error');
-module.exports = {
+
+const java = require('./ai.java');
+const react = require('./ai.react');
+
+const exported = {
     ...log,
     ...io,
     ...sure,
     ...fx,
+
     ...meta,
     ...visitor,
     ...collection,
     ...console,
+
     ...java,
-    ...text,
+    ...react,
     E,
 };
+module.exports = exported;
