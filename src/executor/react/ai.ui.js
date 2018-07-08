@@ -1,5 +1,14 @@
 const Ux = require('../../epic');
 const Code = require('./ai.code.react');
+const _jsZero = (config, reference) => {
+    if (Ux.isExist(config.fileZero)) {
+        Ux.info(`Zero，检测到zero配置文件${config.fileZero.cyan}`);
+        const zeroConfig = Ux.zeroParse(config.fileZero);
+        Ux.info(`Zero配置信息：\n${JSON.stringify(zeroConfig).blue}`);
+    } else {
+        Ux.warn(`Zero，未找到配置文件${config.fileZero}，跳过Zero UI的创建`);
+    }
+};
 const jsUi = () => {
     const actual = Ux.executeInput(
         [],
@@ -7,17 +16,19 @@ const jsUi = () => {
             ['-n', '--name', '.']
         ]
     );
-    const folder = Ux.reactComponentRoot(actual, "UI");
+    const config = Ux.reactComponentRoot(actual, "UI");
 
     let reference = null;
-    const file = folder.pathComponent + '/' + folder.fileJs;
+    const file = config.pathComponent + '/' + config.fileJs;
     if (Ux.isExist(file)) {
-        reference = Code.loadClass(folder);
+        reference = Code.loadClass(config);
     } else {
-        reference = Code.createClass(folder);
+        reference = Code.createClass(config);
     }
-    Ux.outString(file, reference.to());
+    // 设置Zero相关配置
+    _jsZero(config, reference);
+    console.info(reference.to());
 };
 module.exports = {
-    jsUi
+    jsUi,
 };

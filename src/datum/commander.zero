@@ -4,3 +4,4 @@ key,        executeKey,     为数据模板添加key属性，key为UUID格式,  
 data,       executeData,    根据字段名称生成数据信息,                  c=您的配置文件路径, o=【.】输出的数据文件路径（包括文件名）, j=【false】是否为JsonArray，默认生成JsonObject, n=【23】如果是Array则表示生成数据条数
 jz.api,     zeroApi,        生成Java Api中的全套内容,                 c=您的配置文件名，最终会加上.zero后缀, f=【.zero/java】配置文件路径
 ui,         jsUi,           生成UI.js根节点专用文件,                  n=前端专用组件名，无默认值
+rs,         rsUi,           书写Resource文件专用工具,                 n=专用名称，用于处理配置文件路径, t=【UI】修改的资源文件名

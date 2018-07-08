@@ -12,7 +12,7 @@ const reactRoot = () => {
     root = root[0];
     return Io.resolveDirectory(root);
 };
-const reactComponentRoot = (actual = {}, filename, type = "components") => {
+const _reactRoot = (actual = {}, filename, error = true, type = "components") => {
     const result = {};
     if ('.' === actual.name) {
         // 从子目录直接创建
@@ -30,9 +30,12 @@ const reactComponentRoot = (actual = {}, filename, type = "components") => {
         result.language = language;
         result.pathResource = Io.resolveDirectory(folders[4]) + `/src/cab/${language}/${type}`
             + folders[0].split(`src/${type}`)[1];
+        result.fileZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
     } else {
         const pkg = process.cwd() + '/package.json';
-        Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
+        if (error) {
+            Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
+        }
         // 判断actual.name是否符合规范
         const path = actual.name.replace(/\./g, '/');
         result.pathPage = '/' + path;
@@ -44,6 +47,7 @@ const reactComponentRoot = (actual = {}, filename, type = "components") => {
         result.language = language;
         result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
             + '/' + path;
+        result.fileZero = `${process.cwd()}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
     }
     result.fileJs = filename + '.js';
     result.fileJson = filename + '.json';
@@ -53,14 +57,19 @@ const reactComponentRoot = (actual = {}, filename, type = "components") => {
     // 文件名
     log.info(`Component, 生成组件目录：${result.pathComponent.blue}`);
     log.info(`Page, 生成页面文件目录：${result.pathPage}`);
-    log.info(`Resource, 生成资源文件目录：${result.pathResource.yellow}`);
+    log.info(`Resource, 生成资源文件目录：${result.pathResource.green}`);
     log.info(`使用的语言代码：${result.language.red}`);
-    log.info(`将要创建的文件名：${result.fileJs.blue} / ${result.fileJson.yellow}`);
+    log.info(`将要创建的文件名：${result.fileJs.blue} / ${result.fileJson.green}`);
     // 递归创建目录
     Io.makeDirs(result.pathComponent);
     return result;
 };
+const reactComponentRoot = (actual = {}, filename, type = "components") =>
+    _reactRoot(actual, filename, true, type);
+const reactResourceRoot = (actual = {}, filename, type = "components") =>
+    _reactRoot(actual, filename, false, type);
 module.exports = {
     reactRoot,
-    reactComponentRoot
+    reactComponentRoot,
+    reactResourceRoot
 };

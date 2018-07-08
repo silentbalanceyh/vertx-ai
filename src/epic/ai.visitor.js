@@ -6,6 +6,7 @@ const E = require('./ai.error');
 const Fx = require('./ai.fx');
 const It = require('./ai.collection');
 const Io = require('./ai.io');
+const Ui = require('./ai.visitor.ui');
 const _parseExpr = (item = "") => {
     let ret = item;
     if (item) {
@@ -79,8 +80,9 @@ const PARSER = {
     "P;": _parseProp, "P": _parseProp,
     "A;": _parseArray, "A": _parseArray,
     "KV;": _parseKv, "KV": _parseKv,
+    "UI;": Ui.parseUi, "UI": Ui.parseUi
 };
-const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;']) => {
+const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;"]) => {
     const content = fs.readFileSync(path, "utf-8").trim();
     const lines = content.split(/\n/g);
     const fileType = lines.shift();

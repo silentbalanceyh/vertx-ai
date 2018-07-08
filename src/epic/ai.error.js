@@ -19,5 +19,6 @@ module.exports = {
     fn10015: (arg, entity) => `[AI-10015] Duplicated method '${arg}' found in class '${entity}', please check.`,
 
     fn10016: (arg) => `[AI-10016] Zero UI specification wrong, you could not execute in '${arg}'`,
-    fn10017: (arg) => `[AI-10017] Current folder '${arg}' is not project folder, please switch to project root directory`
+    fn10017: (arg) => `[AI-10017] Current folder '${arg}' is not project folder, please switch to project root directory`,
+    fn10018: (arg) => `[AI-10018] Zero Resource config file missing '${arg}', please check.`
 };

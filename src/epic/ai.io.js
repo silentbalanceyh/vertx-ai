@@ -86,6 +86,7 @@ const ioProp = (path) => {
 };
 
 const makeDirs = (path = "") => {
+    // TODO: Path专用
     const folders = cycleParent(path, true);
     // 查找第一个存在的目录
     const lefts = folders.filter(item => !isExist(item)).sort((left, right) => left.length - right.length);
