@@ -11,6 +11,25 @@ _extractAnno = (idx, content) => {
     const end = findLineIndex(start, content, '\n');
     return content.substring(start - 1, end);
 };
+_extractMethod = (idx, content) => {
+    const start = idx;
+    let end = -1;
+    let counter = 1;
+    let bodyStart = findLineIndex(idx, content, '{') + 1;
+    for (let idx = bodyStart; idx < content.length; idx++) {
+        const char = content.charAt(idx);
+        if ('{' === char) {
+            counter++;
+        } else if ('}' === char) {
+            counter--;
+        }
+        if (0 === counter) {
+            end = idx + 1;
+            break;
+        }
+    }
+    return content.substring(start, end);
+};
 _extractAbstract = (idx, content) => findLine(idx, content, ';');
 _extractSentence = (idx, content) => findLine(idx, content, ';');
 _extractDefine = (idx, content) => findLine(idx, content, '{');
@@ -22,7 +41,8 @@ const IDENTIFIERS = {
     "MEMBER_VAR": _extractSentence,
     "BLOCK_COMMENT": _extractLineBlock,
     "ANNOTATION": _extractAnno,
-    "ABSTRACT_METHOD": _extractAbstract
+    "ABSTRACT_METHOD": _extractAbstract,
+    "METHOD": _extractMethod
 };
 const isSpace = (char) => ' ' === char;
 const isNewLine = (char) => '\n' === char;
@@ -42,7 +62,7 @@ const isKeyword = (literal) => {
     const $keyword = Immutable.fromJS(KEYWORD);
     return $keyword.contains(literal);
 };
-const findNonSpace = (current, content) => {
+const findStopIndex = (current, content) => {
     let start = current;
     for (let idx = start; idx < content.length; idx++) {
         const char = content.charAt(idx);
@@ -53,6 +73,7 @@ const findNonSpace = (current, content) => {
     }
     return start;
 };
+
 const findUnitl = (current, content, char = ' ') => {
     let end;
     const start = current;
@@ -94,13 +115,36 @@ const findKeywordUntil = (current, content) => {
     if (isKeyword(word)) {
         words.push(word);
         // 查找word之后下一个非中断字符
-        const start = findNonSpace(current + word.length, content);
+        const start = findStopIndex(current + word.length, content);
         const nexts = findKeywordUntil(start, content);
         if (0 < nexts.length) {
             words = words.concat(nexts);
         }
     }
     return words;
+};
+
+const _analyzeType = (currentIndex, content) => {
+    // 完整语句
+    let whole = findLine(currentIndex, content, ';');
+    if (0 <= whole.indexOf('(') && 0 <= whole.indexOf(')')) {
+        // 对方法进行分类
+        let start = whole.indexOf(')') + 1;
+        const nextChar = whole.charAt(findStopIndex(start, whole));
+        if ('{' === nextChar) {
+            // 方法
+            return "METHOD";
+        } else {
+            // 抽象方法
+            return "ABSTRACT_METHOD";
+        }
+    } else {
+        // 从语句中去掉字符串部分
+        whole = whole.replace(/"*"/g, '');
+        if (0 >= whole.indexOf('(') && 0 >= whole.indexOf(')')) {
+            return "MEMBER_VAR"
+        }
+    }
 };
 
 const analyzeType = (previous, currentIndex, next, content) => {
@@ -129,19 +173,11 @@ const analyzeType = (previous, currentIndex, next, content) => {
             const $keywords = Immutable.fromJS(keywords);
             if ($keywords.contains("class") || $keywords.contains("interface")) {
                 return "DEFINE"
+            } else {
+                return _analyzeType(currentIndex, content);
             }
         } else if (isLetter(char)) {
-            // 完整语句
-            let whole = findLine(currentIndex, content, ';');
-            if (0 <= whole.indexOf('(') && 0 <= whole.indexOf(')')) {
-                return "ABSTRACT_METHOD";
-            } else {
-                // 从语句中去掉字符串部分
-                whole = whole.replace(/"*"/g, '');
-                if (0 >= whole.indexOf('(') && 0 >= whole.indexOf(')')) {
-                    return "MEMBER_VAR"
-                }
-            }
+            return _analyzeType(currentIndex, content);
         }
     }
 };

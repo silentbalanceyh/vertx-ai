@@ -13,10 +13,15 @@ const zeroApi = () => {
     const configData = Ux.zeroParse(configFile);
     // 执行常量处理
     Ux.fxTerminal(!configData.api, Ux.E.fn10011(configData));
+    // 方法解析处理，多处使用
+    if (configData.method) {
+        configData.method = Ux.parseMethod(configData.method);
+    }
     Zero.goCv(configData, folder);
     // 执行Api Agent处理
     Zero.goAgent(configData, folder);
-    
+    // 执行Api Worker处理
+    Zero.goWorker(configData, folder);
 };
 module.exports = {
     zeroApi

@@ -82,6 +82,13 @@ const zeroAMethodWithAnnotation = (sorted = []) => {
             const methodName = zeroMethodName(each.line);
             if (methodName) method[methodName] = methodName;
             methodLine = [];
+        } else if ("METHOD" === each.type) {
+            methodLine.push('    ' + each.line);
+            zeroAnnotation(index, sorted, methodLine, '    ');
+            methodLines.push(Ux.joinLines(methodLine.reverse()));
+            const methodName = zeroMethodName(each.line);
+            if (methodName) method[methodName] = methodName;
+            methodLine = [];
         }
     });
     return {

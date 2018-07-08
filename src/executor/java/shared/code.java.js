@@ -1,15 +1,5 @@
 const _JavaInterface = require('./code.java.interface');
-
-class _JavaClass {
-    constructor(pkg, name) {
-        this.pkg = pkg;
-        this.name = name;
-        this.pkgLines = [];
-        this.importLines = [];
-        this.bodyLines = [];
-        this.memberLines = [];
-    }
-}
+const _JavaClass = require('./code.java.clazz');
 
 class Java {
 
@@ -19,6 +9,10 @@ class Java {
 
     static loadInterface(file) {
         return new _JavaInterface(file);
+    }
+
+    static loadClass(file) {
+        return new _JavaClass(file);
     }
 
     static createClass(pkg, name) {
