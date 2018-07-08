@@ -2,7 +2,7 @@ const Ux = require('../../../epic');
 const Seg = require('./code.segment');
 const codeParser = require('./parser/java.parser');
 
-class _JavaInterface {
+class _JavaDefine {
 
     constructor(pkg, name) {
         if (2 === arguments.length) {
@@ -33,9 +33,9 @@ class _JavaInterface {
         }
     }
 
-    init() {
+    init(isClass) {
         Seg.writePackage(this.pkgLines, this.pkg);
-        Seg.writeBody(this.bodyLines, this.name);
+        Seg.writeBody(this.bodyLines, this.name, isClass);
         return this;
     }
 
@@ -63,12 +63,30 @@ class _JavaInterface {
         return this;
     }
 
-    addMethod(method, annotations = []) {
+    appendAnnotation(annotations = []) {
+        annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
+        Seg.rewriteDefine(this.bodyLines, annotations);
+        return this;
+    }
+
+    addAbstractMethod(method, annotations = []) {
         if (!this.method[method.name]) {
             // 添加Annotation
             annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
             // 方法添加
             Seg.writeMethod(this.methodLines, method, annotations, this);
+        } else {
+            Ux.warn(Ux.E.fn10015(method.name, this.name))
+        }
+        return this;
+    }
+
+    addMethod(method, annotations = []) {
+        if (!this.method[method.name]) {
+            // 添加Annotation
+            annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
+            // 方法添加
+            Seg.writeMethod(this.methodLines, method, annotations, this, false);
         } else {
             Ux.warn(Ux.E.fn10015(method.name, this.name))
         }
@@ -95,4 +113,4 @@ class _JavaInterface {
     }
 }
 
-module.exports = _JavaInterface;
+module.exports = _JavaDefine;

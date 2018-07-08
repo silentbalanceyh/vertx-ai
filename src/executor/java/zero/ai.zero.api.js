@@ -1,6 +1,8 @@
 const fs = require('fs');
-const {Java, parseApi} = require('../shared');
+const Kit = require('../shared');
+const {Java, parseApi} = Kit;
 const Ux = require('../../../epic');
+
 const _calcAddr = (config = {}, root = "") => {
     root = root + '/' + config['package'].replace(/\./g, '/');
     root = root + '/cv/';
@@ -29,31 +31,15 @@ const _calcAddrVar = (config = {}) => {
         name, value
     }
 };
-const _calcAnnotation = (config = {}, reference) => {
-    const annotations = [];
-    const api = parseApi(config.api);
-
-    annotations.push(`@Path("${api.uri}")`);
-    reference.addImport(`javax.ws.rs.Path`);
-    // Jsr
-    annotations.push(`@${api.method.toUpperCase()}`);
-    reference.addImport(`javax.ws.rs.${api.method.toUpperCase()}`);
-
-    // Address
-    let name = "ADDR" + api.uri.replace(/\//g, '_').replace(/-/g, '_') + `_${api.method}`;
-    name = name.toUpperCase();
-    annotations.push(`@Address(Addr.${name})`);
-    reference.addImport(`io.vertx.up.annotations.Address`);
-
-    return annotations;
-};
-const _calcJava = (config = {}, root = "", name = "") => {
+const _calcJava = (config = {}, root = "", name = "", prefix) => {
     const service = config['service'];
     root = root + '/' + config['package'].replace(/\./g, '/');
     root = root + `/micro/${service}/`;
     root = root + name + '.java';
     return {
-        package: config['package'] + '.cv',
+        package: config['package'] + '.' + (
+            prefix ? prefix : `micro.${service}`
+        ),
         file: root,
         name
     }
@@ -96,9 +82,20 @@ const goAgent = (config = {}, root = "") => {
     } else {
         // 重新创建
         reference = Java.createInterface(meta.package, meta.name);
+        const defines = [];
+        Kit.atEndPoint(defines, reference);
+        Kit.atPath(defines, reference, '/');
+        reference.appendAnnotation(defines);
     }
-    const annotations = _calcAnnotation(config, reference);
-    reference.addMethod(config.method, annotations);
+    const annotations = [];
+    const api = parseApi(config.api);
+    Kit.atPath(annotations, reference, api.uri);
+    Kit.atMethod(annotations, reference, api.method);
+    Kit.atAddress(annotations, reference, api, {
+        addr: config.constant,
+        pkg: config.package
+    });
+    reference.addAbstractMethod(config.method, annotations);
     //console.info(reference);
     Ux.outString(meta.file, reference.to());
 };
@@ -112,9 +109,33 @@ const goWorker = (config = {}, root = "") => {
     } else {
         // 重新创建
         reference = Java.createClass(meta.package, meta.name);
+        const defines = [];
+        Kit.atQueue(defines, reference);
+        reference.appendAnnotation(defines);
     }
-    const annotations = _calcAnnotation(config, reference);
-    console.info(reference.to());
+    const annotations = [];
+    const api = parseApi(config.api);
+    Kit.atAddress(annotations, reference, api, {
+        addr: config.constant,
+        pkg: config.package
+    });
+    if (config.method) {
+        // 特殊方法定制
+        config.method.scope = 'public';
+        config.method.returnValue = 'Future<JsonObject>';
+        config.method.params = [];
+        config.method.params.push({
+            type: 'final Envelop',
+            name: 'envelop'
+        });
+        config.method.ws = false;
+        // 导入必要的库
+        reference.addImport('io.vertx.core.Future');
+        reference.addImport('io.vertx.core.json.JsonObject');
+        reference.addImport('io.vertx.up.atom.Envelop');
+    }
+    reference.addMethod(config.method, annotations);
+    Ux.outString(meta.file, reference.to());
 };
 module.exports = {
     goCv,

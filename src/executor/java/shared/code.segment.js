@@ -78,9 +78,12 @@ const writeParams = (params = [], ws = false, reference) => {
     }
     return content;
 };
-const writeMethod = (lines, method, annotations = [], reference) => {
+const writeMethod = (lines, method, annotations = [], reference, isAbstract = true) => {
     // 方法添加
     let content = "    ";
+    if (method.scope) {
+        content += method.scope + ' ';
+    }
     content += method.returnValue;
     Ux.info(`添加新方法：${method.name.green}`);
     content += ' ' + method.name + '(';
@@ -91,8 +94,24 @@ const writeMethod = (lines, method, annotations = [], reference) => {
     let all = "";
     annotations.forEach(annotation => all += `    ${annotation}\n`);
     all += content;
-    all += ';\n';
+    if (isAbstract) {
+        all += ';\n';
+    } else {
+        if ("void" === method.returnValue) {
+            all += '{\n    }'
+        } else {
+            all += '{\n        return null;\n    }';
+        }
+    }
     lines.push(all);
+};
+const rewriteDefine = (lines, annotations = []) => {
+    let annotationDefine = "";
+    annotations.forEach(annotation => {
+        annotationDefine += annotation + '\n';
+    });
+    annotationDefine += lines[0];
+    lines[0] = annotationDefine;
 };
 module.exports = {
     writePackage,
@@ -100,5 +119,6 @@ module.exports = {
     writeInterfaceVariable,
     writeImportLine,
     writeAnnotation,
-    writeMethod
+    writeMethod,
+    rewriteDefine
 };
