@@ -74,6 +74,18 @@ const findStopIndex = (current, content) => {
     return start;
 };
 
+const findNextCharIndex = (current, content, input) => {
+    let start = current;
+    for (let idx = start; idx < content.length; idx++) {
+        const char = content.charAt(idx);
+        if (char === input) {
+            start = idx;
+            break;
+        }
+    }
+    return start;
+};
+
 const findUnitl = (current, content, char = ' ') => {
     let end;
     const start = current;
@@ -130,13 +142,18 @@ const _analyzeType = (currentIndex, content) => {
     if (0 <= whole.indexOf('(') && 0 <= whole.indexOf(')')) {
         // 对方法进行分类
         let start = whole.indexOf(')') + 1;
+        const nextBracket = findNextCharIndex(start, whole, '{');
+        const comma = findNextCharIndex(start, whole, ';');
         const nextChar = whole.charAt(findStopIndex(start, whole));
         if ('{' === nextChar) {
             // 方法
             return "METHOD";
         } else {
-            // 抽象方法
-            return "ABSTRACT_METHOD";
+            if (nextBracket > comma) {
+                return "METHOD";
+            } else {
+                return "ABSTRACT_METHOD";
+            }
         }
     } else {
         // 从语句中去掉字符串部分

@@ -141,7 +141,11 @@ const zeroProcess = (meta = []) => {
                 memberLines.push('    ' + line.line + ';\n');
             }
             const valName = zeroVar(line.line);
-            member[valName] = line.line.split('=')[1].trim();
+            if (0 <= line.line.indexOf("=")) {
+                member[valName] = line.line.split('=')[1].trim();
+            } else {
+                member[valName] = "";
+            }
         }
     });
     return {
@@ -166,6 +170,7 @@ const zeroJava = (content) => {
         const type = Spliter.analyzeStart(idx, char, content);
         const line = Spliter.findSentence(idx, type, content);
         if (line) {
+            console.info(type, line);
             metaItem.lineIndex = idx;
             idx = idx + line.length;
             metaItem.line = line.trim();
