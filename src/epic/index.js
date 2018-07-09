@@ -6,6 +6,8 @@ const meta = require('./ai.meta');
 const visitor = require('./ai.visitor');
 const collection = require('./ai.collection');
 const console = require('./ai.console');
+const word = require('./ai.word');
+
 const E = require('./ai.error');
 
 const java = require('./ai.java');
@@ -16,6 +18,7 @@ const exported = {
     ...io,
     ...sure,
     ...fx,
+    ...word,
 
     ...meta,
     ...visitor,

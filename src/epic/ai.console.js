@@ -4,6 +4,7 @@ const E = require('./ai.error');
 const Log = require('./ai.log');
 const U = require('underscore');
 const Immutable = require('immutable');
+
 const readArgs = (required = []) => {
     const arguments = process.argv.splice(3);
     const config = {};
@@ -47,5 +48,5 @@ const formatArgs = (args = {}, pairs = []) => {
 };
 module.exports = {
     readArgs,
-    formatArgs
+    formatArgs,
 };

@@ -18,7 +18,7 @@ const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
 const isExist = (path) => fs.existsSync(path);
 const _outFile = (paths, content) => {
-    fs.writeFile(paths, content, () => {
+    fs.writeFile(paths, content, (res) => {
         Log.info(`成功将数据写入到文件：${paths}！`.cyan);
     });
 };
