@@ -105,6 +105,29 @@ const zeroAMethodWithAnnotation = (sorted = []) => {
         methodLines, method
     };
 };
+const zeroMemberWithAnnotation = (sorted = []) => {
+    const memberLines = [];
+    let memberLine = [];
+    const member = {};
+    sorted.forEach((line, index) => {
+        if (line.type === "MEMBER_VAR") {
+            memberLines.push('    ' + line.line + ';');
+            zeroAnnotation(index, sorted, memberLine, '    ');
+            memberLines.push(Ux.javaJoinLines(memberLine.reverse()));
+            memberLine = [];
+            const valName = zeroVar(line.line);
+            if (0 <= line.line.indexOf("=")) {
+                member[valName] = line.line.split('=')[1].trim();
+            } else {
+                member[valName] = "";
+            }
+        }
+    });
+    return {
+        memberLines: memberLines.reverse(),
+        member
+    }
+};
 const zeroMethodName = (item = "") => {
     let name = null;
     const end = item.indexOf('(');
@@ -140,24 +163,7 @@ const zeroProcess = (meta = []) => {
     let annoLines = [];
     annoLine.forEach(line => annoLines.push(line.line));
     // Member处理
-    const memberLines = [];
-    const member = {};
-    sorted.forEach((line, index) => {
-        if (line.type === "MEMBER_VAR") {
-            const previous = sorted[index - 1];
-            if (previous && 0 < previous.type.indexOf("COMMENT")) {
-                memberLines.push('    ' + previous.line + `\n    ` + line.line + ';\n');
-            } else {
-                memberLines.push('    ' + line.line + ';\n');
-            }
-            const valName = zeroVar(line.line);
-            if (0 <= line.line.indexOf("=")) {
-                member[valName] = line.line.split('=')[1].trim();
-            } else {
-                member[valName] = "";
-            }
-        }
-    });
+    const {memberLines, member} = zeroMemberWithAnnotation(sorted);
     return {
         name,
         pkg,
