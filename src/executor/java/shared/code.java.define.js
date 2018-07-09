@@ -17,6 +17,7 @@ class _JavaDefine {
             this.annoLines = [];
             this.methodLines = [];
             this.method = {};
+            this.api = "/";
         } else {
             // 修改
             const file = arguments[0];
@@ -32,6 +33,7 @@ class _JavaDefine {
             this.annoLines = result.annoLines;
             this.methodLines = result.methodLines;
             this.method = result.method;
+            this.api = result.api;
         }
     }
 
@@ -74,7 +76,14 @@ class _JavaDefine {
     addAbstractMethod(method, annotations = []) {
         if (!this.method[method.name]) {
             // 添加Annotation
-            annotations.forEach(annotation => Seg.writeAnnotation(this.annoLines, annotation));
+            let api = this.api;
+            annotations.forEach((annotation, index) => {
+                if (annotation.startsWith("@Path") && 0 <= annotation.indexOf(api)) {
+                    annotation = annotation.replace(new RegExp(api, 'g'), '');
+                    annotations[index] = annotation;
+                }
+                Seg.writeAnnotation(this.annoLines, annotation);
+            });
             // 方法添加
             Seg.writeMethod(this.methodLines, method, annotations, this);
         } else {

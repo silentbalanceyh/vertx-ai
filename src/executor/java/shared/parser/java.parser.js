@@ -43,31 +43,41 @@ const zeroVar = (line) => {
     }
 };
 const zeroAnnotation = (index, sorted = [], array = [], indent = '') => {
+    let api = "";
     for (let idx = index - 1; idx > 0; idx--) {
         const previous = sorted[idx];
         if ("ANNOTATION" === previous.type || 0 < previous.type.indexOf("COMMENT")) {
             array.push(indent + previous.line);
+            if ("ANNOTATION" === previous.type) {
+                if (previous.line.startsWith("@Path")) {
+                    api = previous.line.replace(/@Path\("/g, '');
+                    api = api.replace(/"\)/g, '');
+                }
+            }
         } else {
             break;
         }
     }
+    return api;
 };
 const zeroDefineWithAnnotation = (sorted = []) => {
     const bodyLines = [];
     let name = null;
     const defineLine = [];
+    let api = null;
     sorted.forEach((each, index) => {
         if ("DEFINE" === each.type) {
             name = zeroName(each.line);
             defineLine.push(each.line + '{');
-            zeroAnnotation(index, sorted, defineLine);
+            api = zeroAnnotation(index, sorted, defineLine);
         }
     });
     bodyLines.push(Ux.javaJoinLines(defineLine.reverse()));
     bodyLines.push('}');
     return {
         bodyLines,
-        name
+        name,
+        api
     }
 };
 const zeroAMethodWithAnnotation = (sorted = []) => {
@@ -118,7 +128,7 @@ const zeroProcess = (meta = []) => {
     const pkg = pkgLine[0].line.split(' ')[1];
     Ux.info(`代码分析：找到定义的包${pkg.blue}`);
     // 定义语句
-    const {bodyLines, name} = zeroDefineWithAnnotation(sorted);
+    const {bodyLines, name, api} = zeroDefineWithAnnotation(sorted);
     // Import语句
     const importLine = sorted.filter(item => item.type === "IMPORT");
     let importLines = [];
@@ -158,7 +168,8 @@ const zeroProcess = (meta = []) => {
         memberLines,
         importLines,
         annoLines,
-        methodLines
+        methodLines,
+        api
     }
 };
 const zeroJava = (content) => {
@@ -170,7 +181,6 @@ const zeroJava = (content) => {
         const type = Spliter.analyzeStart(idx, char, content);
         const line = Spliter.findSentence(idx, type, content);
         if (line) {
-            console.info(type, line);
             metaItem.lineIndex = idx;
             idx = idx + line.length;
             metaItem.line = line.trim();
