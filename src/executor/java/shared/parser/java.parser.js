@@ -107,8 +107,8 @@ const zeroAMethodWithAnnotation = (sorted = []) => {
 };
 const zeroMemberWithAnnotation = (sorted = []) => {
     const memberLines = [];
-    let memberLine = [];
     const member = {};
+    let memberLine = [];
     sorted.forEach((line, index) => {
         if (line.type === "MEMBER_VAR") {
             memberLines.push('    ' + line.line + ';');
