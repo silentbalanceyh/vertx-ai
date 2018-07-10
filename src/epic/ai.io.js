@@ -87,10 +87,25 @@ const ioProp = (path) => {
 
 const makeDirs = (path = "") => {
     // TODO: Path专用
-    const folders = cycleParent(path, true);
+    const folderTrace = path.split('/').filter(each => '' !== each);
+    const folderInfo = [];
+    folderTrace.forEach((trace, index) => {
+        const formated = `/${trace}`;
+        const previous = folderInfo[index - 1];
+        let item = null;
+        if (previous) {
+            item = `${previous}${formated}`;
+        } else {
+            item = `${formated}`;
+        }
+        folderInfo.push(item);
+    });
     // 查找第一个存在的目录
-    const lefts = folders.filter(item => !isExist(item)).sort((left, right) => left.length - right.length);
-    lefts.filter(item => '' !== item).forEach(left => fs.mkdirSync(left));
+    const lefts = folderInfo.filter(item => !isExist(item)).sort((left, right) => left.length - right.length);
+    lefts.filter(item => '' !== item).forEach(left => {
+        Log.info("创建目录：" + left.yellow);
+        fs.mkdirSync(left);
+    });
     return true;
 };
 

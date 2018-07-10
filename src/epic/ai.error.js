@@ -20,5 +20,7 @@ module.exports = {
 
     fn10016: (arg) => `[AI-10016] Zero UI specification wrong, you could not execute in '${arg}'`,
     fn10017: (arg) => `[AI-10017] Current folder '${arg}' is not project folder, please switch to project root directory`,
-    fn10018: (arg) => `[AI-10018] Zero Resource config file missing '${arg}', please check.`
+    fn10018: (arg) => `[AI-10018] Zero Resource config file missing '${arg}', please check.`,
+    fn10019: (arg) => `[AI-10019] This command could run in project root folder only, current folder = ${arg}`,
+    fn10020: (arg) => `[AI-10020] The menu data file must be json format with 'data' (Array) node, current = ${arg}`
 };

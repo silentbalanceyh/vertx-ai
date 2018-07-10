@@ -21,7 +21,7 @@ const writeRenderLine = (lines) => {
     if (lines) {
         lines.push(`    render(){`);
         lines.push(`        return (`);
-        lines.push(`            <div></div>`);
+        lines.push(`            <div>{/*JSX*/}</div>`);
         lines.push(`        )`);
         lines.push(`    }`)
     }

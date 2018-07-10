@@ -12,6 +12,11 @@ const reactRoot = () => {
     root = root[0];
     return Io.resolveDirectory(root);
 };
+const reactLanguage = () => {
+    const root = reactRoot();
+    const env = Io.ioProp(root + '/.env.development');
+    return env['Z_LANGUAGE'];
+};
 const _reactRoot = (actual = {}, filename, error = true, type = "components") => {
     const result = {};
     if ('.' === actual.name) {
@@ -70,6 +75,7 @@ const reactResourceRoot = (actual = {}, filename, type = "components") =>
     _reactRoot(actual, filename, false, type);
 module.exports = {
     reactRoot,
+    reactLanguage,
     reactComponentRoot,
     reactResourceRoot
 };

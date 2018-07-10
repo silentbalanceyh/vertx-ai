@@ -21,7 +21,7 @@ class _ReactDefine {
         return this;
     }
 
-    to() {
+    to(item) {
         let lines = [];
         if (0 < this.importLines.length) {
             lines = lines.concat(this.importLines);
@@ -33,7 +33,11 @@ class _ReactDefine {
         }
         lines.push(this.bodyLines[1]);
         lines.push(this.exportedLines[0]);
-        return Ux.javaJoinLines(lines);
+        let linesContent = Ux.javaJoinLines(lines);
+        if (0 <= linesContent.indexOf('{/*JSX*/}') && item) {
+            linesContent = linesContent.replace('{/*JSX*/}', item);
+        }
+        return linesContent;
     }
 }
 

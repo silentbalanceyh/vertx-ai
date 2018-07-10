@@ -1,5 +1,7 @@
 const Ux = require('../epic');
+const Code = require('./react/ai.code.react');
 const Mock = require('mockjs');
+const U = require('underscore');
 const {v4} = require("uuid");
 const Random = Mock.Random;
 const dataGenerator = {
@@ -91,6 +93,60 @@ const executeData = () => {
     }
     Ux.outJson(path, {data});
 };
+const _executeMenuMeta = (menus = [], root) => {
+    const meta = [];
+    menus.forEach(item => {
+        const metaItem = {};
+        let name = item.uri.trim();
+        while (name.startsWith('/')) {
+            name = name.substring(1, name.length);
+        }
+        name = name.replace(/\//g, '.');
+        metaItem.uri = item.uri;
+        metaItem.name = name;
+        metaItem.folder = `${root}/src/components${item.uri}`;
+        metaItem.namespace = `components${item.uri}`;
+        metaItem.resource = `${root}/src/cab/${Ux.reactLanguage()}/${metaItem.namespace}`;
+        meta.push(metaItem);
+    });
+    return meta;
+};
+const executeMenu = () => {
+    const actual = Ux.executeInput(
+        ['-c', '--config'],
+        [
+            ['-c', '--config'],
+            ['-o', '--out', '.'],
+        ]
+    );
+    const root = Ux.reactRoot();
+    Ux.fxTerminal(!root, Ux.E.fn10019(root));
+    Ux.cxExist(actual.config);
+    // 读取Json数据文件
+    const menus = Ux.ioJObject(actual.config);
+    Ux.fxTerminal(!U.isArray(menus.data), Ux.E.fn10020(menus.data));
+    // 过滤掉没有uri的菜单路径
+    const generated = menus.data.filter(menu => menu && menu.hasOwnProperty('uri'));
+    const meta = _executeMenuMeta(generated, root);
+    // 目录创建完成后，写入文件信息
+    const json = {};
+    meta.forEach(each => {
+        Ux.makeDirs(each.folder);
+        Ux.makeDirs(each.resource);
+        // 写入资源文件
+        const jsonPath = `${each.resource}/UI.json`;
+        Ux.fxContinue(!Ux.isExist(jsonPath), () => Ux.outJson(jsonPath, json));
+        // 写入React文件
+        const uiPath = `${each.folder}/UI.js`;
+        Ux.fxContinue(!Ux.isExist(uiPath), () => {
+            const config = Ux.reactComponentRoot({name: each.name}, "UI");
+            const reference = Code.createClass(config);
+            const content = reference.to("Path:" + each.uri);
+            Ux.outString(uiPath, content);
+        })
+    });
+};
 module.exports = {
-    executeData
+    executeData,
+    executeMenu
 };
