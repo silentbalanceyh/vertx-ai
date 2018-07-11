@@ -34,7 +34,6 @@ const dataGenerator = {
     "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),
     "PercentFloat": () => Random.float(0, 0, 1, 99).toFixed(2),
     "Guid": () => v4()
-
 };
 for (let idx = 0; idx < 20; idx++) {
     dataGenerator[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
@@ -43,11 +42,25 @@ for (let idx = 0; idx < 20; idx++) {
 }
 const _generateRecord = (mapping) => {
     const record = {};
-    Ux.itObject(mapping, (field, generator) =>
+    Ux.itObject(mapping, (field, generator) => {
         Ux.fxContinue(dataGenerator[generator], () => {
             record[field] = dataGenerator[generator]();
-        })
-    );
+        });
+        if (generator.startsWith("FUN")) {
+            const file = process.cwd() + '/' + generator.split('-')[1];
+            Ux.cxExist(file);
+            const content = Ux.ioString(file);
+            try {
+                eval(content);
+                const value = eval("execute();");
+                if (value) {
+                    record[field] = value;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    });
     return record;
 };
 const _generateData = (mapping, {
@@ -76,6 +89,7 @@ const executeData = () => {
     Ux.cxExist(actual.config);
     const fields = Ux.zeroParse(actual.config);
     const mapping = Ux.zeroParse(Ux.ioRoot() + "/src/datum/data.zero");
+    Ux.info(`数据规则信息：\n${JSON.stringify(fields, null, 4)}`);
     Ux.itObject(mapping, (key, value) =>
         Ux.fxContinue(fields.hasOwnProperty(key) && fields[key] === key,
             () => {
