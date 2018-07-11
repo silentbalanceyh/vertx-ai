@@ -2,6 +2,7 @@ const Ux = require('../epic');
 const Code = require('./react/ai.code.react');
 const Mock = require('mockjs');
 const U = require('underscore');
+const Immutable = require('immutable');
 const {v4} = require("uuid");
 const Random = Mock.Random;
 const dataGenerator = {
@@ -146,7 +147,29 @@ const executeMenu = () => {
         })
     });
 };
+const executeCsv = () => {
+    const actual = Ux.executeInput(
+        ['-p', '--path'],
+        [
+            ['-p', '--path'],
+            ['-c', '--config', null],
+            ['-s', '--separator', ',']
+        ]
+    );
+    Ux.cxExist(actual.path);
+    // 读取配置信息
+    const data = Ux.ioJObject(actual.path);
+    let $data = Immutable.fromJS(data).get('data');
+    $data = $data && $data.toJS ? $data.toJS() : [];
+    let mapping = Ux.fxContinue(Ux.isExist(actual.config), () => Ux.zeroParse(actual.config));
+    // Csv
+    Ux.info(`使用分隔符：${actual.separator.green}`);
+    const csvArr = Ux.toCsv($data, mapping, actual.separator);
+    const csvData = Ux.joinWith(csvArr, '\n');
+    Ux.outString('./' + v4() + ".csv", csvData);
+};
 module.exports = {
     executeData,
-    executeMenu
+    executeMenu,
+    executeCsv
 };

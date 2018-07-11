@@ -3,14 +3,46 @@ const Root = require('app-root-path');
 const Sure = require('./ai.sure');
 const Log = require('./ai.log');
 const Fx = require('./ai.fx');
+const Word = require('./ai.word');
+const It = require('./ai.collection');
 
 const toJObject = (content = "") => {
     Sure.cxJString(content);
     return JSON.parse(content);
 };
+const valueJObject = (object = {}, keysData) => {
+    const values = [];
+    const keys = keysData ? keysData : Object.keys(object);
+    keys.forEach(key => values.push(object[key]));
+    return values;
+};
 const toJArray = (content = "") => {
     Sure.cxJString(content);
     return JSON.parse(content);
+};
+const toCsv = (array = [], mapping = {}, seperator) => {
+    let lines = [];
+    if (0 < array.length) {
+        const keys = Object.keys(array[0]);
+        // 转换字段信息
+        const formatted = {};
+        keys.forEach(key => formatted[key] = key);
+        It.itObject(mapping, (from, to) => {
+            if (formatted.hasOwnProperty(from)) {
+                Log.info(`字段执行转换：${from.red} -> ${to.blue}`);
+                formatted[to] = to;
+                delete formatted[from];
+            }
+        });
+        const header = Object.keys(formatted);
+        lines.push(Word.joinWith(header, seperator));
+        array.forEach(each => {
+            const line = valueJObject(each);
+            lines.push(Word.joinWith(line, seperator));
+        });
+        return lines;
+    }
+    return lines;
 };
 
 const ioRoot = () => Root;
@@ -115,9 +147,11 @@ module.exports = {
     makeDirs,
 
     resolveDirectory,
+    valueJObject,
 
     toJObject,
     toJArray,
+    toCsv,
 
     ioJArray,
     ioJObject,
