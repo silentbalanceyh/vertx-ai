@@ -56,7 +56,8 @@ const _parseRel = (lines = []) => {
 };
 
 const _parseOption = (item = "", name = "option") => {
-    const prop = zeroParse(Io.ioRoot() + "/src/datum/" + name + ".zero", ["P;"]);
+    const root = Io.ioRoot();
+    const prop = zeroParse(root.resolve("/src/datum/" + name + ".zero"), ["P;"]);
     const kv = _parseExpr(item);
     const pair = {};
     pair[kv[0]] = kv[1];
