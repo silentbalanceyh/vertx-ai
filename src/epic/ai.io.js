@@ -37,7 +37,13 @@ const toCsv = (array = [], mapping = {}, seperator) => {
         const header = Object.keys(formatted);
         lines.push(Word.joinWith(header, seperator));
         array.forEach(each => {
-            const line = valueJObject(each);
+            It.itObject(mapping, (from, to) => {
+                if (each.hasOwnProperty(from)) {
+                    each[to] = each[from];
+                    delete each[from];
+                }
+            });
+            const line = valueJObject(each, Object.keys(formatted));
             lines.push(Word.joinWith(line, seperator));
         });
         return lines;
