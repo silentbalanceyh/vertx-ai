@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Immutable = require('immutable');
 const U = require('underscore');
 const Sure = require('./ai.sure');
@@ -57,7 +58,7 @@ const _parseRel = (lines = []) => {
 
 const _parseOption = (item = "", name = "option") => {
     const root = Io.ioRoot();
-    const prop = zeroParse(root.resolve("/src/datum/" + name + ".zero"), ["P;"]);
+    const prop = zeroParse(root + "/datum/" + name + ".zero", ["P;"]);
     const kv = _parseExpr(item);
     const pair = {};
     pair[kv[0]] = kv[1];

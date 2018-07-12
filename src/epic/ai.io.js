@@ -1,7 +1,7 @@
 const fs = require('fs');
-const Root = require('app-root-path');
 const Sure = require('./ai.sure');
 const Log = require('./ai.log');
+const E = require('./ai.error');
 const Fx = require('./ai.fx');
 const Word = require('./ai.word');
 const It = require('./ai.collection');
@@ -62,7 +62,6 @@ const toCsv = (array = [], mapping = {}, seperator) => {
     return lines;
 };
 
-const ioRoot = () => Root;
 const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
 const isExist = (path) => fs.existsSync(path);
@@ -134,8 +133,7 @@ const ioProp = (path) => {
     }
 };
 
-const makeDirs = (path = "") => {
-    // TODO: Path专用
+const _makeTrace = (path = "") => {
     const folderTrace = path.split('/').filter(each => '' !== each);
     const folderInfo = [];
     folderTrace.forEach((trace, index) => {
@@ -149,6 +147,12 @@ const makeDirs = (path = "") => {
         }
         folderInfo.push(item);
     });
+    return folderInfo
+};
+
+const makeDirs = (path = "") => {
+    // TODO: Path专用
+    const folderInfo = _makeTrace(path);
     // 查找第一个存在的目录
     const lefts = folderInfo.filter(item => !isExist(item)).sort((left, right) => left.length - right.length);
     lefts.filter(item => '' !== item).forEach(left => {
@@ -169,8 +173,14 @@ const ioCsv = (file, separator) => {
     });
     return lines;
 };
-
+const ioRoot = () => {
+    const folderInfo = _makeTrace(__dirname);
+    let root = folderInfo.filter(item => item.endsWith("src"));
+    Fx.fxTerminal(1 !== root.length, E.fn10022(__dirname));
+    return root[0];
+};
 module.exports = {
+    ioRoot,
     cycleParent,
     cycleChildren,
     makeDirs,
@@ -188,7 +198,6 @@ module.exports = {
     ioStream,
     ioCsv,
     ioProp,
-    ioRoot,
 
     outJson,
     outString,
