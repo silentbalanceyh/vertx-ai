@@ -7,12 +7,29 @@ const Fx = require('./ai.fx');
 const It = require('./ai.collection');
 const Io = require('./ai.io');
 const Ui = require('./ai.visitor.ui');
+
+const _parseValue = (value = "") => {
+    // 是否数值
+    if (value) {
+        if ("true" === value.toString().toLowerCase()
+            || "false" === value.toString().toLowerCase()) {
+            value = Boolean(value);
+        } else {
+            const reg = /^([1-9]\d*|-[1-9]\d*)$/;
+            if (reg.test(value)) {
+                value = parseInt(value, 10);
+            }
+        }
+    }
+    return value;
+};
 const _parseExpr = (item = "") => {
     let ret = item;
     if (item) {
         item = item.toString().trim();
         if (0 < item.indexOf('=')) {
             const kv = item.split('=');
+            kv[1] = _parseValue(kv[1]);
             ret = [kv[0], kv[1]];
         } else {
             ret = [item, item];

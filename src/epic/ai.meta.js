@@ -79,7 +79,9 @@ const executeEnd = () => {
     program.parse(process.argv);
 };
 const executeInput = (required = [], params = []) => {
-    const args = Input.readArgs([required]);
+    const elementArray = required.filter(item => U.isArray(item));
+    const isMatrix = 1 < elementArray.length;
+    const args = isMatrix ? Input.readArgs(required) : Input.readArgs([required]);
     return Input.formatArgs(args, params)
 };
 module.exports = {
