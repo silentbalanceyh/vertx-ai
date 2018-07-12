@@ -46,6 +46,15 @@ const _parseProp = (lines) => {
     return data;
 };
 
+const _parseRel = (lines = []) => {
+    const array = [];
+    lines.forEach(line => {
+        const parsed = _parseExpr(line.trim());
+        array.push(parsed);
+    });
+    return array;
+};
+
 const _parseOption = (item = "", name = "option") => {
     const prop = zeroParse(Io.ioRoot() + "/src/datum/" + name + ".zero", ["P;"]);
     const kv = _parseExpr(item);
@@ -97,9 +106,10 @@ const PARSER = {
     "P;": _parseProp, "P": _parseProp,
     "A;": _parseArray, "A": _parseArray,
     "KV;": _parseKv, "KV": _parseKv,
-    "UI;": Ui.parseUi, "UI": Ui.parseUi
+    "UI;": Ui.parseUi, "UI": Ui.parseUi,
+    "R;": _parseRel, "R": _parseRel
 };
-const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;"]) => {
+const zeroParse = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => {
     const content = fs.readFileSync(path, "utf-8").trim();
     const lines = content.split(/\n/g);
     const fileType = lines.shift();

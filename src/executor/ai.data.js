@@ -217,21 +217,25 @@ const executeRel = () => {
     const sourceArr = _extractData(config['fromFile'], actual['json']);
     const targetArr = _extractData(config['toFile'], actual['json']);
     const data = Ux.zeroParse(config.source);
-    if (data && 0 < Object.keys(data).length) {
+    if (data && 0 < data.length) {
         const dataArray = [];
         const fromField = config['fromField'];
         const toField = config['toField'];
         const fromCond = config['fromCond'];
         const toCond = config['toCond'];
-        Ux.itObject(data, (key, value) => {
-            // 查找Source
-            const source = Ux.elementFind(sourceArr, fromCond, key);
-            const target = Ux.elementFind(targetArr, toCond, value);
-            if (source && target) {
-                const item = {};
-                item[fromField] = source.id;
-                item[toField] = target.id;
-                dataArray.push(item);
+        Ux.itArray(data, (item = []) => {
+            const key = item[0];
+            const value = item[1];
+            if (key && value) {
+                // 查找Source
+                const source = Ux.elementFind(sourceArr, fromCond, key);
+                const target = Ux.elementFind(targetArr, toCond, value);
+                if (source && target) {
+                    const item = {};
+                    item[fromField] = source.id;
+                    item[toField] = target.id;
+                    dataArray.push(item);
+                }
             }
         });
         const csvArr = Ux.toCsv(dataArray, null, ';');
