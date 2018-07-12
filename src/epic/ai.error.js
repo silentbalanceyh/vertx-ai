@@ -22,5 +22,6 @@ module.exports = {
     fn10017: (arg) => `[AI-10017] Current folder '${arg}' is not project folder, please switch to project root directory`,
     fn10018: (arg) => `[AI-10018] Zero Resource config file missing '${arg}', please check.`,
     fn10019: (arg) => `[AI-10019] This command could run in project root folder only, current folder = ${arg}`,
-    fn10020: (arg) => `[AI-10020] The menu data file must be json format with 'data' (Array) node, current = ${arg}`
+    fn10020: (arg) => `[AI-10020] The menu data file must be json format with 'data' (Array) node, current = ${arg}`,
+    fn10021: (arg, value) => `[AI-10021] The condition '${arg} = ${value}' hit duplicated record in your file.`
 };

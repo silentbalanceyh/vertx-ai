@@ -128,17 +128,17 @@ const _executeMenuMeta = (menus = [], root) => {
 };
 const executeMenu = () => {
     const actual = Ux.executeInput(
-        ['-c', '--config'],
+        ['-d', '--data'],
         [
-            ['-c', '--config'],
+            ['-d', '--data'],
             ['-o', '--out', '.'],
         ]
     );
     const root = Ux.reactRoot();
     Ux.fxTerminal(!root, Ux.E.fn10019(root));
-    Ux.cxExist(actual.config);
+    Ux.cxExist(actual.data);
     // 读取Json数据文件
-    const menus = Ux.ioJObject(actual.config);
+    const menus = Ux.ioJObject(actual.data);
     Ux.fxTerminal(!U.isArray(menus.data), Ux.E.fn10020(menus.data));
     // 过滤掉没有uri的菜单路径
     const generated = menus.data.filter(menu => menu && menu.hasOwnProperty('uri'));
@@ -182,8 +182,66 @@ const executeCsv = () => {
     const csvData = Ux.joinWith(csvArr, '\n');
     Ux.outString('./' + v4() + ".csv", csvData);
 };
+
+const _extractData = (path = "", json = false) => {
+    let dataArr = [];
+    if (json) {
+        const dataJson = Ux.ioJObject(path);
+        if (dataJson && U.isArray(dataJson.data)) {
+            dataArr = dataArr.concat(dataJson.data);
+        }
+    } else {
+        dataArr = Ux.ioCsv(path, ';');
+    }
+    return dataArr;
+};
+
+const executeRel = () => {
+    const actual = Ux.executeInput(
+        [
+            ['-c', '--config']
+        ],
+        [
+            ['-c', '--config'],
+            ['-o', '--out', '.'],
+            ['-j', '--json', false]
+        ]
+    );
+    Ux.cxExist(actual.config);
+    const config = Ux.zeroParse(actual.config);
+    Ux.info("读取到的配置信息：\n" + JSON.stringify(config, null, 4).yellow);
+    Ux.cxExist(config.source);
+    Ux.cxExist(config['fromFile']);
+    Ux.cxExist(config['toFile']);
+    // 读取原始数组
+    const sourceArr = _extractData(config['fromFile'], actual['json']);
+    const targetArr = _extractData(config['toFile'], actual['json']);
+    const data = Ux.zeroParse(config.source);
+    if (data && 0 < Object.keys(data).length) {
+        const dataArray = [];
+        const fromField = config['fromField'];
+        const toField = config['toField'];
+        const fromCond = config['fromCond'];
+        const toCond = config['toCond'];
+        Ux.itObject(data, (key, value) => {
+            // 查找Source
+            const source = Ux.elementFind(sourceArr, fromCond, key);
+            const target = Ux.elementFind(targetArr, toCond, value);
+            if (source && target) {
+                const item = {};
+                item[fromField] = source.id;
+                item[toField] = target.id;
+                dataArray.push(item);
+            }
+        });
+        const csvArr = Ux.toCsv(dataArray, null, ';');
+        const csvData = Ux.joinWith(csvArr, '\n');
+        Ux.outString(actual['out'] + '/' + v4() + ".csv", csvData);
+    }
+};
 module.exports = {
     executeData,
     executeMenu,
-    executeCsv
+    executeCsv,
+    executeRel
 };

@@ -5,6 +5,7 @@ const Log = require('./ai.log');
 const Fx = require('./ai.fx');
 const Word = require('./ai.word');
 const It = require('./ai.collection');
+const Arr = require('./ai.array');
 
 const toJObject = (content = "") => {
     Sure.cxJString(content);
@@ -156,6 +157,18 @@ const makeDirs = (path = "") => {
     });
     return true;
 };
+const ioCsv = (file, separator) => {
+    const data = ioString(file).split('\n');
+    const header = data.shift();
+    const lines = [];
+    data.forEach(line => {
+        if (line && 0 < line.trim().length) {
+            const item = Arr.elementZipper(header.split(separator), line.split(separator), true)
+            lines.push(item);
+        }
+    });
+    return lines;
+};
 
 module.exports = {
     cycleParent,
@@ -173,6 +186,7 @@ module.exports = {
     ioJObject,
     ioString,
     ioStream,
+    ioCsv,
     ioProp,
     ioRoot,
 

@@ -39,7 +39,7 @@ const formatArgs = (args = {}, pairs = []) => {
         It.itObject(args, (key, value) => Fx.fxContinue(arg0 === key || arg1 === key, () => {
             actual[finalKey] = value;
         }));
-        Fx.fxContinue(!args.hasOwnProperty(arg0) && !args.hasOwnProperty(arg1) && !!dft, () => {
+        Fx.fxContinue(!args.hasOwnProperty(arg0) && !args.hasOwnProperty(arg1) && undefined !== dft, () => {
             actual[finalKey] = dft;
         });
     }));
