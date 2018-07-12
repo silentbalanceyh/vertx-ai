@@ -13,17 +13,27 @@ const toJObject = (content = "") => {
 const valueJObject = (object = {}, keysData) => {
     const values = [];
     const keys = keysData ? keysData : Object.keys(object);
-    keys.forEach(key => values.push(object[key]));
+    keys.forEach(key => values.push(object[key] ? object[key] : ""));
     return values;
 };
 const toJArray = (content = "") => {
     Sure.cxJString(content);
     return JSON.parse(content);
 };
+const _findMaxFields = (array = []) => {
+    let keys = {};
+    for (let idx = 0; idx < array.length; idx++) {
+        const length = Object.keys(array[idx]).length;
+        if (length > Object.keys(keys).length) {
+            keys = array[idx];
+        }
+    }
+    return Object.keys(keys);
+};
 const toCsv = (array = [], mapping = {}, seperator) => {
     let lines = [];
     if (0 < array.length) {
-        const keys = Object.keys(array[0]);
+        const keys = _findMaxFields(array);
         // 转换字段信息
         const formatted = {};
         keys.forEach(key => formatted[key] = key);
