@@ -82,7 +82,40 @@ const executeDefault = () => {
         }
     }
 };
+const executeUk = () => {
+    const actual = Ux.executeInput(
+        [
+            ['-d', '--data'],
+            ['-t', '--target']
+        ],
+        [
+            ['-d', '--data'],
+            ['-t', '--target']
+        ]
+    );
+    Ux.cxExist(actual.data);
+    const field = actual.target;
+    if (field) {
+        const fieldArr = field.toString().split(',');
+        Ux.info(`检查字段：${JSON.stringify(fieldArr).blue}`);
+        const data = Ux.ioJObject(actual.data);
+        if (data && data.data) {
+            fieldArr.forEach(field => {
+                const checked = {};
+                data.data.forEach(each => {
+                    const value = each[field];
+                    if (value && checked.hasOwnProperty(value)) {
+                        Ux.info(`字段出现重复值：${field} = ${value}`.red);
+                    }
+                    checked[value] = true;
+                })
+            });
+            Ux.info("系统检查重复值完成！".cyan);
+        }
+    }
+};
 module.exports = {
     executeKey,
-    executeDefault
+    executeDefault,
+    executeUk
 };
