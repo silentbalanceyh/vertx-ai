@@ -1,9 +1,11 @@
 const key = require('./ai.key');
 const data = require('./ai.data');
+const init = require('./ai.init');
 const java = require('./java/ai.java');
 const react = require('./react/ai.react');
 const rs = require('./json/ai.rs');
 const exported = {
+    ...init,
     ...key,
     ...data,
     // Java代码处理

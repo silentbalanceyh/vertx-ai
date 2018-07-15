@@ -24,5 +24,7 @@ module.exports = {
     fn10019: (arg) => `[AI-10019] This command could run in project root folder only, current folder = ${arg}`,
     fn10020: (arg) => `[AI-10020] The menu data file must be json format with 'data' (Array) node, current = ${arg}`,
     fn10021: (arg, value) => `[AI-10021] The condition '${arg} = ${value}' hit duplicated record in your file.`,
-    fn10022: (arg) => `[AI-10022] Could not find root folder of current project. ${arg}`
+    fn10022: (arg) => `[AI-10022] Could not find root folder of current project. ${arg}`,
+    fn10023: (arg) => `[AI-10023] Initialized folder must be empty, current ${arg} is invalid`,
+    fn10024: (arg) => `[AI-10024] This operation is not allowed for current path ${arg}`
 };

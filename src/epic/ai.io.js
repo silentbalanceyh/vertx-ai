@@ -92,6 +92,40 @@ const cycleParent = (path, includeCurrent = false) => {
     });
     return result;
 };
+
+const deleteFolder = (path) => {
+    if (fs.existsSync(path)) {
+        const etat = fs.statSync(path);
+        if (etat.isDirectory()) {
+            const children = fs.readdirSync(path);
+            if (0 === children.length) {
+                fs.rmdirSync(path);
+            } else {
+                children.forEach(item => {
+                    const hitted = path + '/' + item;
+                    deleteFolder(hitted);
+                });
+            }
+        } else {
+            Log.info(`删除文件：${path}`);
+            fs.unlinkSync(path);
+        }
+    }
+};
+
+const copyPath = (from, to) => {
+    Fx.fxContinue(isExist(from) && !isExist(to), () => {
+        Fx.fxContinue(isFile(from), () => {
+            const content = ioString(from);
+            outString(to, content);
+        })
+    });
+};
+
+const deletePath = (path) => {
+    Fx.fxTerminal('/' === path.trim(), E.fn10024(path));
+    deleteFolder(path);
+};
 const cycleChildren = (path, includeCurrent = true) => {
     let result = [];
     if (includeCurrent) {
@@ -192,12 +226,16 @@ module.exports = {
     toJArray,
     toCsv,
 
+    copyPath,
+
     ioJArray,
     ioJObject,
     ioString,
     ioStream,
     ioCsv,
     ioProp,
+
+    deletePath,
 
     outJson,
     outString,

@@ -36,7 +36,15 @@ const FUNS = {
     Valid: (arg) => !!arg,
     File: (arg) => isFile(arg),
     Directory: (arg) => isFile(arg, false),
-    Exist: (arg) => fs.existsSync(arg)
+    Exist: (arg) => fs.existsSync(arg),
+    Empty: (arg) => {
+        const etat = fs.statSync(arg);
+        if (etat.isFile()) {
+            return false;
+        }
+        const children = fs.readdirSync(arg);
+        return 0 === children.length;
+    }
 };
 const EFUNS = {
     Function: E.fn10001,
@@ -46,7 +54,8 @@ const EFUNS = {
     Enum: E.fn10002,
     File: E.fn10007,
     Directory: E.fn10008,
-    Exist: E.fn10009
+    Exist: E.fn10009,
+    Empty: E.fn10023,
 };
 const _sure = (type) => (arg, config) => {
     const check = FUNS[type];
@@ -62,5 +71,6 @@ module.exports = {
     cxValid: _sure('Valid'),
     cxFile: _sure('File'),
     cxExist: _sure('Exist'),
-    cxDirectory: _sure('Directory')
+    cxDirectory: _sure('Directory'),
+    cxEmpty: _sure('Empty')
 };
