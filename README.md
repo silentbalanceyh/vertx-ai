@@ -23,7 +23,11 @@ npm install -g vertx-ai
 added 77 packages from 119 contributors in 8.417s
 ```
 
-## 2.工具命令教程
+## 2.工具教程
 
-该工具的教程参考链接：[命令目录](/doc/README.md)
+目前发布的工具教程如下：
+
+* [T0001 - 工程初始化](/doc/gong-cheng-chu-shi-hua.md)
+
+
 
