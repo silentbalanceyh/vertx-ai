@@ -88,7 +88,7 @@ const executeData = () => {
     );
     Ux.cxExist(actual.config);
     const fields = Ux.zeroParse(actual.config);
-    const mapping = Ux.zeroParse(Ux.ioRoot() + "/src/datum/data.zero");
+    const mapping = Ux.zeroParse(Ux.ioRoot() + "/datum/data.zero");
     Ux.info(`数据规则信息：\n${JSON.stringify(fields, null, 4)}`);
     Ux.itObject(mapping, (key, value) =>
         Ux.fxContinue(fields.hasOwnProperty(key) && fields[key] === key,

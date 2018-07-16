@@ -8,6 +8,6 @@ csv,        executeCsv,     将JsonArray数据转换成csv,                 p=�
 menu,       executeMenu,    根据菜单对应的JSON文件生成代码/数据,        d=您的菜单数据文件路径, o=【.】项目根目录，默认当前目录, v=【<uuid>.csv】是否根据Json生成CSV文件（Jhipster专用）
 rel,        executeRel,     根据两个文件创建关系数据文件,               c=您的配置文件路径, o=【.】输出文件路径, j=【false】是Json格式还是Csv格式，默认Csv
 jz.api,     zeroApi,        生成Java Api中的全套内容,                 c=您的配置文件名，最终会加上.zero后缀, f=【.zero/java】配置文件路径
-ui,         jsUi,           生成UI.js根节点专用文件,                  n=前端专用组件名，无默认值
-rs,         rsUi,           书写Resource文件专用工具,                 n=专用名称，用于处理配置文件路径, t=【UI】修改的资源文件名
+ui,         jsUi,           生成UI.js根节点专用文件,                  u=前端专用组件名，无默认值
+rs,         rsUi,           书写Resource文件专用工具,                 u=专用名称，用于处理配置文件路径, t=【UI】修改的资源文件名
 zero,       initZero,       初始化Zero项目专用命令,                   o=【.】输出到当前目录

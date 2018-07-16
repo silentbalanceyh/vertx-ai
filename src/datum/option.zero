@@ -6,6 +6,6 @@ c=config
 j=json
 n=number
 o=out
-n=name
+u=ui
 t=target
 s=separator
