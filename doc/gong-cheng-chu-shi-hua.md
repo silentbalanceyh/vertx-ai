@@ -53,7 +53,8 @@ ai zero
 ## 2.命令说明
 
 ```shell
-ai zero -h                                                                                      
+> ai zero -h
+
 [Zero AI] Zero AI 代码生成器, GitHub : https://github.com/silentbalanceyh/vertx-ui
 [Zero AI] 当前版本: 0.2.10  确认您的Node版本 ( >= 10.x ) 支持ES6.
 [Zero AI] Zero AI 系统启动......
@@ -70,19 +71,9 @@ ai zero -h
 
 ## 3.参数说明
 
-| 参数格式 | 说明 | 限制 |
+| 参数格式 | 必填 | 说明 |
 | :--- | :--- | :--- |
-| -o, --out | 初始化项目的输出目录地址 | 输出目录必须存在，而且输出目录必须为空目录，包括点操作符打头的目录都视为不合法目录。 |
-
-## 4.错误表
-
-```shell
-# 目录不存在
-[Zero AI] ERR : [AI-10009] The path 'mbcloud-x' does not exist.
-
-# 目录不为空
-[Zero AI] ERR : [AI-10023] Initialized folder must be empty, current mbcloud-demo is invalid
-```
+| -o, --out | 否 | 【默认值：（当前目录）】初始化项目的输出目录地址，输出目录必须存在，而且输出目录必须为空目录，包括点操作符打头的目录都视为不合法目录。 |
 
 
 
