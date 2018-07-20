@@ -1,0 +1,5 @@
+import Ux from 'ux'
+
+export default {
+    fn#MOD#Inited: Ux.createAction("/RX/MODULE/#MODUP#/INITIALIZED")
+}

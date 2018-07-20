@@ -9,3 +9,5 @@ o=out
 u=ui
 t=target
 s=separator
+m=module
+a=all
