@@ -47,7 +47,6 @@ const _generateRecord = (mapping) => {
             record[field] = dataGenerator[generator]();
         });
 		if (U.isArray(generator)) {
-			console.info("generator: ", generator);
 			let idx = Random.natural(0, generator.length - 1);
 			record[field] = generator[idx];
 		} else if (generator.startsWith("FUN")) {
