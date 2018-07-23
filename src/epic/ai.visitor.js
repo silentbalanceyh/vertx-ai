@@ -14,7 +14,7 @@ const _parseValue = (value = "") => {
     if (value) {
         if ("true" === value.toString().toLowerCase()
             || "false" === value.toString().toLowerCase()) {
-            value = Boolean(value);
+            value = "true" === value.toString().toLowerCase();
         } else if (value.startsWith("[")) {
 			value = JSON.parse(value);
 		} else {
