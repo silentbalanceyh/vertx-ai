@@ -87,13 +87,13 @@ const zeroIpc = () => {
     });
     // 打印IPC信息
     items.forEach(item => {
-        const content = `[ IPC ] 地址：${formatSpace(item.clientAddr).yellow} ` +
-            `客户端：${formatSpace(item.client, 15).red} --> ` + formatSpace("", 6) +
-            `服务端：${formatSpace(item.server, 15).blue}` +
+        const content = `[ IPC ] 地址：${formatSpace(item.clientAddr).yellow.bold} ` +
+            `客户端：${formatSpace(item.client, 15).red.bold} --> ` + formatSpace("", 6) +
+            `服务端：${formatSpace(item.server, 15).blue.bold}` +
             `自调用：${formatSpace(item.self ? "是".red : "否".green)}`;
         Ux.info(content);
     });
-    Ux.info("[ IPC ] 分析完成！！！".green);
+    Ux.info("[ IPC ] 分析完成！！！".cyan.bold);
 };
 
 module.exports = {
