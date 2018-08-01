@@ -14,7 +14,7 @@ const toJObject = (content = "") => {
 const valueJObject = (object = {}, keysData) => {
     const values = [];
     const keys = keysData ? keysData : Object.keys(object);
-    keys.forEach(key => values.push(object[key] ? object[key] : ""));
+    keys.forEach(key => values.push(undefined !== object[key] ? object[key] : ""));
     return values;
 };
 const toJArray = (content = "") => {

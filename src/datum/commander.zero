@@ -13,4 +13,3 @@ ui,         jsUi,           生成UI.js根节点专用文件,                  u
 rs,         rsUi,           书写Resource文件专用工具,                 u=专用名称，用于处理配置文件路径, t=【UI】修改的资源文件名
 zero,       initZero,       初始化Zero项目专用命令,                   o=【.】输出到当前目录
 page,       initPage,       初始化当前page组件相关信息,                u=专用名称，用于处理组件路径，React分析, m=模块专用文件，逗号隔开
-

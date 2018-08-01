@@ -16,6 +16,8 @@ ai ipc
 ## 1.运行命令
 
 ```shell
+> ai ipc
+
 [Zero AI] Zero AI 代码生成器, GitHub : https://github.com/silentbalanceyh/vertx-ui
 [Zero AI] 当前版本: 0.2.11  确认您的Node版本 ( >= 10.x ) 支持ES6.
 [Zero AI] Zero AI 系统启动......
