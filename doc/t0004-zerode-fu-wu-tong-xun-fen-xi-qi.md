@@ -8,5 +8,10 @@ Zero框架：[http://www.vertxup.cn](http://www.vertxup.cn)
 ai ipc
 ```
 
+## 0.限制
+
+* 该命令只会扫描zero框架中的gRpc的客户端和服务端代码，服务端扫描`@Ipc`部分，客户端扫描`Ux.thenRpc`部分（标准），其他代码行不会被扫描；
+* 该命令只适用于`Maven`项目
+
 
 
