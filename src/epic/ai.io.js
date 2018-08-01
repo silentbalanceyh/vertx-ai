@@ -166,6 +166,18 @@ const ioProp = (path) => {
         return {};
     }
 };
+const ioFiles = (folder) => {
+    const fileArr = [];
+    if (isDirectory(folder)) {
+        const files = fs.readdirSync(folder);
+        files.forEach(item => {
+            const file = item;
+            const path = `${folder}/${item}`;
+            fileArr.push({file, path})
+        });
+    }
+    return fileArr;
+};
 
 const _makeTrace = (path = "") => {
     const folderTrace = path.split('/').filter(each => '' !== each);
@@ -213,8 +225,16 @@ const ioRoot = () => {
     Fx.fxTerminal(1 !== root.length, E.fn10022(__dirname));
     return root[0];
 };
+const ioName = (path = '.') => {
+    const stat = fs.statSync(path);
+    if (stat.isDirectory()) {
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+};
 module.exports = {
+    ioName,
     ioRoot,
+
     cycleParent,
     cycleChildren,
     makeDirs,
@@ -234,6 +254,7 @@ module.exports = {
     ioStream,
     ioCsv,
     ioProp,
+    ioFiles,
 
     deletePath,
 
