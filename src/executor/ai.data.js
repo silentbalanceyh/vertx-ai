@@ -33,7 +33,7 @@ const dataGenerator = {
     "DateTime": () => Random.datetime(),
     "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),
     "PercentFloat": () => Random.float(0, 0, 1, 99).toFixed(2),
-    "Guid": () => v4()
+    "Guid": () => v4(),
 };
 for (let idx = 0; idx < 20; idx++) {
     dataGenerator[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
@@ -46,7 +46,10 @@ const _generateRecord = (mapping) => {
         Ux.fxContinue(dataGenerator[generator], () => {
             record[field] = dataGenerator[generator]();
         });
-        if (generator.startsWith("FUN")) {
+		if (U.isArray(generator)) {
+			let idx = Random.natural(0, generator.length - 1);
+			record[field] = generator[idx];
+		} else if (generator.startsWith("FUN")) {
             const file = process.cwd() + '/' + generator.split('-')[1];
             Ux.cxExist(file);
             const content = Ux.ioString(file);
