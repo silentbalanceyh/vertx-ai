@@ -34,6 +34,7 @@ const dataGenerator = {
     "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),
     "PercentFloat": () => Random.float(0, 0, 1, 99).toFixed(2),
     "Guid": () => v4(),
+    "Now": () => new Date()
 };
 for (let idx = 0; idx < 20; idx++) {
     dataGenerator[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
@@ -43,13 +44,10 @@ for (let idx = 0; idx < 20; idx++) {
 const _generateRecord = (mapping) => {
     const record = {};
     Ux.itObject(mapping, (field, generator) => {
-        Ux.fxContinue(dataGenerator[generator], () => {
-            record[field] = dataGenerator[generator]();
-        });
-		if (U.isArray(generator)) {
-			let idx = Random.natural(0, generator.length - 1);
-			record[field] = generator[idx];
-		} else if (generator.startsWith("FUN")) {
+        if (U.isArray(generator)) {
+            let idx = Random.natural(0, generator.length - 1);
+            record[field] = generator[idx];
+        } else if (generator.startsWith("FUN")) {
             const file = process.cwd() + '/' + generator.split('-')[1];
             Ux.cxExist(file);
             const content = Ux.ioString(file);
@@ -62,6 +60,15 @@ const _generateRecord = (mapping) => {
             } catch (error) {
                 console.error(error);
             }
+        } else if (generator.startsWith("$FIX:")) {
+            record[field] = generator.substring(generator.indexOf(":") + 1).trim();
+        } else if ("Bool" === generator) {
+            // 解决判断条件有问题的情况
+            record[field] = dataGenerator["Bool"]();
+        } else {
+            Ux.fxContinue(dataGenerator.hasOwnProperty(generator), () => {
+                record[field] = dataGenerator[generator]();
+            });
         }
     });
     return record;
