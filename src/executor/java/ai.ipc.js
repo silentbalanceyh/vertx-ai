@@ -70,7 +70,9 @@ const fixPojo = (file = {}) => {
                 const key = line.split(":")[0].trim();
                 const value = line.split(":")[1].trim();
                 // key处理
-                if (!key.startsWith("is") && !key.startsWith("pk")) {
+                if (!key.startsWith("is")
+                    && !key.startsWith("pk")
+                    && !key.startsWith("rlt")) {
                     // 取第一位
                     let finalKey = key.substring(0, 1);
                     finalKey += key.substring(1, 2).toUpperCase();
