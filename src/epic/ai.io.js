@@ -65,13 +65,18 @@ const toCsv = (array = [], mapping = {}, seperator) => {
 const isFile = (path) => fs.statSync(path).isFile();
 const isDirectory = (path) => fs.statSync(path).isDirectory();
 const isExist = (path) => fs.existsSync(path);
-const _outFile = (paths, content) => {
-    fs.writeFile(paths, content, (res) => {
-        Log.info(`成功将数据写入到文件：${paths}！`.cyan);
-    });
+const _outFile = (paths, content, sync) => {
+    if (sync) {
+        fs.writeFileSync(paths, content);
+        Log.info(`（Sync）成功将数据写入到文件：${paths}！`.cyan);
+    } else {
+        fs.writeFile(paths, content, (res) => {
+            Log.info(`（Async）成功将数据写入到文件：${paths}！`.cyan);
+        });
+    }
 };
 const outJson = (paths, content) => Fx.fxContinue(!!content, () => _outFile(paths, JSON.stringify(content, null, 4)));
-const outString = (paths, content) => Fx.fxContinue(!!content, () => _outFile(paths, content));
+const outString = (paths, content, sync = false) => Fx.fxContinue(!!content, () => _outFile(paths, content, sync));
 const resolveDirectory = (path = "") => {
     let result = path.trim();
     if (result.endsWith('/')) {

@@ -45,6 +45,68 @@ const analyzeFolder = (name, path) => {
     files.forEach(file => analyzeFile(name, file, server, client));
     return {server, client};
 };
+
+const fixPojo = (file = {}) => {
+    // 读取成行
+    if (Ux.isExist(file.path)) {
+        const lines = Ux.ioString(file.path).split('\n');
+        const fixed = [];
+        for (let idx = 0; idx < lines.length; idx++) {
+            const line = lines[idx];
+            if (line.startsWith("columns")) {
+                Ux.info("[ POJO ] 跳过列信息：" + line.red);
+                break;
+            }
+            if (0 < line.indexOf("\"")) {
+                Ux.info("[ POJO ] 跳过类型信息：" + line.yellow);
+            } else {
+                fixed.push(line);
+            }
+        }
+        // 读取Fixed
+        Ux.itArray(fixed, (line, index) => {
+            // 行修正
+            if (0 > line.indexOf("mapping:") && 0 < line.trim().length) {
+                const key = line.split(":")[0].trim();
+                const value = line.split(":")[1].trim();
+                // key处理
+                if (!key.startsWith("is") && !key.startsWith("pk")) {
+                    // 取第一位
+                    let finalKey = key.substring(0, 1);
+                    finalKey += key.substring(1, 2).toUpperCase();
+                    finalKey += key.substring(2);
+                    fixed[index] = `  ${finalKey} : ${value}`
+                }
+            }
+        });
+        const content = fixed.join('\n');
+        Ux.outString(file.path, content, true);
+    } else {
+        Ux.warn("[ POJO ] 跳过：" + file.path);
+    }
+};
+
+const analyzePojo = (folder) => {
+    const files = Ux.ioFiles(folder);
+    Ux.info("[ POJO ] 修正目录：" + folder);
+    files.forEach(file => fixPojo(file));
+};
+
+const zeroPojo = () => {
+    const actual = Ux.executeInput(
+        [],
+        [
+            ['-o', '--out', '.']
+        ]
+    );
+    Ux.cxExist(actual["out"]);
+    const pathes = Ux.cycleChildren(actual['out'], false);
+    // 查找pojo目录
+    pathes.filter(path => 0 < path.indexOf("src/main/resources/pojo"))
+        .forEach(path => analyzePojo(path));
+    // 执行目录
+    Ux.info("[ POJO ] 修正完成！！！".green.bold);
+};
 const zeroIpc = () => {
     const actual = Ux.executeInput(
         [],
@@ -97,5 +159,6 @@ const zeroIpc = () => {
 };
 
 module.exports = {
-    zeroIpc
+    zeroIpc,
+    zeroPojo
 };
