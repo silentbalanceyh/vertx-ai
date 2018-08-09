@@ -19,75 +19,78 @@ const reactLanguage = () => {
     return env['Z_LANGUAGE'];
 };
 const _reactRoot = (actual = {}, filename, error = true, type = "components") => {
-    const result = {};
-    if ('.' === actual['ui']) {
-        log.info(`Branch, 当前目录：${actual['ui'].yellow}`);
-        // 从子目录直接创建
-        const folders = Io.cycleParent(process.cwd(), true);
-        // folder中的元素，往上走两级，必须以src/components结尾
-        const target = Io.resolveDirectory(folders[2]);
-        Fx.fxTerminal(!target.endsWith(`src/${type}`), E.fn10016(process.cwd()));
-        result.pathComponent = Io.resolveDirectory(folders[0]);
-        result.pathPage = result.pathComponent.split(`src/${type}`)[1];
-        result.namespace = result.pathComponent.split(`src`)[1];
-        // 读取语言文件
-        const env = Io.ioProp(folders[4] + '/.env.development');
-        const language = env['Z_LANGUAGE'];
-        // 资源文件处理
-        result.language = language;
-        result.pathResource = Io.resolveDirectory(folders[4]) + `/src/cab/${language}/${type}`
-            + folders[0].split(`src/${type}`)[1];
-        result.pathZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
-    } else {
-        log.info(`Branch, 指定目录：${actual['ui'].yellow}`);
-        const pkg = process.cwd() + '/package.json';
-        if (error) {
-            Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
-        }
-        // 判断actual.name是否符合规范
-        let path = actual['ui'].replace(/\./g, '/');
-        const prefix = `src/${type}`;
-        // 语言文件
-        const env = Io.ioProp(process.cwd() + '/.env.development');
-        const language = env['Z_LANGUAGE'];
-        result.language = language;
-        if (path.startsWith(prefix)) {
-            result.pathPage = path.replace(prefix, "");
-            result.pathComponent = Io.resolveDirectory(process.cwd()) + `/` + path;
-            result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}`)
-                + '/' + path.replace("src/", "");
+        const result = {};
+        if ('.' === actual['ui']) {
+            log.info(`Branch, 当前目录：${actual['ui'].yellow}`);
+            // 从子目录直接创建
+            const folders = Io.cycleParent(process.cwd(), true);
+            // folder中的元素，往上走两级，必须以src/components结尾
+            const target = Io.resolveDirectory(folders[2]);
+            Fx.fxTerminal(!target.endsWith(`src/${type}`), E.fn10016(process.cwd()));
+            result.pathComponent = Io.resolveDirectory(folders[0]);
+            result.pathPage = result.pathComponent.split(`src/${type}`)[1];
+            result.namespace = result.pathComponent.split(`src`)[1];
+            // 读取语言文件
+            const env = Io.ioProp(folders[4] + '/.env.development');
+            const language = env['Z_LANGUAGE'];
+            // 资源文件处理
+            result.language = language;
+            result.pathResource = Io.resolveDirectory(folders[4]) + `/src/cab/${language}/${type}`
+                + folders[0].split(`src/${type}`)[1];
+            result.pathZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
         } else {
-            result.pathPage = '/' + path;
-            result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
-            result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
-                + '/' + path;
+            log.info(`Branch, 指定目录：${actual['ui'].yellow}`);
+            const pkg = process.cwd() + '/package.json';
+            if (error) {
+                Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
+            }
+            // 判断actual.name是否符合规范
+            let path = actual['ui'].replace(/\./g, '/');
+            const prefix = `src/${type}`;
+            // 语言文件
+            const env = Io.ioProp(process.cwd() + '/.env.development');
+            const language = env['Z_LANGUAGE'];
+            result.language = language;
+            if (path.startsWith(prefix)) {
+                result.pathPage = path.replace(prefix, "");
+                result.pathComponent = Io.resolveDirectory(process.cwd()) + `/` + path;
+                result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}`)
+                    + '/' + path.replace("src/", "");
+            } else {
+                result.pathPage = '/' + path;
+                result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
+                result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
+                    + '/' + path;
+            }
+            result.namespace = result.pathComponent.split('src')[1];
+            result.pathZero = `${process.cwd()}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
         }
-        result.namespace = result.pathComponent.split('src')[1];
-        result.pathZero = `${process.cwd()}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
+        if (result.namespace.trim().startsWith('/')) {
+            result.namespace = result.namespace.trim().substring(1, result.namespace.length);
+        }
+        result.fileJs = filename + '.js';
+        result.fileJson = filename + '.json';
+        result.fileCab = "Cab.json";
+        result.fileLess = "Cab.less";
+        result.fileOp = 'Op.ts';
+        result.fileTypes = "Act.Types.js";
+        result.fileEpic = "Act.Epic.js";
+        // 文件名
+        log.info(`Component, 生成组件目录：${result.pathComponent.blue}`);
+        log.info(`Page, 生成页面文件目录：${result.pathPage}`);
+        log.info(`Resource, 生成资源文件目录：${result.pathResource.green}`);
+        log.info(`使用的语言代码：${result.language.red}`);
+        log.info(`文件颜色说明：${`JavaScript`.yellow} / ${`TypeScript`.blue} / ${`Less`.blue} / ${`Json`.green}`);
+        log.info(`==> UI文件：${result.fileJs.yellow} / ${result.fileJson.green}`);
+        log.info(`==> Epic文件：${result.fileTypes.yellow} / ${result.fileEpic.yellow}`);
+        log.info(`==> Op文件：${result.fileOp.blue}`);
+        log.info(`==> Less文件：${result.fileLess.blue}`);
+        log.info(`==> Cab名空间：${result.fileCab.green}`);
+        // 递归创建目录
+        Io.makeDirs(result.pathComponent);
+        return result;
     }
-    if (result.namespace.trim().startsWith('/')) {
-        result.namespace = result.namespace.trim().substring(1, result.namespace.length);
-    }
-    result.fileJs = filename + '.js';
-    result.fileJson = filename + '.json';
-    result.fileCab = "Cab.json";
-    result.fileLess = "Cab.less";
-    result.fileOp = 'Op.ts';
-    result.fileTypes = "Act.Types.js";
-    result.fileEpic = "Act.Epic.js";
-    // 文件名
-    log.info(`Component, 生成组件目录：${result.pathComponent.blue}`);
-    log.info(`Page, 生成页面文件目录：${result.pathPage}`);
-    log.info(`Resource, 生成资源文件目录：${result.pathResource.green}`);
-    log.info(`使用的语言代码：${result.language.red}`);
-    log.info(`==> 将创建UI文件：${result.fileJs.blue} / ${result.fileJson.green}`);
-    log.info(`==> 将创建Epic文件：${result.fileTypes.blue} / ${result.fileEpic.green}`);
-    log.info(`==> 将创建Op文件：${result.fileOp.yellow}`);
-    log.info(`==> 将创建Less文件：${result.fileLess.red}`);
-    // 递归创建目录
-    Io.makeDirs(result.pathComponent);
-    return result;
-};
+;
 const reactComponentRoot = (actual = {}, filename, type = "components") =>
     _reactRoot(actual, filename, true, type);
 const reactResourceRoot = (actual = {}, filename, type = "components") =>
@@ -97,11 +100,17 @@ const reactFileAnalyze = (files = "", config = {}) => {
     const finalFiles = [];
     files.forEach(file => {
         if (file.startsWith("UI")) {
-            finalFiles.push(`${file}.js`);
-            finalFiles.push(`${file}.json`);
+            finalFiles.push(
+                `${file}.js`
+            );
+            finalFiles.push(
+                `${file}.json`
+            );
         }
         if (file.startsWith("Op")) {
-            finalFiles.push(`${file}.ts`);
+            finalFiles.push(
+                `${file}.ts`
+            );
         }
     });
     for (const key in config) {
@@ -144,12 +153,16 @@ const reactOp = (children = []) => {
             const name = child
                 .substring(0, child.lastIndexOf('.'))
                 .replace(/\./g, "_").toUpperCase();
-            line += `import ${name} from './${child.substring(0, child.lastIndexOf('.'))}';\n`;
+            line +=
+                `import ${name} from './${child.substring(0, child.lastIndexOf('.'))}';\n`
+            ;
             define.push(name);
         });
         line += "export default {\n";
         define.forEach(each => {
-            line += `    ...${each},\n`;
+            line +=
+                `    ...${each},\n`
+            ;
         })
     }
     line += "}";
@@ -160,7 +173,9 @@ const reactPathResolve = (path = ".", type = "components") => {
         // 使用的是当前目录，直接返回
         return path;
     } else {
-        if (path.startsWith(`src/${type}`)) {
+        if (path.startsWith(
+            `src/${type}`
+        )) {
             return path;
         } else {
             const count = Word.countSlash(path);

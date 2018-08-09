@@ -29,5 +29,9 @@ module.exports = {
     fn10024: (arg) => `[AI-10024] This operation is not allowed for current path ${arg}`,
     fn10025: (arg) => `[AI-10025] Web control initialized require "actual.data" must be string, current:${arg}`,
     fn10026: (arg) => `[AI-10026] The path is invalid, ${arg}, system support one of ".", "src/components/xxx", "xxx".`,
-    fn10027: (arg) => `[AI-10027] The path must be format with "<module>/<page>", could not be others, current = ${arg}`
+    fn10027: (arg) => `[AI-10027] The path must be format with "<module>/<page>", could not be others, current = ${arg}`,
+    fn10028: (arg) => `[AI-10028] The "module" parameter must be one of "FORM", "FILTER", "HALF", "EDIT" values. current = ${arg}`,
+    fn10029: (arg) => `[AI-10029] [DEV] You'll use development command, please set "ZT" environment first, format = "<module>/<page>", current = ${arg}`,
+    fn10030: (arg, key) => `[AI-10030] [DEV] This method require "${key}" in your resource file, but current "${key}" = ${arg}`,
+    fn10031: (arg) => `[AI-10031] [DEV] Button key must start with "btn", current ${arg}`
 };

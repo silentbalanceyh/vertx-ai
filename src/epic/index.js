@@ -14,6 +14,7 @@ const E = require('./ai.error');
 
 const java = require('./ai.java');
 const react = require('./ai.react');
+const value = require('./ai.value');
 
 const exported = {
     ...log,
@@ -27,6 +28,7 @@ const exported = {
     ...collection,
     ...console,
     ...array,
+    ...value,
 
     ...java,
     ...react,
