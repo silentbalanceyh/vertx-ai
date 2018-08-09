@@ -3,8 +3,8 @@ const E = require('./ai.error');
 const Fx = require('./ai.fx');
 const log = require('./ai.log');
 const fs = require('fs');
-const reactRoot = () => {
-    const current = process.cwd();
+const reactRoot = (path) => {
+    const current = path ? `${process.cwd()}/${path}` : process.cwd();
     let root = Io.cycleParent(current, true);
     // 检查哪个目录中包含了package.json来判断根路径
     root = root.filter(item => fs.existsSync(`${item}/package.json`));
@@ -20,6 +20,7 @@ const reactLanguage = () => {
 const _reactRoot = (actual = {}, filename, error = true, type = "components") => {
     const result = {};
     if ('.' === actual['ui']) {
+        log.info(`Branch, 当前目录：${actual['ui'].yellow}`);
         // 从子目录直接创建
         const folders = Io.cycleParent(process.cwd(), true);
         // folder中的元素，往上走两级，必须以src/components结尾
@@ -37,21 +38,29 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
             + folders[0].split(`src/${type}`)[1];
         result.pathZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
     } else {
+        log.info(`Branch, 指定目录：${actual['ui'].yellow}`);
         const pkg = process.cwd() + '/package.json';
         if (error) {
             Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
         }
         // 判断actual.name是否符合规范
-        const path = actual['ui'].replace(/\./g, '/');
+        let path = actual['ui'].replace(/\./g, '/');
+        const prefix = `src/${type}`;
         result.pathPage = '/' + path;
-        result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
-        result.namespace = result.pathComponent.split('src')[1];
         // 语言文件
         const env = Io.ioProp(process.cwd() + '/.env.development');
         const language = env['Z_LANGUAGE'];
         result.language = language;
-        result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
-            + '/' + path;
+        if (path.startsWith(prefix)) {
+            result.pathComponent = Io.resolveDirectory(process.cwd()) + `/` + path;
+            result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}`)
+                + '/' + path.replace("src/", "");
+        } else {
+            result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
+            result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
+                + '/' + path;
+        }
+        result.namespace = result.pathComponent.split('src')[1];
         result.pathZero = `${process.cwd()}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
     }
     if (result.namespace.trim().startsWith('/')) {
