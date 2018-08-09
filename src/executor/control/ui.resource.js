@@ -8,7 +8,6 @@ const _verifyMeta = () => {
             ['-p', '--path', "UI"]
         ]
     );
-    console.info(actual.value);
     Helper.onOut(actual);
     const meta = Helper.onMetadata(actual['out'], actual.path);
     return {meta, actual}

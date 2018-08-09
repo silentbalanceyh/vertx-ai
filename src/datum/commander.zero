@@ -12,7 +12,7 @@ ipc,        zeroIpc,        分析当前Zero中的Ipc流程,                  o=
 pojo,       zeroPojo,       分析当前项目中的Pojo进行字段修正,          o=【.】项目根目录路径
 zero,       initZero,       初始化Zero项目专用命令,                   o=【.】输出到当前目录
 ui.card,    jsUiPageCard,   【ZT命令】生成PageCard页面专用命令,        y=【false】是否覆盖当前存在组件, v=当前PageCard所需基本配置，只能配title和type，type默认是PageCard
-ui.form,    jsUiForm,       【ZT命令】生成Form页面专用命令,            y=【false】是否覆盖当前存在组件, m=当前Form组件的配置，支持4个值, p=【UI.Form】当前Form文件的名称
+ui.form,    jsUiForm,       【ZT命令】生成Form页面专用命令,            y=【false】是否覆盖当前存在组件, m=【FORM】当前Form组件的配置，支持4个值, p=【UI.Form】当前Form文件的名称
 rs.left,    rsLeft,         【ZT命令】生成Card左按钮专用处理,          p=【UI】被写的资源文件, v=被追加的值
 rs.right,   rsRight,        【ZT命令】生成Card右按钮专用处理,          p=【UI】被写的资源文件, v=被追加的值
 rs.success, rsSuccess,      【ZT命令】写success消息到资源文件,         p=【UI】被写的资源文件名, v=被追加的值
