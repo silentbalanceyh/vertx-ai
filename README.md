@@ -39,8 +39,8 @@ added 77 packages from 119 contributors in 8.417s
 
 ZT工具必须设置ZT环境变量，`export ZT=generated/tool`，这里必须存在目录`src/components/generated/tool`的目录，一旦设置过后，所有的命令都是作用于该模块：generated/tool，对应的基础信息如：
 
-* **src/components/generated/tool - **Zero中的组件开发目录
-* **src/cab/cn/components/generated/tool **- Zero中的资源文件目录
+* **src/components/generated/tool** - Zero中的组件开发目录
+* **src/cab/cn/components/generated/tool** - Zero中的资源文件目录
 
 上边目录的详细结构参考前端文档：[http://www.vertxui.cn](http://www.vertxui.cn)，另外需要注意的是ZT命令必须在vertx-ui的根目录执行。
 
