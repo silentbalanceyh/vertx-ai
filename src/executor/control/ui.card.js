@@ -12,8 +12,7 @@ const _parseMeta = (actual = {}) => {
     const restData = {};
     restData['_page'] = {};
     let type = "p"; // p - PageCard, h - HelpCard
-    Ux.fxTerminal("string" !== typeof actual.data,
-        Ux.E.fn10024(actual.data));
+    Ux.fxTerminal("string" !== typeof actual.data, Ux.E.fn10025(actual.data));
     const literal = actual.data;
     let title = "";
     if (0 < literal.indexOf(":")) {
@@ -45,16 +44,19 @@ const jsUiPageCard = () => {
             ['-y', '--yes', false]
         ]
     );
-    const meta = Ux.reactComponentRoot({
-        ui: actual['out']
-    }, "UI");
+    const ui = Ux.reactPathResolve(actual['out']);
+    const meta = Ux.reactComponentRoot({ui}, "UI");
+    // 创建目录
+    Ux.fxContinue(!Ux.isExist(meta.pathComponent), Ux.makeDirs(meta.pathComponent));
+    Ux.fxContinue(!Ux.isExist(meta.pathResource), Ux.makeDirs(meta.pathResource));
+    // 然后执行
     const metadata = _parseMeta(actual);
     // 写资源文件
     const restPath = meta.pathResource + '/' + meta.fileJson;
     if (_readyPath(restPath, actual['yes'])) {
         Ux.outJson(restPath, metadata.data);
     } else {
-        Ux.info(`资源文件已存在：${restPath.green}`);
+        Ux.info("( Skip ) ".red + `资源文件已存在：${restPath}`.cyan);
     }
     // 写名空间文件
     const namespace = {};
@@ -63,16 +65,17 @@ const jsUiPageCard = () => {
     if (_readyPath(nsPath, actual['yes'])) {
         Ux.outJson(nsPath, namespace);
     } else {
-        Ux.info(`名空间文件已存在：${nsPath}`);
+        Ux.info("( Skip ) ".red + `名空间文件已存在：${nsPath}`.cyan);
     }
     // 写组件文件
     const uiPath = meta.pathComponent + "/UI.js";
     if (_readyPath(uiPath, actual['yes'])) {
         Ux.outString(uiPath, metadata.file);
     } else {
-        Ux.info(`组件文件已存在：${uiPath.blue}`);
+        Ux.info("( Skip ) ".red + `组件文件已存在：${uiPath}`.cyan);
     }
 };
+
 module.exports = {
     jsUiPageCard
 };

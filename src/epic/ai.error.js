@@ -27,5 +27,7 @@ module.exports = {
     fn10022: (arg) => `[AI-10022] Could not find root folder of current project. ${arg}`,
     fn10023: (arg) => `[AI-10023] Initialized folder must be empty, current ${arg} is invalid`,
     fn10024: (arg) => `[AI-10024] This operation is not allowed for current path ${arg}`,
-    fn10025: (arg) => `[AI-10025] Web control initialized require "actual.data" must be string, current:${arg}`
+    fn10025: (arg) => `[AI-10025] Web control initialized require "actual.data" must be string, current:${arg}`,
+    fn10026: (arg) => `[AI-10026] The path is invalid, ${arg}, system support one of ".", "src/components/xxx", "xxx".`,
+    fn10027: (arg) => `[AI-10027] The path must be format with "<module>/<page>", could not be others, current = ${arg}`
 };

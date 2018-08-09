@@ -1,5 +1,7 @@
-const Card = require('./ui.page.card');
+const Card = require('./ui.card');
+const Form = require("./ui.form");
 const exported = {
-    ...Card
+    ...Card,
+    ...Form
 };
 module.exports = exported;

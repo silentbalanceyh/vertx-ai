@@ -2,6 +2,7 @@ const Io = require('./ai.io');
 const E = require('./ai.error');
 const Fx = require('./ai.fx');
 const log = require('./ai.log');
+const Word = require('./ai.word');
 const fs = require('fs');
 const reactRoot = (path) => {
     const current = path ? `${process.cwd()}/${path}` : process.cwd();
@@ -46,16 +47,17 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
         // 判断actual.name是否符合规范
         let path = actual['ui'].replace(/\./g, '/');
         const prefix = `src/${type}`;
-        result.pathPage = '/' + path;
         // 语言文件
         const env = Io.ioProp(process.cwd() + '/.env.development');
         const language = env['Z_LANGUAGE'];
         result.language = language;
         if (path.startsWith(prefix)) {
+            result.pathPage = path.replace(prefix, "");
             result.pathComponent = Io.resolveDirectory(process.cwd()) + `/` + path;
             result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}`)
                 + '/' + path.replace("src/", "");
         } else {
+            result.pathPage = '/' + path;
             result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
             result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
                 + '/' + path;
@@ -153,11 +155,26 @@ const reactOp = (children = []) => {
     line += "}";
     return line;
 };
+const reactPathResolve = (path = ".", type = "components") => {
+    if ("." === path.trim()) {
+        // 使用的是当前目录，直接返回
+        return path;
+    } else {
+        if (path.startsWith(`src/${type}`)) {
+            return path;
+        } else {
+            const count = Word.countSlash(path);
+            Fx.fxTerminal(1 !== count || path.startsWith("/"), E.fn10026(path));
+            return `src/${type}/` + path;
+        }
+    }
+};
 module.exports = {
     reactRoot,
     reactTpl,
     reactOp,
     reactLanguage,
+    reactPathResolve,
     reactComponentRoot,
     reactFileAnalyze,
     reactResourceRoot

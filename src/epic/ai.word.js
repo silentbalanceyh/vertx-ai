@@ -11,7 +11,17 @@ const joinWith = (array = [], separator = ',') => {
     }
     return content;
 };
+const countSlash = (literal = "") => {
+    let counter = 0;
+    for (let idx = 0; idx < literal.length; idx++) {
+        if ('/' === literal.charAt(idx)) {
+            counter++;
+        }
+    }
+    return counter;
+};
 module.exports = {
     firstUpper,
-    joinWith
+    joinWith,
+    countSlash
 };
