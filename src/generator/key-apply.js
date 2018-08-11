@@ -2,6 +2,8 @@ const ai = require('../zero/zero');
 const {args, log, config} = ai;
 const fs = require("fs");
 const uuid = require("uuid");
+const path = require('path');
+const SEP = path.sep;
 
 const applyKey = (data = {}, field = 'key') => {
     for (const key in data) {
@@ -28,10 +30,10 @@ const eachFile = (path, callback) => {
         for (let idx = 0; idx < dir.length; idx++) {
             if (!dir[idx].startsWith("_")) {
                 let hitFile = null;
-                if (path.endsWith('/')) {
+                if (path.endsWith(SEP)) {
                     hitFile = path + dir[idx];
                 } else {
-                    hitFile = path + '/' + dir[idx];
+                    hitFile = path + SEP + dir[idx];
                 }
                 eachFile(hitFile, callback);
             }

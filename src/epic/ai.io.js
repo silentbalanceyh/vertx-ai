@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Sure = require('./ai.sure');
 const Log = require('./ai.log');
 const E = require('./ai.error');
@@ -6,6 +7,8 @@ const Fx = require('./ai.fx');
 const Word = require('./ai.word');
 const It = require('./ai.collection');
 const Arr = require('./ai.array');
+
+const SEPRATOR = path.sep;
 
 const toJObject = (content = "") => {
     Sure.cxJString(content);
@@ -79,7 +82,7 @@ const outJson = (paths, content) => Fx.fxContinue(!!content, () => _outFile(path
 const outString = (paths, content, sync = false) => Fx.fxContinue(!!content, () => _outFile(paths, content, sync));
 const resolveDirectory = (path = "") => {
     let result = path.trim();
-    if (result.endsWith('/')) {
+    if (result.endsWith(SEPRATOR)) {
         result = result.substring(0, result.length - 1);
     }
     return result;
@@ -91,7 +94,7 @@ const cycleParent = (path, includeCurrent = false) => {
     }
     Fx.fxContinue(fs.existsSync(path), () => {
         let parent = resolveDirectory(path);
-        parent = parent.substring(0, parent.lastIndexOf('/'));
+        parent = parent.substring(0, parent.lastIndexOf(SEPRATOR));
         result.push(parent);
         result = result.concat(cycleParent(parent, false));
     });
@@ -107,7 +110,7 @@ const deleteFolder = (path) => {
                 fs.rmdirSync(path);
             } else {
                 children.forEach(item => {
-                    const hitted = path + '/' + item;
+                    const hitted = path + SEPRATOR + item;
                     deleteFolder(hitted);
                 });
             }
@@ -128,7 +131,7 @@ const copyPath = (from, to) => {
 };
 
 const deletePath = (path) => {
-    Fx.fxTerminal('/' === path.trim(), E.fn10024(path));
+    Fx.fxTerminal(SEPRATOR === path.trim(), E.fn10024(path));
     deleteFolder(path);
 };
 const cycleChildren = (path, includeCurrent = true) => {
@@ -138,7 +141,7 @@ const cycleChildren = (path, includeCurrent = true) => {
     }
     Fx.fxContinue(fs.existsSync(path), () => {
         const folders = fs.readdirSync(path);
-        const directory = resolveDirectory(path) + '/';
+        const directory = resolveDirectory(path) + SEPRATOR;
         folders.forEach(item => Fx.fxContinue(!item.startsWith('.'), () => {
             const absolute = directory + item;
             if (isDirectory(absolute)) {
@@ -177,7 +180,7 @@ const ioFiles = (folder) => {
         const files = fs.readdirSync(folder);
         files.forEach(item => {
             const file = item;
-            const path = `${folder}/${item}`;
+            const path = `${folder}${SEPRATOR}${item}`;
             fileArr.push({file, path})
         });
     }
@@ -185,10 +188,10 @@ const ioFiles = (folder) => {
 };
 
 const _makeTrace = (path = "") => {
-    const folderTrace = path.split('/').filter(each => '' !== each);
+    const folderTrace = path.split(SEPRATOR).filter(each => '' !== each);
     const folderInfo = [];
     folderTrace.forEach((trace, index) => {
-        const formated = `/${trace}`;
+        const formated = `${SEPRATOR}${trace}`;
         const previous = folderInfo[index - 1];
         let item = null;
         if (previous) {
@@ -218,7 +221,7 @@ const ioCsv = (file, separator) => {
     const lines = [];
     data.forEach(line => {
         if (line && 0 < line.trim().length) {
-            const item = Arr.elementZipper(header.split(separator), line.split(separator), true)
+            const item = Arr.elementZipper(header.split(separator), line.split(separator), true);
             lines.push(item);
         }
     });
@@ -233,7 +236,7 @@ const ioRoot = () => {
 const ioName = (path = '.') => {
     const stat = fs.statSync(path);
     if (stat.isDirectory()) {
-        return path.substring(path.lastIndexOf("/") + 1);
+        return path.substring(path.lastIndexOf(SEPRATOR) + 1);
     }
 };
 module.exports = {

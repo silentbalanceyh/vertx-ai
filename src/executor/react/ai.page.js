@@ -1,4 +1,6 @@
 const Ux = require('../../epic');
+const path = require('path');
+const SEPARATOR = path.sep;
 const initPage = () => {
     const actual = Ux.executeInput(
         [
@@ -24,7 +26,7 @@ const initPage = () => {
             }
         });
         mod.MOD = modules.join('');
-        mod.MODUP = modules.join('/').toUpperCase();
+        mod.MODUP = modules.join(SEPARATOR).toUpperCase();
     }
     // 2.模板处理
     const formatedTpl = {};

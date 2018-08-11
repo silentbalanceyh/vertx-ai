@@ -3,6 +3,8 @@ const Fx = require('./ai.fx');
 const U = require('underscore');
 const fs = require('fs');
 const inflect = require('i')();
+const path = require('path');
+const SEPRATOR = path.sep;
 
 const _eachExec = (executor, callback, method = "") => {
     if (U.isFunction(executor)) {
@@ -53,7 +55,7 @@ const itFileSync = (path = "", callback) => {
     if (etat.isDirectory()) {
         const dir = fs.readdirSync(path);
         itArray(dir, (item) => Fx.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
-            let divider = path.endsWith('/') ? '/' : "";
+            let divider = path.endsWith(SEPRATOR) ? SEPRATOR : "";
             let hitFile = path + divider + item;
             itFileSync(hitFile, callback);
         }))

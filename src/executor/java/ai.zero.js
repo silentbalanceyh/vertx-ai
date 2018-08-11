@@ -1,5 +1,7 @@
 const Ux = require('../../epic');
 const Zero = require('./zero');
+const path = require('path');
+const SEP = path.sep;
 const zeroApi = () => {
     const actual = Ux.executeInput(
         ['-c', '--config'],
@@ -9,7 +11,7 @@ const zeroApi = () => {
         ]
     );
     const folder = Ux.javaRoot();
-    const configFile = actual.path + '/' + actual.config + '.zero';
+    const configFile = actual.path + SEP + actual.config + '.zero';
     const configData = Ux.zeroParse(configFile);
     // 执行常量处理
     Ux.fxTerminal(!configData.api, Ux.E.fn10011(configData));

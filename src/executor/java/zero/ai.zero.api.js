@@ -1,11 +1,13 @@
 const fs = require('fs');
+const path = require('path');
+const SEPARATOR = path.sep;
 const Kit = require('../shared');
 const {Java, parseApi} = Kit;
 const Ux = require('../../../epic');
 
 const _calcAddr = (config = {}, root = "") => {
-    root = root + '/' + config['package'].replace(/\./g, '/');
-    root = root + '/cv/';
+    root = root + SEPARATOR + config['package'].replace(/\./g, SEPARATOR);
+    root = root + SEPARATOR + 'cv' + SEPARATOR;
     let name = "";
     if (config.hasOwnProperty('constant')) {
         name = config.constant;
@@ -33,8 +35,8 @@ const _calcAddrVar = (config = {}) => {
 };
 const _calcJava = (config = {}, root = "", name = "", prefix) => {
     const service = config['service'];
-    root = root + '/' + config['package'].replace(/\./g, '/');
-    root = root + `/micro/${service}/`;
+    root = root + SEPARATOR + config['package'].replace(/\./g, SEPARATOR);
+    root = root + SEPARATOR + `micro${SEPARATOR}${service}${SEPARATOR}`;
     root = root + name + '.java';
     return {
         package: config['package'] + '.' + (

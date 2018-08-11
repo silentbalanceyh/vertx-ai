@@ -1,4 +1,8 @@
 const Ux = require('../../epic');
+const path = require('path');
+
+const SEPRATOR = path.sep;
+
 const Code = require('./ai.code.react');
 const _jsZero = (config, reference) => {
     if (Ux.isExist(config.fileZero)) {
@@ -19,7 +23,7 @@ const jsUi = () => {
     const config = Ux.reactComponentRoot(actual, "UI");
 
     let reference = null;
-    const file = config.pathComponent + '/' + config.fileJs;
+    const file = config.pathComponent + SEPRATOR + config.fileJs;
     if (Ux.isExist(file)) {
         reference = Code.loadClass(config);
     } else {

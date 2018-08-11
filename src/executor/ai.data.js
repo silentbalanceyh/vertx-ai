@@ -5,6 +5,8 @@ const U = require('underscore');
 const Immutable = require('immutable');
 const {v4} = require("uuid");
 const Random = Mock.Random;
+const path = require('path');
+const SEPRATOR = path.sep;
 const dataGenerator = {
     "Code": () => Random.string('ABCDEFGHIJKLMNOPQRSTUVWXYZ.', 6),
 
@@ -48,7 +50,7 @@ const _generateRecord = (mapping) => {
             let idx = Random.natural(0, generator.length - 1);
             record[field] = generator[idx];
         } else if (generator.startsWith("FUN")) {
-            const file = process.cwd() + '/' + generator.split('-')[1];
+            const file = process.cwd() + SEPRATOR + generator.split('-')[1];
             Ux.cxExist(file);
             const content = Ux.ioString(file);
             try {
@@ -98,7 +100,7 @@ const executeData = () => {
     );
     Ux.cxExist(actual.config);
     const fields = Ux.zeroParse(actual.config);
-    const mapping = Ux.zeroParse(Ux.ioRoot() + "/datum/data.zero");
+    const mapping = Ux.zeroParse(Ux.ioRoot() + SEPRATOR + "datum" + SEPRATOR + "data.zero");
     Ux.info(`数据规则信息：\n${JSON.stringify(fields, null, 4)}`);
     Ux.itObject(mapping, (key, value) =>
         Ux.fxContinue(fields.hasOwnProperty(key) && fields[key] === key,
@@ -111,8 +113,8 @@ const executeData = () => {
     // 路径处理
     let path = actual['out'];
     if (!path.endsWith('json')) {
-        if (!path.endsWith('/')) {
-            path = path + '/';
+        if (!path.endsWith(SEPRATOR)) {
+            path = path + SEPRATOR;
         }
         path = path + v4() + ".json";
     }
@@ -120,18 +122,19 @@ const executeData = () => {
 };
 const _executeMenuMeta = (menus = [], root) => {
     const meta = [];
+    const reg = new RegExp(SEPRATOR, "g");
     menus.forEach(item => {
         const metaItem = {};
         let name = item.uri.trim();
-        while (name.startsWith('/')) {
+        while (name.startsWith(SEPRATOR)) {
             name = name.substring(1, name.length);
         }
-        name = name.replace(/\//g, '.');
+        name = name.replace(reg, '.');
         metaItem.uri = item.uri;
         metaItem.name = name;
-        metaItem.folder = `${root}/src/components${item.uri}`;
+        metaItem.folder = `${root}${SEPRATOR}src${SEPRATOR}components${item.uri}`;
         metaItem.namespace = `components${item.uri}`;
-        metaItem.resource = `${root}/src/cab/${Ux.reactLanguage()}/${metaItem.namespace}`;
+        metaItem.resource = `${root}${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${Ux.reactLanguage()}${SEPRATOR}${metaItem.namespace}`;
         meta.push(metaItem);
     });
     return meta;
@@ -159,10 +162,10 @@ const executeMenu = () => {
         Ux.makeDirs(each.folder);
         Ux.makeDirs(each.resource);
         // 写入资源文件
-        const jsonPath = `${each.resource}/UI.json`;
+        const jsonPath = `${each.resource}${SEPRATOR}UI.json`;
         Ux.fxContinue(!Ux.isExist(jsonPath), () => Ux.outJson(jsonPath, json));
         // 写入React文件
-        const uiPath = `${each.folder}/UI.js`;
+        const uiPath = `${each.folder}${SEPRATOR}UI.js`;
         Ux.fxContinue(!Ux.isExist(uiPath), () => {
             const config = Ux.reactComponentRoot({ui: each.name}, "UI");
             const reference = Code.createClass(config);
@@ -190,7 +193,7 @@ const executeCsv = () => {
     Ux.info(`使用分隔符：${actual.separator.green}`);
     const csvArr = Ux.toCsv($data, mapping, actual.separator);
     const csvData = Ux.joinWith(csvArr, '\n');
-    Ux.outString('./' + v4() + ".csv", csvData);
+    Ux.outString('.' + SEPRATOR + v4() + ".csv", csvData);
 };
 
 const _extractData = (path = "", json = false) => {
@@ -250,7 +253,7 @@ const executeRel = () => {
         });
         const csvArr = Ux.toCsv(dataArray, null, ';');
         const csvData = Ux.joinWith(csvArr, '\n');
-        Ux.outString(actual['out'] + '/' + v4() + ".csv", csvData);
+        Ux.outString(actual['out'] + SEPRATOR + v4() + ".csv", csvData);
     }
 };
 module.exports = {

@@ -1,4 +1,6 @@
 const Log = require('./ai.log');
+const path = require('path');
+const SEP = path.sep;
 const firstUpper = (value = "") =>
     value.substr(0, 1).toUpperCase() + value.substr(1, value.length);
 const joinWith = (array = [], separator = ',') => {
@@ -14,7 +16,7 @@ const joinWith = (array = [], separator = ',') => {
 const countSlash = (literal = "") => {
     let counter = 0;
     for (let idx = 0; idx < literal.length; idx++) {
-        if ('/' === literal.charAt(idx)) {
+        if (SEP === literal.charAt(idx)) {
             counter++;
         }
     }

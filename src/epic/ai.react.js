@@ -4,68 +4,71 @@ const Fx = require('./ai.fx');
 const log = require('./ai.log');
 const Word = require('./ai.word');
 const fs = require('fs');
+const path = require('path');
+const SEPRATOR = path.sep;
 const reactRoot = (path) => {
-    const current = path ? `${process.cwd()}/${path}` : process.cwd();
+    const current = path ? `${process.cwd()}${SEPRATOR}${path}` : process.cwd();
     let root = Io.cycleParent(current, true);
     // 检查哪个目录中包含了package.json来判断根路径
-    root = root.filter(item => fs.existsSync(`${item}/package.json`));
+    root = root.filter(item => fs.existsSync(`${item}${SEPRATOR}package.json`));
     Fx.fxTerminal(1 < root.length, E.fn10010(root));
     root = root[0];
     return Io.resolveDirectory(root);
 };
 const reactLanguage = () => {
     const root = reactRoot();
-    const env = Io.ioProp(root + '/.env.development');
+    const env = Io.ioProp(root + SEPRATOR + '.env.development');
     return env['Z_LANGUAGE'];
 };
 const _reactRoot = (actual = {}, filename, error = true, type = "components") => {
         const result = {};
+        const reg = new RegExp(SEPRATOR, "g");
         if ('.' === actual['ui']) {
             log.info(`Branch, 当前目录：${actual['ui'].yellow}`);
             // 从子目录直接创建
             const folders = Io.cycleParent(process.cwd(), true);
             // folder中的元素，往上走两级，必须以src/components结尾
             const target = Io.resolveDirectory(folders[2]);
-            Fx.fxTerminal(!target.endsWith(`src/${type}`), E.fn10016(process.cwd()));
+            Fx.fxTerminal(!target.endsWith(`src${SEPRATOR}${type}`), E.fn10016(process.cwd()));
             result.pathComponent = Io.resolveDirectory(folders[0]);
-            result.pathPage = result.pathComponent.split(`src/${type}`)[1];
+            result.pathPage = result.pathComponent.split(`src${SEPRATOR}${type}`)[1];
             result.namespace = result.pathComponent.split(`src`)[1];
             // 读取语言文件
-            const env = Io.ioProp(folders[4] + '/.env.development');
+            const env = Io.ioProp(folders[4] + SEPRATOR + '.env.development');
             const language = env['Z_LANGUAGE'];
             // 资源文件处理
             result.language = language;
-            result.pathResource = Io.resolveDirectory(folders[4]) + `/src/cab/${language}/${type}`
-                + folders[0].split(`src/${type}`)[1];
-            result.pathZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
+            result.pathResource = Io.resolveDirectory(folders[4]) + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}/${type}`
+                + folders[0].split(`src${SEPRATOR}${type}`)[1];
+            result.pathZero = `${folders[4]}${SEPRATOR}.zero${SEPRATOR}react${SEPRATOR}${result.pathPage.replace(reg, '.')}.${filename}.zero`;
         } else {
             log.info(`Branch, 指定目录：${actual['ui'] ? actual["ui"].yellow : ""}`);
-            const pkg = process.cwd() + '/package.json';
+            const pkg = process.cwd() + SEPRATOR + 'package.json';
             if (error) {
                 Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
             }
             // 判断actual.name是否符合规范
-            let path = actual['ui'].replace(/\./g, '/');
-            const prefix = `src/${type}`;
+            let path = actual['ui'].replace(/\./g, SEPRATOR);
+            const prefix = `src${SEPRATOR}${type}`;
             // 语言文件
-            const env = Io.ioProp(process.cwd() + '/.env.development');
+            const env = Io.ioProp(process.cwd() + SEPRATOR + '.env.development');
             const language = env['Z_LANGUAGE'];
             result.language = language;
             if (path.startsWith(prefix)) {
                 result.pathPage = path.replace(prefix, "");
-                result.pathComponent = Io.resolveDirectory(process.cwd()) + `/` + path;
-                result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}`)
-                    + '/' + path.replace("src/", "");
+                result.pathComponent = Io.resolveDirectory(process.cwd()) + SEPRATOR + path;
+                result.pathResource = Io.resolveDirectory(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}`)
+                    + SEPRATOR + path.replace("src" + SEPRATOR, "");
             } else {
-                result.pathPage = '/' + path;
-                result.pathComponent = Io.resolveDirectory(process.cwd()) + `/src/${type}/` + path;
-                result.pathResource = Io.resolveDirectory(process.cwd() + `/src/cab/${language}/${type}`)
-                    + '/' + path;
+                result.pathPage = SEPRATOR + path;
+                result.pathComponent = Io.resolveDirectory(process.cwd()) + `${SEPRATOR}src${SEPRATOR}${type}${SEPRATOR}` + path;
+                result.pathResource = Io.resolveDirectory(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}${SEPRATOR}${type}`)
+                    + SEPRATOR + path;
             }
             result.namespace = result.pathComponent.split('src')[1];
-            result.pathZero = `${process.cwd()}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
+            result.pathZero = `${process.cwd()}${SEPRATOR}.zero${SEPRATOR}react${SEPRATOR}${result.pathPage.replace(reg, '.')}.${filename}.zero`;
         }
-        if (result.namespace.trim().startsWith('/')) {
+        if (result.namespace.trim().startsWith(SEPRATOR)) {
             result.namespace = result.namespace.trim().substring(1, result.namespace.length);
         }
         result.fileJs = filename + '.js';
@@ -124,9 +127,9 @@ const reactFileAnalyze = (files = "", config = {}) => {
     const formated = {};
     finalFiles.forEach(file => {
         if (file.endsWith("json") && !file.startsWith("Cab")) {
-            formated[file] = config.pathResource + '/' + file;
+            formated[file] = config.pathResource + SEPRATOR + file;
         } else {
-            formated[file] = config.pathComponent + '/' + file;
+            formated[file] = config.pathComponent + SEPRATOR + file;
         }
     });
     return formated;
@@ -138,7 +141,7 @@ const reactTpl = (root) => {
         const dirData = {};
         dir.forEach(item => {
             const key = item.replace(/.tz/g, "");
-            dirData[key] = Io.ioString(path + '/' + item);
+            dirData[key] = Io.ioString(path + SEPRATOR + item);
         });
         return dirData;
     }
