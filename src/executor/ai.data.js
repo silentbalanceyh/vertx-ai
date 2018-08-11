@@ -164,7 +164,7 @@ const executeMenu = () => {
         // 写入React文件
         const uiPath = `${each.folder}/UI.js`;
         Ux.fxContinue(!Ux.isExist(uiPath), () => {
-            const config = Ux.reactComponentRoot({name: each.name}, "UI");
+            const config = Ux.reactComponentRoot({ui: each.name}, "UI");
             const reference = Code.createClass(config);
             const content = reference.to("Path:" + each.uri);
             Ux.outString(uiPath, content);

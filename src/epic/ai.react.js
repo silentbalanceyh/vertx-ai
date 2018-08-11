@@ -39,7 +39,7 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
                 + folders[0].split(`src/${type}`)[1];
             result.pathZero = `${folders[4]}/.zero/react/${result.pathPage.replace(/\//g, '.')}.${filename}.zero`;
         } else {
-            log.info(`Branch, 指定目录：${actual['ui'].yellow}`);
+            log.info(`Branch, 指定目录：${actual['ui'] ? actual["ui"].yellow : ""}`);
             const pkg = process.cwd() + '/package.json';
             if (error) {
                 Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
