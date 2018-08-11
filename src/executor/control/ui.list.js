@@ -10,8 +10,9 @@ const jsUiList = () => {
     );
     Helper.onOut(actual);
     Ux.cxExist(actual.path);
-    
-    console.info(actual);
+    const config = Ux.zeroParse(actual.path);
+    const meta = Helper.onMetadata(actual["out"], "UI.Form");
+    console.info(actual, config, meta);
 };
 module.exports = {
     jsUiList
