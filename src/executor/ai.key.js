@@ -1,4 +1,5 @@
 const Ux = require('../epic');
+const {v4} = require("uuid");
 const U = require('underscore');
 const uuid = require('uuid');
 const _applyUUID = (data = {}, field) => {
@@ -114,8 +115,22 @@ const executeUk = () => {
         }
     }
 };
+const executeUuid = () => {
+    const actual = Ux.executeInput(
+        [],
+        [
+            ['-n', '--number', 20]
+        ]
+    );
+    const number = actual.number;
+    Ux.info(`UUID生成器，生成数量：${number}`);
+    for (let idx = 0; idx < number; idx++) {
+        console.info(v4());
+    }
+};
 module.exports = {
     executeKey,
     executeDefault,
-    executeUk
+    executeUk,
+    executeUuid
 };

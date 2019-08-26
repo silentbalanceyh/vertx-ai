@@ -10,6 +10,7 @@ rel,        executeRel,     根据两个文件创建关系数据文件,         
 jz.api,     zeroApi,        生成Java Api中的全套内容,                 c=您的配置文件名，最终会加上.zero后缀, f=【.zero/java】配置文件路径
 ipc,        zeroIpc,        分析当前Zero中的Ipc流程,                  o=【.】项目根目录路径
 pojo,       zeroPojo,       分析当前项目中的Pojo进行字段修正,          o=【.】项目根目录路径
+uuid,       executeUuid,    生成UUID的值，可直接拷贝,                n=【20】生成的数量
 zero,       initZero,       初始化Zero项目专用命令,                   o=【.】输出到当前目录
 ui.card,    jsUiPageCard,   【ZT命令】生成PageCard页面专用命令,        y=【false】是否覆盖当前存在组件, v=当前PageCard所需基本配置，只能配title和type，type默认是PageCard
 ui.form,    jsUiForm,       【ZT命令】生成Form页面专用命令,            y=【false】是否覆盖当前存在组件, m=【FORM】当前Form组件的配置，支持4个值, p=【UI.Form】当前Form文件的名称
