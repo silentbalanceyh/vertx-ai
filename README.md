@@ -43,8 +43,8 @@ added 77 packages from 119 contributors in 8.417s
 ### 2.2. 注意点
 
 * ZT环境变量设置后，必须存在目录`src/xxx`，如`ZT=generated/tool`，那么必须存在`src/generate/tool`目录，基础信息对应到
-    * **src/components/generated/tool** - Zero中的组件开发目录
-    * **src/cab/cn/components/generated/tool** - Zero中的资源文件目录
+    * `src/components/generated/tool` - Zero中的组件开发目录
+    * `src/cab/cn/components/generated/tool` - Zero中的资源文件目录
 * ZF环境变量设置后，设置目录下必须包含`pom.xml`文件（后端项目基础结构，Maven检测）
 
 
