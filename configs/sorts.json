@@ -2,28 +2,25 @@
     "": [
         "readme.md", 
         "summary.md", 
-        "config-demo", 
+        "backup", 
         "doc", 
-        "execute", 
         "node_modules", 
         "src"
     ], 
     "__positions": {
-        "src": 7, 
-        "execute": 5, 
+        "src": 6, 
         "summary.md": 2, 
-        "config-demo": 3, 
         "doc": 4, 
-        "node_modules": 6, 
+        "node_modules": 5, 
+        "backup": 3, 
         "readme.md": 1
     }, 
     "__raw_positions": {
-        "src": 7, 
-        "execute": 5, 
+        "src": 6, 
         "summary.md": 2, 
-        "config-demo": 3, 
         "doc": 4, 
-        "node_modules": 6, 
+        "node_modules": 5, 
+        "backup": 3, 
         "readme.md": 1
     }
 }

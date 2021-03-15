@@ -60,7 +60,7 @@ typings/
 # next.js build output
 .next
 .idea
-/execute
 .Archive
 .markeditor
 .configs
+backup
