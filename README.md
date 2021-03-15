@@ -18,7 +18,7 @@ npm install -g vertx-ai
 
 ```
 /usr/local/bin/ai -> /usr/local/lib/node_modules/vertx-ai/src/ai.js
-/usr/local/bin/aj -> /usr/local/lib/node_modules/vertx-ai/src/index.js
+/usr/local/bin/aj -> /usr/local/lib/node_modules/vertx-ai/src/aj.js
 + vertx-ai@0.3.0
 added 77 packages from 119 contributors in 8.417s
 ```
