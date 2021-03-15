@@ -28,7 +28,7 @@ time, mark, audio, video {
 
 body {
   padding: 10px 50px 0 0;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #232323;
   background-color: #FBFAF7;
@@ -80,6 +80,7 @@ a {
   color: #C30000;
   font-weight: 200;
   text-decoration: none;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 a:hover {
