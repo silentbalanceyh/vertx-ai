@@ -4,6 +4,7 @@ Zero工具箱为一个工具类型的项目，主要为后端项目和前端项�
 
 * 前端：[http://www.vertxui.cn](http://www.vertxui.cn)
 * 后端：[http://www.vertxup.cn](http://www.vertxup.cn)
+* 详细文档：[Zero Ai文档](http://www.vertxai.cn/document/doc-web/index.html)
 
 ## 1. 安装流程
 
@@ -24,7 +25,7 @@ added 77 packages from 119 contributors in 8.417s
 
 ## 2. 基本说明
 
->  下边是工具列表，主要分为两种：独立工具/Zero专用工具
+> 下边是工具列表，主要分为两种：独立工具/Zero专用工具
 
 * 独立工具：可直接调用`ai xxx`方式执行的工具。
 * 专用工具：调用`aj xxx`，并且需要设置对应环境变量。
@@ -44,11 +45,6 @@ added 77 packages from 119 contributors in 8.417s
     * **src/cab/cn/components/generated/tool** - Zero中的资源文件目录
 * ZF环境变量设置后，设置目录下必须包含`pom.xml`文件（后端项目基础结构，Maven检测）
 
-## 3. 工具列表
-
-### 3.1. 独立工具
-
-### 3.2. 专用工具
 
 
 
