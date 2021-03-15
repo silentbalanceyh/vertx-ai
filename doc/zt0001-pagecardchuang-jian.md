@@ -31,7 +31,7 @@ ai ui.card
 [Zero AI] 文件颜色说明：JavaScript / TypeScript / Less / Json
 [Zero AI] ==> UI文件：UI.js / UI.json
 [Zero AI] ==> Epic文件：Act.Types.js / Act.Epic.js
-[Zero AI] ==> Op文件：Op.ts
+[Zero AI] ==> Op文件：Op.js
 [Zero AI] ==> Less文件：Cab.less
 [Zero AI] ==> Cab名空间：Cab.json
 [Zero AI] （Async）成功将数据写入到文件：/Users/lang/Develop/Source/vertx-ui/src/components/generated/tool/UI.js！

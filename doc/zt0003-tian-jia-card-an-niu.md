@@ -58,7 +58,7 @@ btnSubmit,提交,primary
 [Zero AI] 文件颜色说明：JavaScript / TypeScript / Less / Json
 [Zero AI] ==> UI文件：UI.js / UI.json
 [Zero AI] ==> Epic文件：Act.Types.js / Act.Epic.js
-[Zero AI] ==> Op文件：Op.ts
+[Zero AI] ==> Op文件：Op.js
 [Zero AI] ==> Less文件：Cab.less
 [Zero AI] ==> Cab名空间：Cab.json
 [Zero AI] ( Add ) 添加key = btnSubmit的按钮条目为：btnSubmit,提交,primary
@@ -100,7 +100,7 @@ btnSubmit,提交,primary
 * 如果改变的不是`UI.json`文件，而是其他文件，则设置`--path`参数。
 * `rs.right`的写法和`rs.left`写法一致，只是生成的是`_page -> right`节点中的信息。
 
-这里的`$opSave`最终会让你在`Op.ts`目录中保证有`$op`打头的函数，函数格式如：
+这里的`$opSave`最终会让你在`Op.js`目录中保证有`$op`打头的函数，函数格式如：
 
 ```typescript
 const $opApprove = (reference: any) => (event: any) => {

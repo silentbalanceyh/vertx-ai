@@ -14,7 +14,7 @@ const fxTerminal = (condition, message) => {
             }
         }
         Log.error(message);
-        throw new Error(message.red);
+        // throw new Error(message.red);
     }
 };
 const fxContinue = (condition, executor) => {

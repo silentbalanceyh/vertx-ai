@@ -2,11 +2,10 @@
 
 Zero工具箱为一个工具类型的项目，主要为后端项目和前端项目打造的辅助开发人员进行快速开发的命令行工具，该框架的前端项目和后端项目的地址如下：
 
-前端：[http://www.vertxui.cn](http://www.vertxui.cn)
+* 前端：[http://www.vertxui.cn](http://www.vertxui.cn)
+* 后端：[http://www.vertxup.cn](http://www.vertxup.cn)
 
-后端：[http://www.vertxup.cn](http://www.vertxup.cn)
-
-## 1.安装办法
+## 1. 安装流程
 
 使用以下命令安装该工具
 
@@ -14,52 +13,43 @@ Zero工具箱为一个工具类型的项目，主要为后端项目和前端项�
 npm install -g vertx-ai
 ```
 
-等你看到下边的输出信息后，证明安装过程已完成，目前最新版本：**0.2.10**。
+等你看到下边的输出信息后，证明安装过程已完成，目前最新版本：**0.3.0**。
 
 ```
 /usr/local/bin/ai -> /usr/local/lib/node_modules/vertx-ai/src/ai.js
 /usr/local/bin/aj -> /usr/local/lib/node_modules/vertx-ai/src/index.js
-+ vertx-ai@0.2.10
++ vertx-ai@0.3.0
 added 77 packages from 119 contributors in 8.417s
 ```
 
-## 2.工具教程
+## 2. 基本说明
 
-目前发布的工具教程如下：
+>  下边是工具列表，主要分为两种：独立工具/Zero专用工具
 
-### 2.1. 独立工具
+* 独立工具：可直接调用`ai xxx`方式执行的工具。
+* 专用工具：调用`aj xxx`，并且需要设置对应环境变量。
 
-* [T0001 - 工程初始化](/doc/gong-cheng-chu-shi-hua.md)
-* [T0002 - UUID生成器](/doc/t0002-uuidsheng-cheng-qi.md)
-* [T0003 - 数据模拟器](/doc/t0003-shu-ju-mo-ni-qi.md)
-* [T0004 - Zero的服务通讯分析器](/doc/t0004-zerode-fu-wu-tong-xun-fen-xi-qi.md) -- **Zero Up框架专用命令**
-* [T0005 - Json转Csv](/doc/t0005-liquibaseshu-ju-zhuan-huan-qi.md)
+### 2.1. 环境变量表
 
-### 2.2. 【ZT】工具
+|环境变量名|例子|含义|
+|---|:---|:---|
+|LG|`export LG=cn`|「前端」默认为`cn`环境变量。|
+|ZT|`export ZT=generated/tool`|「前端」接下来的所有ZT命令都是在generated/tool模块中执行。|
+|ZF|`export ZF=ox-engine/ox-business`|「后端」接下来所有的ZF命令都在对应目录中执行。|
 
-ZT工具必须设置ZT环境变量，`export ZT=generated/tool`，这里必须存在目录`src/components/generated/tool`的目录，一旦设置过后，所有的命令都是作用于该模块：generated/tool，对应的基础信息如：
+### 2.2. 注意点
 
-* **src/components/generated/tool** - Zero中的组件开发目录
-* **src/cab/cn/components/generated/tool** - Zero中的资源文件目录
+* ZT环境变量设置后，必须存在目录`src/xxx`，如`ZT=generated/tool`，那么必须存在`src/generate/tool`目录，基础信息对应到
+    * **src/components/generated/tool** - Zero中的组件开发目录
+    * **src/cab/cn/components/generated/tool** - Zero中的资源文件目录
+* ZF环境变量设置后，设置目录下必须包含`pom.xml`文件（后端项目基础结构，Maven检测）
 
-上边目录的详细结构参考前端文档：[http://www.vertxui.cn](http://www.vertxui.cn)，另外需要注意的是ZT命令必须在vertx-ui的根目录执行。
+## 3. 工具列表
 
-* [ZT0001 - Card创建](/doc/zt0001-pagecardchuang-jian.md)
-* [ZT0002 - Form创建](/doc/zt0002-formchuang-jian.md)
-* [ZT0003 - 处理Card按钮](/doc/zt0003-tian-jia-card-an-niu.md)
-* [ZT0004 - 处理Modal遮罩效果](/doc/zt0004-chu-li-modal-zhe-zhao-xiao-guo.md)
+### 3.1. 独立工具
 
-## 3.索引
+### 3.2. 专用工具
 
-* [ai zero](/doc/gong-cheng-chu-shi-hua.md)
-* [ai key](/doc/t0002-uuidsheng-cheng-qi.md)
-* [ai data](/doc/t0003-shu-ju-mo-ni-qi.md)
-* [ai ipc](/doc/t0004-zerode-fu-wu-tong-xun-fen-xi-qi.md)
-* [ai csv](/doc/t0005-liquibaseshu-ju-zhuan-huan-qi.md)
-* [ai ui.card](/doc/zt0001-pagecardchuang-jian.md)
-* [ai ui.form](/doc/zt0002-formchuang-jian.md)
-* [ai rs.left / ai rs.right](/doc/zt0003-tian-jia-card-an-niu.md)
-* [ai rs.success / ai.rs.error / ai rs.confirm](/doc/zt0004-chu-li-modal-zhe-zhao-xiao-guo.md)
 
 
 

@@ -61,3 +61,6 @@ typings/
 .next
 .idea
 /execute
+.Archive
+.markeditor
+.configs

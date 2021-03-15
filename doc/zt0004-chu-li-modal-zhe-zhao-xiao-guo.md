@@ -66,7 +66,7 @@ ai rs.confirm
 [Zero AI] 文件颜色说明：JavaScript / TypeScript / Less / Json
 [Zero AI] ==> UI文件：UI.js / UI.json
 [Zero AI] ==> Epic文件：Act.Types.js / Act.Epic.js
-[Zero AI] ==> Op文件：Op.ts
+[Zero AI] ==> Op文件：Op.js
 [Zero AI] ==> Less文件：Cab.less
 [Zero AI] ==> Cab名空间：Cab.json
 [Zero AI] 设置 _modal -> success -> added = "您的部门已经添加成功"

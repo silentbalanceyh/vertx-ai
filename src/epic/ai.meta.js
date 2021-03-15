@@ -8,12 +8,14 @@ const Fx = require('./ai.fx');
 const E = require('./ai.error');
 const Input = require('./ai.console');
 
-const executeHeader = () => {
+const executeHeader = (app) => {
     const appInfo = require('./../../package.json');
     program.allowUnknownOption();
     program.version(appInfo.version);
-    Log.info(`Zero AI 代码生成器, ` + 'GitHub : '.bold + `https://github.com/silentbalanceyh/vertx-ui`.blue);
-    Log.info(`当前版本: ` + `${appInfo.version}`.red + '  ' + `确认您的Node版本 ( >= 10.x ) 支持ES6.`.yellow);
+    Log.info(`Zero AI 代码生成工具  : `.rainbow + app.yellow);
+    Log.info('HomePage   : '.bold + appInfo.homepage.blue);
+    Log.info('Github     : '.bold + appInfo.github.blue);
+    Log.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 14.x ) 支持ES6, ES7.」`.yellow);
     const ZT = process.env.ZT;
     Fx.fxContinue(!!ZT, () => Log.info(`开启ZT模块开发环境，当前模块：${ZT.red}，特殊命令只能在${`【ZT】`.red}环境使用。`));
     Log.info("Zero AI 系统启动......".cyan);

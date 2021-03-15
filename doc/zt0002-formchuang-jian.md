@@ -31,11 +31,11 @@ ai ui.form
 [Zero AI] 文件颜色说明：JavaScript / TypeScript / Less / Json
 [Zero AI] ==> UI文件：UI.Form.Add.js / UI.Form.Add.json
 [Zero AI] ==> Epic文件：Act.Types.js / Act.Epic.js
-[Zero AI] ==> Op文件：Op.ts
+[Zero AI] ==> Op文件：Op.js
 [Zero AI] ==> Less文件：Cab.less
 [Zero AI] ==> Cab名空间：Cab.json
 [Zero AI] ( Skip ) 名空间文件已存在：/Users/lang/Develop/Source/vertx-ui/src/components/generated/tool/Cab.json
-[Zero AI] （Async）成功将数据写入到文件：/Users/lang/Develop/Source/vertx-ui/src/components/generated/tool/Op.ts！
+[Zero AI] （Async）成功将数据写入到文件：/Users/lang/Develop/Source/vertx-ui/src/components/generated/tool/Op.js！
 [Zero AI] （Async）成功将数据写入到文件：/Users/lang/Develop/Source/vertx-ui/src/cab/cn/components/generated/tool/UI.Form.Add.json！
 [Zero AI] （Async）成功将数据写入到文件：/Users/lang/Develop/Source/vertx-ui/src/components/generated/tool/UI.Form.Add.js！
 ```
