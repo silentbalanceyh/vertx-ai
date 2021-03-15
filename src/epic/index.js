@@ -38,5 +38,36 @@ const exported = {
  * @overview
  *
  * # Zero Ai研发文档
+ *
+ *
+ */
+/**
+ * ## ai命令
+ *
+ * ### 1. 基本使用
+ *
+ * ai命令的专用语法如下：
+ *
+ * ```shell
+ * ai <command> [options1|options2|options3...]
+ * ```
+ *
+ * @module ai
+ */
+/**
+ * ## aj命令
+ *
+ * aj命令的专用语法如下：
+ *
+ * ```shell
+ * aj <command> [options1|options2|options3...]
+ * ```
+ *
+ * @module aj
+ */
+/**
+ * ## epic核心库
+ *
+ * @module epic
  */
 module.exports = exported;
