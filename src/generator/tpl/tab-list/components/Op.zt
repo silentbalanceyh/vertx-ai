@@ -1,6 +1,0 @@
-import Form from './Op.Form';
-import Bar from './Op.Bar';
-export default {
-    ...Form,
-    ...Bar
-}

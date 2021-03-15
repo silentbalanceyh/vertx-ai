@@ -22,8 +22,7 @@ const elementFind = (array = [], field, value) => {
     }
 };
 const exported = {
-        elementZipper,
-        elementFind
-    }
-;
+    elementZipper,
+    elementFind
+};
 module.exports = exported;

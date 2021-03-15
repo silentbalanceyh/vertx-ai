@@ -1,9 +1,0 @@
-const key = require('./ai.key');
-const data = require('./ai.data');
-const init = require('./ai.init');
-const java = require('./java/ai.java');
-const react = require('./react/ai.react');
-const rs = require('./json/ai.rs');
-const ui = require("./control");
-const exported = {};
-module.exports = exported;

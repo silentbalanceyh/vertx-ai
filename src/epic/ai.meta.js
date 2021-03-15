@@ -9,7 +9,7 @@ const E = require('./ai.error');
 const Input = require('./ai.console');
 
 const executeHeader = (app) => {
-    const appInfo = require('./../../package.json');
+    const appInfo = require('../../package.json');
     program.allowUnknownOption();
     program.version(appInfo.version);
     Log.info(`Zero AI 代码生成工具  : `.rainbow + app.yellow);

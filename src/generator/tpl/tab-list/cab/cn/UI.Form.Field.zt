@@ -1,9 +1,0 @@
-{
-    "field": "#NAME#",
-    "optionItem": {
-        "label": "#DISPLAY#"
-    },
-    "optionConfig": {
-        "validateTrigger": "onBlur"
-    }
-}

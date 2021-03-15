@@ -6,15 +6,15 @@ const U = require('underscore');
 const Immutable = require('immutable');
 
 const readArgs = (required = []) => {
-    const arguments = process.argv.splice(3);
+    const inputArgs = process.argv.splice(3);
     const config = {};
     let key = undefined;
     let value = undefined;
-    for (let idx = 0; idx <= arguments.length; idx++) {
+    for (let idx = 0; idx <= inputArgs.length; idx++) {
         if (0 === idx % 2) {
-            key = arguments[idx];
+            key = inputArgs[idx];
         } else {
-            value = arguments[idx];
+            value = inputArgs[idx];
         }
         if (key && value) {
             config[key] = value;

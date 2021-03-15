@@ -1,26 +1,29 @@
 {
     "": [
-        "readme.md", 
         "summary.md", 
+        "readme.md", 
         "backup", 
-        "doc", 
+        "document", 
         "node_modules", 
+        "scripts", 
         "src"
     ], 
     "__positions": {
-        "src": 6, 
-        "summary.md": 2, 
-        "doc": 4, 
+        "src": 7, 
+        "summary.md": 1, 
         "node_modules": 5, 
+        "scripts": 6, 
+        "document": 4, 
         "backup": 3, 
-        "readme.md": 1
+        "readme.md": 2
     }, 
     "__raw_positions": {
-        "src": 6, 
-        "summary.md": 2, 
-        "doc": 4, 
+        "src": 7, 
+        "summary.md": 1, 
         "node_modules": 5, 
+        "scripts": 6, 
+        "document": 4, 
         "backup": 3, 
-        "readme.md": 1
+        "readme.md": 2
     }
 }
