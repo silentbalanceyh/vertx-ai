@@ -1,37 +1,38 @@
-const log = require('./ai.log');
-const io = require('./ai.io');
-const sure = require('./ai.sure');
-const fx = require('./ai.fx');
-const meta = require('./ai.meta');
-const visitor = require('./ai.visitor');
-const collection = require('./ai.collection');
-const console = require('./ai.console');
+const aiLog = require('./ai.log');
+const aiIo = require('./ai.io');
+const aiSure = require('./ai.sure');
+const aiFx = require('./ai.fx');
+const aiMeta = require('./ai.meta');
+const aiVisitor = require('./ai.visitor');
+const aiCollection = require('./ai.collection');
+const aiConsole = require('./ai.console');
 
-const array = require('./ai.array');
-const word = require('./ai.word');
+const aiArray = require('./ai.array');
+const aiWord = require('./ai.word');
+
+
+const aiJava = require('./ai.java');
+const aiReact = require('./ai.react');
+const aiValue = require('./ai.value');
 
 const E = require('./ai.error');
 
-const java = require('./ai.java');
-const react = require('./ai.react');
-const value = require('./ai.value');
-
 const exported = {
-    ...log,
-    ...io,
-    ...sure,
-    ...fx,
-    ...word,
+    ...aiLog,
+    ...aiIo,
+    ...aiSure,
+    ...aiFx,
+    ...aiWord,
 
-    ...meta,
-    ...visitor,
-    ...collection,
-    ...console,
-    ...array,
-    ...value,
+    ...aiMeta,
+    ...aiVisitor,
+    ...aiCollection,
+    ...aiConsole,
+    ...aiArray,
+    ...aiValue,
 
-    ...java,
-    ...react,
+    ...aiJava,
+    ...aiReact,
     E,
 };
 /**
@@ -45,6 +46,14 @@ const exported = {
  *
  * * `ai xxx`：基础命令工具。
  * * `aj xxx`：界面工具集。
+ *
+ * ## 2. Epic使用方法
+ *
+ * ```js
+ * const Ec = require('./epic');
+ * // Ec.xxx 调用全程Api
+ * ```
+ *
  *
  */
 /**
@@ -76,4 +85,11 @@ const exported = {
  *
  * @module epic
  */
+
+/**
+ * ## debug调试库
+ *
+ * @module debug
+ */
+console.log(exported);
 module.exports = exported;

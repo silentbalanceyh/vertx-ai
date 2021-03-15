@@ -6,7 +6,7 @@ const inflect = require('i')();
 const path = require('path');
 const SEPRATOR = path.sep;
 
-const _eachExec = (executor, callback, method = "") => {
+const _eachFn = (executor, callback, method = "") => {
     if (U.isFunction(executor)) {
         return callback();
     } else {
@@ -17,7 +17,7 @@ const _eachExec = (executor, callback, method = "") => {
 const itPair = (first = [], second = [], executor = () => {
 }) => {
     const length = first.length > second.length ? first.length : second.length;
-    _eachExec(executor, () => {
+    _eachFn(executor, () => {
         for (let idx = 0; idx < length; idx++) {
             const firstArg = first[idx];
             const secondArg = second[idx];
@@ -29,7 +29,7 @@ const itPair = (first = [], second = [], executor = () => {
 const itObject = (object = {}, executor = () => {
 }) => {
     const target = {};
-    _eachExec(executor, () => {
+    _eachFn(executor, () => {
         for (const key in object) {
             if (object.hasOwnProperty(key)) {
                 const value = object[key];
@@ -39,11 +39,35 @@ const itObject = (object = {}, executor = () => {
     }, "itObject");
     return target;
 };
-
+/**
+ * ## `Ec.itArray`
+ *
+ * ### 1. 基本介绍
+ *
+ * 迭代输入的数组，然后执行函数`executor`，该函数签名如下，它有两个参数：
+ *
+ * ```js
+ * function(item, index){
+ *
+ * }
+ * ```
+ *
+ * ### 2. 内置参数
+ *
+ * |参数|类型|含义|
+ * |---|---|:---|
+ * |item|`Object/<Any>`|每一个数组中的元素，任意类型。|
+ * |index|Number|该元素在数组中的索引值。|
+ *
+ * @memberOf module:epic
+ * @param {Array} array 被迭代的数组
+ * @param {Function} executor 第二参数，必须是一个标准的JavaScript函数
+ * @returns {Array} 返回执行完成后的数组
+ */
 const itArray = (array = [], executor = () => {
 }) => {
     const target = [];
-    _eachExec(executor, () => array.forEach((item, index) => {
+    _eachFn(executor, () => array.forEach((item, index) => {
         const each = executor(item, index);
         target.push(each);
     }), "itArray");

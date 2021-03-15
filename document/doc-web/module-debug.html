@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>epic - Zero UI框架专用前端文档</title>
+    <title>debug - Zero UI框架专用前端文档</title>
     
     <meta name="description" content="前端开发框架，官方地址：http://www.vertx-ui.cn" />
     
@@ -41,7 +41,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">epic</h1>
+    <h1 class="page-title">debug</h1>
     
 
     
@@ -64,7 +64,7 @@
         <div class="container-overview">
         
             
-                <div class="description usertext"><h2>epic核心库</h2></div>
+                <div class="description usertext"><h2>debug调试库</h2></div>
             
 
             
@@ -166,7 +166,7 @@
 
     
 
-    <h4 class="name" id=".itArray"><span class="type-signature">(static) </span>itArray<span class="signature">(array, executor)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".error"><span class="type-signature">(static) </span>error<span class="signature">(message)</span><span class="type-signature"></span></h4>
 
     
 
@@ -213,35 +213,8 @@
 
 
 <div class="description usertext">
-    <h2><code>Ec.itArray</code></h2>
-<h3>1. 基本介绍</h3>
-<p>迭代输入的数组，然后执行函数<code>executor</code>，该函数签名如下，它有两个参数：</p>
-<pre class="prettyprint source lang-js"><code>function(item, index){
-
-}
-</code></pre>
-<h3>2. 内置参数</h3>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th style="text-align:left">含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>item</td>
-<td><code>Object/&lt;Any&gt;</code></td>
-<td style="text-align:left">每一个数组中的元素，任意类型。</td>
-</tr>
-<tr>
-<td>index</td>
-<td>Number</td>
-<td style="text-align:left">该元素在数组中的索引值。</td>
-</tr>
-</tbody>
-</table>
+    <h2><code>Ec.error</code></h2>
+<p>工具专用日志，<code>ERROR</code>级别，（黄色），消息前缀包含<code>[Zero AI]</code>前缀。</p>
 </div>
 
 
@@ -279,377 +252,7 @@
 
         <tr>
             
-                <td class="name"><code>array</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>被迭代的数组</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>executor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>第二参数，必须是一个标准的JavaScript函数</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>返回执行完成后的数组</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".parseArgs"><span class="type-signature">(static) </span>parseArgs<span class="signature">(ensure)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <h2><code>Ec.parseArgs</code></h2>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>ensure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>参数允许的长度解析，如果长度不合法，则直接退出</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>解析成功后的数据信息</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".parseZero"><span class="type-signature">(static) </span>parseZero<span class="signature">(path, fileTypes)</span><span class="type-signature"> &rarr; {Any}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <h2><code>Ec.parseZero</code></h2>
-<h3>1. 基本介绍</h3>
-<p>解析路径中的特殊文件，文件后缀使用<code>.zero</code>，作为当前工具的核心配置数据，文件内容通常如下（<code>UTF-8</code>方式读取内容）：</p>
-<pre class="prettyprint source lang-shell"><code>PREFIX;
-&lt;Content>
-</code></pre>
-<p>此处<code>PREFIX</code>则是第二参数，表示不同的文件类型，不同文件类型的解析方式有所区别。</p>
-<h3>2. 文件类型</h3>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">前缀</th>
-<th style="text-align:left">含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>P;</code></td>
-<td style="text-align:left">属性文件专用集，用于描述基础属性文件内容。</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>KV;</code></td>
-<td style="text-align:left"><code>P;</code>的不换行模式，直接以<code>,</code>为每一个键值对的匹配项，去<code>\n</code>换行符过后统一解析，不支持<code>ENUM</code>枚举信息。</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>R;</code></td>
-<td style="text-align:left">关系专用解析文件，可解析关系数据文件（后期可增强）。</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>A;</code></td>
-<td style="text-align:left">命令解析专用，表格解析器，解析以<code>\t</code>为分隔符的表格，然后解析尾部<code>optionX</code>部分为配置选项。</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>UI;</code></td>
-<td style="text-align:left">Jsx文件专用解析器，根据文件模板解析数据。</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>J;</code></td>
-<td style="text-align:left">Java文件专用解析器，解析Java源代码文件数据专用。</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
@@ -665,30 +268,7 @@
 
             
 
-            <td class="description last"><p>解析文件的路径</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>fileTypes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>文件前缀类型</p></td>
+            <td class="description last"><p>打印的日志信息。</p></td>
         </tr>
 
     
@@ -710,28 +290,270 @@
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-<div class="param-desc">
-    <p>最终解析出来的数据内容</p>
+            
+
+    
+
+    <h4 class="name" id=".info"><span class="type-signature">(static) </span>info<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.info</code></h2>
+<p>工具专用日志，<code>INFO</code>级别，（普通日志），消息前缀包含<code>[Zero AI]</code>前缀。</p>
 </div>
 
 
 
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
-<span class="param-type">Any</span>
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>打印的日志信息。</p></td>
+        </tr>
 
     
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".warn"><span class="type-signature">(static) </span>warn<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.warn</code></h2>
+<p>工具专用日志，<code>INFO</code>级别，（警告日志），消息前缀包含<code>[Zero AI]</code>前缀。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>打印的日志信息。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
