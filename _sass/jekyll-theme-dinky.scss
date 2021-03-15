@@ -423,13 +423,16 @@ footer {
   }
 }
 
-li a {
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  font-size: 13px;
-  color: #1874CD;
-}
+section {
 
-code .language-plaintext {
-  background-color: #f4f4f4;
-  color: #ff8626;
+  li a {
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+    font-size: 13px;
+    color: #1874CD;
+  }
+
+  code .language-plaintext {
+    background-color: #f4f4f4;
+    color: #ff8626;
+  }
 }
