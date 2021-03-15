@@ -85,8 +85,8 @@ const executeEnd = () => {
 const executeInput = (required = [], params = []) => {
     const elementArray = required.filter(item => U.isArray(item));
     const isMatrix = 1 < elementArray.length;
-    const args = isMatrix ? Input.readArgs(required) : Input.readArgs([required]);
-    return Input.formatArgs(args, params)
+    const args = isMatrix ? Input.parseInput(required) : Input.parseInput([required]);
+    return Input.parseFormat(args, params)
 };
 module.exports = {
     executeHeader,

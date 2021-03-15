@@ -8,12 +8,12 @@ const path = require('path');
 const SEPRATOR = path.sep;
 const reactRoot = (path) => {
     const current = path ? `${process.cwd()}${SEPRATOR}${path}` : process.cwd();
-    let root = Io.cycleParent(current, true);
+    let root = Io.dirParent(current, true);
     // 检查哪个目录中包含了package.json来判断根路径
     root = root.filter(item => fs.existsSync(`${item}${SEPRATOR}package.json`));
     Fx.fxTerminal(1 < root.length, E.fn10010(root));
     root = root[0];
-    return Io.resolveDirectory(root);
+    return Io.dirResolve(root);
 };
 const reactLanguage = () => {
     const root = reactRoot();
@@ -26,11 +26,11 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
         if ('.' === actual['ui']) {
             log.info(`Branch, 当前目录：${actual['ui'].yellow}`);
             // 从子目录直接创建
-            const folders = Io.cycleParent(process.cwd(), true);
+            const folders = Io.dirParent(process.cwd(), true);
             // folder中的元素，往上走两级，必须以src/components结尾
-            const target = Io.resolveDirectory(folders[2]);
+            const target = Io.dirResolve(folders[2]);
             Fx.fxTerminal(!target.endsWith(`src${SEPRATOR}${type}`), E.fn10016(process.cwd()));
-            result.pathComponent = Io.resolveDirectory(folders[0]);
+            result.pathComponent = Io.dirResolve(folders[0]);
             result.pathPage = result.pathComponent.split(`src${SEPRATOR}${type}`)[1];
             result.namespace = result.pathComponent.split(`src`)[1];
             // 读取语言文件
@@ -38,7 +38,7 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
             const language = env['Z_LANGUAGE'];
             // 资源文件处理
             result.language = language;
-            result.pathResource = Io.resolveDirectory(folders[4]) + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}/${type}`
+            result.pathResource = Io.dirResolve(folders[4]) + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}/${type}`
                 + folders[0].split(`src${SEPRATOR}${type}`)[1];
             result.pathZero = `${folders[4]}${SEPRATOR}.zero${SEPRATOR}react${SEPRATOR}${result.pathPage.replace(reg, '.')}.${filename}.zero`;
         } else {
@@ -56,13 +56,13 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
             result.language = language;
             if (path.startsWith(prefix)) {
                 result.pathPage = path.replace(prefix, "");
-                result.pathComponent = Io.resolveDirectory(process.cwd()) + SEPRATOR + path;
-                result.pathResource = Io.resolveDirectory(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}`)
+                result.pathComponent = Io.dirResolve(process.cwd()) + SEPRATOR + path;
+                result.pathResource = Io.dirResolve(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}`)
                     + SEPRATOR + path.replace("src" + SEPRATOR, "");
             } else {
                 result.pathPage = SEPRATOR + path;
-                result.pathComponent = Io.resolveDirectory(process.cwd()) + `${SEPRATOR}src${SEPRATOR}${type}${SEPRATOR}` + path;
-                result.pathResource = Io.resolveDirectory(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}${SEPRATOR}${type}`)
+                result.pathComponent = Io.dirResolve(process.cwd()) + `${SEPRATOR}src${SEPRATOR}${type}${SEPRATOR}` + path;
+                result.pathResource = Io.dirResolve(process.cwd() + `${SEPRATOR}src${SEPRATOR}cab${SEPRATOR}${language}${SEPRATOR}${type}`)
                     + SEPRATOR + path;
             }
             result.namespace = result.pathComponent.split('src')[1];
@@ -181,7 +181,7 @@ const reactPathResolve = (path = ".", type = "components") => {
         )) {
             return path;
         } else {
-            const count = Word.countSlash(path);
+            const count = Word.strSlashCount(path);
             Fx.fxTerminal(1 !== count || path.startsWith("/"), E.fn10026(path));
             return `src/${type}/` + path;
         }

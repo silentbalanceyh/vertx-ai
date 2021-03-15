@@ -4,7 +4,6 @@ const Sure = require('./ai.sure');
 const Log = require('./ai.log');
 const E = require('./ai.error');
 const Fx = require('./ai.fx');
-const Word = require('./ai.word');
 const It = require('./ai.collection');
 const Arr = require('./ai.array');
 
@@ -14,7 +13,7 @@ const toJObject = (content = "") => {
     Sure.cxJString(content);
     return JSON.parse(content);
 };
-const valueJObject = (object = {}, keysData) => {
+const csvJObject = (object = {}, keysData) => {
     const values = [];
     const keys = keysData ? keysData : Object.keys(object);
     keys.forEach(key => values.push(undefined !== object[key] ? object[key] : ""));
@@ -49,7 +48,7 @@ const toCsv = (array = [], mapping = {}, seperator) => {
             }
         });
         const header = Object.keys(formatted);
-        lines.push(Word.joinWith(header, seperator));
+        lines.push(header.join(seperator));
         array.forEach(each => {
             It.itObject(mapping, (from, to) => {
                 if (each.hasOwnProperty(from)) {
@@ -57,8 +56,8 @@ const toCsv = (array = [], mapping = {}, seperator) => {
                     delete each[from];
                 }
             });
-            const line = valueJObject(each, Object.keys(formatted));
-            lines.push(Word.joinWith(line, seperator));
+            const line = csvJObject(each, Object.keys(formatted));
+            lines.push(line.join(seperator));
         });
         return lines;
     }
@@ -80,28 +79,28 @@ const _outFile = (paths, content, sync) => {
 };
 const outJson = (paths, content) => Fx.fxContinue(!!content, () => _outFile(paths, JSON.stringify(content, null, 4)));
 const outString = (paths, content, sync = false) => Fx.fxContinue(!!content, () => _outFile(paths, content, sync));
-const resolveDirectory = (path = "") => {
+const dirResolve = (path = "") => {
     let result = path.trim();
     if (result.endsWith(SEPRATOR)) {
         result = result.substring(0, result.length - 1);
     }
     return result;
 };
-const cycleParent = (path, includeCurrent = false) => {
+const dirParent = (path, includeCurrent = false) => {
     let result = [];
     if (includeCurrent) {
         result.push(path);
     }
     Fx.fxContinue(fs.existsSync(path), () => {
-        let parent = resolveDirectory(path);
+        let parent = dirResolve(path);
         parent = parent.substring(0, parent.lastIndexOf(SEPRATOR));
         result.push(parent);
-        result = result.concat(cycleParent(parent, false));
+        result = result.concat(dirParent(parent, false));
     });
     return result;
 };
 
-const deleteFolder = (path) => {
+const ioDeleteDir = (path) => {
     if (fs.existsSync(path)) {
         const etat = fs.statSync(path);
         if (etat.isDirectory()) {
@@ -111,7 +110,7 @@ const deleteFolder = (path) => {
             } else {
                 children.forEach(item => {
                     const hitted = path + SEPRATOR + item;
-                    deleteFolder(hitted);
+                    ioDeleteDir(hitted);
                 });
             }
         } else {
@@ -121,7 +120,7 @@ const deleteFolder = (path) => {
     }
 };
 
-const copyPath = (from, to) => {
+const ioCopy = (from, to) => {
     Fx.fxContinue(isExist(from) && !isExist(to), () => {
         Fx.fxContinue(isFile(from), () => {
             const content = ioString(from);
@@ -130,23 +129,23 @@ const copyPath = (from, to) => {
     });
 };
 
-const deletePath = (path) => {
+const ioDelete = (path) => {
     Fx.fxTerminal(SEPRATOR === path.trim(), E.fn10024(path));
-    deleteFolder(path);
+    ioDeleteDir(path);
 };
-const cycleChildren = (path, includeCurrent = true) => {
+const dirChildren = (path, includeCurrent = true) => {
     let result = [];
     if (includeCurrent) {
         result.push(path);
     }
     Fx.fxContinue(fs.existsSync(path), () => {
         const folders = fs.readdirSync(path);
-        const directory = resolveDirectory(path) + SEPRATOR;
+        const directory = dirResolve(path) + SEPRATOR;
         folders.forEach(item => Fx.fxContinue(!item.startsWith('.'), () => {
             const absolute = directory + item;
             if (isDirectory(absolute)) {
                 result.push(absolute);
-                result = result.concat(cycleChildren(absolute, false));
+                result = result.concat(dirChildren(absolute, false));
             }
         }));
     });
@@ -204,7 +203,7 @@ const _makeTrace = (path = "") => {
     return folderInfo
 };
 
-const makeDirs = (path = "") => {
+const dirCreate = (path = "") => {
     // TODO: Path专用
     const folderInfo = _makeTrace(path);
     // 查找第一个存在的目录
@@ -243,18 +242,16 @@ module.exports = {
     ioName,
     ioRoot,
 
-    cycleParent,
-    cycleChildren,
-    makeDirs,
+    dirChildren,
+    dirParent,
+    dirCreate,
+    dirResolve,
 
-    resolveDirectory,
-    valueJObject,
 
     toJObject,
     toJArray,
     toCsv,
 
-    copyPath,
 
     ioJArray,
     ioJObject,
@@ -264,7 +261,8 @@ module.exports = {
     ioProp,
     ioFiles,
 
-    deletePath,
+    ioCopy,
+    ioDelete,
 
     outJson,
     outString,

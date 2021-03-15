@@ -91,5 +91,5 @@ const exported = {
  *
  * @module debug
  */
-console.log(exported);
+console.log(aiFx.fxSorter(exported));
 module.exports = exported;

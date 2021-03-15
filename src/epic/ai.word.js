@@ -1,19 +1,8 @@
-const Log = require('./ai.log');
 const path = require('path');
 const SEP = path.sep;
-const firstUpper = (value = "") =>
+const strFirstUpper = (value = "") =>
     value.substr(0, 1).toUpperCase() + value.substr(1, value.length);
-const joinWith = (array = [], separator = ',') => {
-    let content = "";
-    for (let idx = 0; idx < array.length; idx++) {
-        content += array[idx];
-        if (idx < array.length - 1) {
-            content += separator;
-        }
-    }
-    return content;
-};
-const countSlash = (literal = "") => {
+const strSlashCount = (literal = "") => {
     let counter = 0;
     for (let idx = 0; idx < literal.length; idx++) {
         if (SEP === literal.charAt(idx)) {
@@ -23,7 +12,6 @@ const countSlash = (literal = "") => {
     return counter;
 };
 module.exports = {
-    firstUpper,
-    joinWith,
-    countSlash
+    strFirstUpper,
+    strSlashCount
 };

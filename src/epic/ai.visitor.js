@@ -20,7 +20,7 @@ const _parseButtons = (value) => {
             const eachVals = eachVal.split(':');
             button.text = eachVals[0];
             if (eachVals[1]) {
-                button.key = `btn${Word.firstUpper(eachVals[1])}`;
+                button.key = `btn${Word.strFirstUpper(eachVals[1])}`;
             }
             if (eachVals[2]) {
                 button.type = eachVals[2];
@@ -306,14 +306,14 @@ const zeroData = (object = {}, path = "") => {
     }
     return hitted;
 };
-const visitJObject = (object = {}, path = "") => {
+const ioVisit = (object = {}, path = "") => {
     let hitValue = zeroData(object, path);
     if ("object" !== typeof hitValue) {
         hitValue = {};
     }
     return hitValue;
 };
-const writeJObject = (object = {}, path = "", data) => {
+const ioAttribute = (object = {}, path = "", data) => {
     let $object = Immutable.fromJS(object);
     if (data) {
         if (!U.isArray(path)) {
@@ -326,6 +326,6 @@ const writeJObject = (object = {}, path = "", data) => {
 module.exports = {
     parseArgs,
     parseZero,
-    visitJObject,
-    writeJObject
+    ioVisit,
+    ioAttribute,
 };

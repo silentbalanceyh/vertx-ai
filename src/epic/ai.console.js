@@ -5,7 +5,7 @@ const Log = require('./ai.log');
 const U = require('underscore');
 const Immutable = require('immutable');
 
-const readArgs = (required = []) => {
+const parseInput = (required = []) => {
     const inputArgs = process.argv.splice(3);
     const config = {};
     let key = undefined;
@@ -28,7 +28,7 @@ const readArgs = (required = []) => {
         E.fn10006(each)));
     return config;
 };
-const formatArgs = (args = {}, pairs = []) => {
+const parseFormat = (args = {}, pairs = []) => {
     const actual = {};
     pairs.forEach(item => Fx.fxContinue(U.isArray(item), () => {
         const arg0 = item[0];
@@ -47,6 +47,6 @@ const formatArgs = (args = {}, pairs = []) => {
     return actual;
 };
 module.exports = {
-    readArgs,
-    formatArgs,
+    parseInput,
+    parseFormat,
 };

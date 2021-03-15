@@ -6,15 +6,15 @@ const javaRoot = () => {
     let root = "";
     if (0 < current.indexOf('src/main/java')) {
         // 已经位于目录之下
-        root = Io.cycleParent(current);
+        root = Io.dirParent(current);
     } else {
         // 未进入项目目录中
-        root = Io.cycleChildren(current);
+        root = Io.dirChildren(current);
     }
     root = root.filter(item => item.endsWith('src/main/java'));
     Fx.fxTerminal(1 < root.length, E.fn10010(root));
     root = root[0];
-    return Io.resolveDirectory(root);
+    return Io.dirResolve(root);
 };
 const javaJoinLines = (lines = []) => {
     let content = '';
