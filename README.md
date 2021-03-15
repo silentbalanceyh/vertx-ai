@@ -6,6 +6,8 @@ Zero工具箱为一个工具类型的项目，主要为后端项目和前端项�
 * 后端：[http://www.vertxup.cn](http://www.vertxup.cn)
 * 详细文档：[Zero Ai文档](http://www.vertxai.cn/document/doc-web/index.html)
 
+该工具可以帮助开发人员执行`Zero/Zero Ui`的智能化开发，工具最新版本为`0.3.0`，目前已发布到npm社区。
+
 ## 1. 安装流程
 
 使用以下命令安装该工具
