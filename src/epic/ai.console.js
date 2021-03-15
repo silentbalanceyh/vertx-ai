@@ -1,6 +1,6 @@
 const Fx = require('./ai.fx');
 const It = require('./ai.collection');
-const E = require('./ai.error');
+const E = require('./object.error');
 const Log = require('./ai.log');
 const U = require('underscore');
 const Immutable = require('immutable');

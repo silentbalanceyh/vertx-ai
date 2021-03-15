@@ -1,5 +1,5 @@
 const Io = require('./ai.io');
-const E = require('./ai.error');
+const E = require('./object.error');
 const Fx = require('./ai.fx');
 const log = require('./ai.log');
 const Word = require('./ai.word');

@@ -1,6 +1,6 @@
-const E = require('./ai.error');
+const E = require('./object.error');
 const Fx = require('./ai.fx');
-const elementZipper = (source = [], target = [], merged = false) => {
+const elementZip = (source = [], target = [], merged = false) => {
     const length = Math.min(source.length, target.length);
     const dataItem = {};
     for (let idx = 0; idx < length; idx++) {
@@ -22,7 +22,7 @@ const elementFind = (array = [], field, value) => {
     }
 };
 const exported = {
-    elementZipper,
+    elementZip,
     elementFind
 };
 module.exports = exported;

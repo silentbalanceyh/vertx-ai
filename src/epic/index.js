@@ -1,8 +1,8 @@
 const aiLog = require('./ai.log');
 const aiIo = require('./ai.io');
-const aiSure = require('./ai.sure');
+const aiSure = require('./object.sure');
 const aiFx = require('./ai.fx');
-const aiMeta = require('./ai.meta');
+const aiExecute = require('./ai.execute');
 const aiVisitor = require('./ai.visitor');
 const aiCollection = require('./ai.collection');
 const aiConsole = require('./ai.console');
@@ -15,7 +15,7 @@ const aiJava = require('./ai.java');
 const aiReact = require('./ai.react');
 const aiValue = require('./ai.value');
 
-const E = require('./ai.error');
+const E = require('./object.error');
 
 const exported = {
     ...aiLog,
@@ -24,7 +24,7 @@ const exported = {
     ...aiFx,
     ...aiWord,
 
-    ...aiMeta,
+    ...aiExecute,
     ...aiVisitor,
     ...aiCollection,
     ...aiConsole,

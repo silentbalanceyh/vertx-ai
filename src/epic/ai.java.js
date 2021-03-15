@@ -1,5 +1,5 @@
 const Io = require('./ai.io');
-const E = require('./ai.error');
+const E = require('./object.error');
 const Fx = require('./ai.fx');
 const javaRoot = () => {
     const current = process.cwd();

@@ -5,7 +5,7 @@ const Immutable = require('immutable');
 const Log = require('./ai.log');
 const It = require('./ai.collection');
 const Fx = require('./ai.fx');
-const E = require('./ai.error');
+const E = require('./object.error');
 const Input = require('./ai.console');
 
 const executeHeader = (app) => {

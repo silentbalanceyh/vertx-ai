@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const Sure = require('./ai.sure');
+const Sure = require('./object.sure');
 const Log = require('./ai.log');
-const E = require('./ai.error');
+const E = require('./object.error');
 const Fx = require('./ai.fx');
 const It = require('./ai.collection');
 const Arr = require('./ai.array');
@@ -220,7 +220,7 @@ const ioCsv = (file, separator) => {
     const lines = [];
     data.forEach(line => {
         if (line && 0 < line.trim().length) {
-            const item = Arr.elementZipper(header.split(separator), line.split(separator), true);
+            const item = Arr.elementZip(header.split(separator), line.split(separator), true);
             lines.push(item);
         }
     });
