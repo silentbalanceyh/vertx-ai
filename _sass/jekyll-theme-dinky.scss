@@ -80,7 +80,6 @@ a {
   color: #C30000;
   font-weight: 200;
   text-decoration: none;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 a:hover {
@@ -422,4 +421,8 @@ footer {
     font-size: 12pt;
     color: #444;
   }
+}
+
+li a {
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
