@@ -36,7 +36,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="http://www.vertxai.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ai</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web-extension/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui Extension</a></h2><h2><a href="http://www.vertxui.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero UI</a></h2><h2><a href="http://www.vertxai.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Ai</a></h2><h2><a href="http://www.vertxup.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Framework</a></h2><h2><a href="http://www.origin-x.cn" target="_blank" class="menu-item" id="website_link" >「Home」Origin X Engine</a></h2><h3>Modules</h3><ul><li><a href="module-ai.html">ai</a></li><li><a href="module-aj.html">aj</a></li><li><a href="module-debug.html">debug</a><ul class='methods'><li data-type='method'><a href="module-debug.html#.error">error</a></li><li data-type='method'><a href="module-debug.html#.info">info</a></li><li data-type='method'><a href="module-debug.html#.warn">warn</a></li></ul></li><li><a href="module-epic.html">epic</a><ul class='methods'><li data-type='method'><a href="module-epic.html#.itArray">itArray</a></li><li data-type='method'><a href="module-epic.html#.parseArgs">parseArgs</a></li><li data-type='method'><a href="module-epic.html#.parseZero">parseZero</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://www.vertxai.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ai</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web-extension/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui Extension</a></h2><h2><a href="http://www.vertxui.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero UI</a></h2><h2><a href="http://www.vertxai.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Ai</a></h2><h2><a href="http://www.vertxup.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Framework</a></h2><h2><a href="http://www.origin-x.cn" target="_blank" class="menu-item" id="website_link" >「Home」Origin X Engine</a></h2><h3>Modules</h3><ul><li><a href="module-ai.html">ai</a><ul class='methods'><li data-type='method'><a href="module-ai.html#.uuid">uuid</a></li></ul></li><li><a href="module-aj.html">aj</a></li><li><a href="module-debug.html">debug</a><ul class='methods'><li data-type='method'><a href="module-debug.html#.error">error</a></li><li data-type='method'><a href="module-debug.html#.info">info</a></li><li data-type='method'><a href="module-debug.html#.warn">warn</a></li></ul></li><li><a href="module-epic.html">epic</a><ul class='methods'><li data-type='method'><a href="module-epic.html#.itArray">itArray</a></li><li data-type='method'><a href="module-epic.html#.parseArgs">parseArgs</a></li><li data-type='method'><a href="module-epic.html#.parseZero">parseZero</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -163,6 +163,137 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".uuid"><span class="type-signature">(static) </span>uuid<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>ai uuid</code></h2>
+<h3>1. 命令</h3>
+<p>使用该命令生成指定数量的UUID字符串，如果平台支持还会拷贝到剪切板中，目前支持的操作系统：</p>
+<ul>
+<li><code>darwin</code>：MacOs苹果操作系统</li>
+</ul>
+<h3>2. 执行</h3>
+<pre class="prettyprint source lang-shell"><code># 2.1. 命令语法
+ai uuid -n &lt;N>
+
+# 2.2. 执行测试
+ai uuid -n 3
+# ...省略部分...
+[Zero AI] Zero AI 系统启动......
+[Zero AI] 命令参数：
+{
+     &quot;number&quot;: &quot;3&quot;
+}
+[Zero AI] UUID生成器，生成数量：3
+[Zero AI] 当前操作系统：darwin
+14ea44ed-5d9a-406a-9912-d95d8f6a8411
+5d27ca30-3e74-4a8a-a149-e8d40677d542
+a1ddb2ce-eabf-4a95-968d-8e4655207f44
+[Zero AI] 生成的UUID已经全部成功拷贝到剪切板中！
+</code></pre>
+<h3>3. 选项</h3>
+<table>
+<thead>
+<tr>
+<th>短参</th>
+<th>全参</th>
+<th>类型</th>
+<th>默认</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-n</td>
+<td>--number</td>
+<td>Number</td>
+<td>20</td>
+<td style="text-align:left">指定需要生成UUID值的数量，默认生成20个UUID字符串值，<code>\n</code>符号分割。</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
 
     
 
@@ -181,7 +312,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Tue Mar 16 2021 01:14:20 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Tue Mar 16 2021 02:02:11 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

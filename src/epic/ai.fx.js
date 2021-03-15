@@ -1,5 +1,6 @@
 const U = require('underscore');
 const Log = require('./ai.log');
+const E = require('./object.error');
 const fxCond = (arg) => {
     if (U.isFunction(arg)) {
         arg = arg();
@@ -50,7 +51,20 @@ const fxSorter = (input = {}) => {
     keys.forEach(key => normalized[key] = input[key]);
     return normalized;
 };
+const fxError = (code, ...args) => {
+    const fnError = `fn${code}`;
+    const fnMessage = E[fnError];
+    if (U.isFunction(fnMessage)) {
+        const inputArgs = [];
+        args.forEach(arg => inputArgs.push(arg));
+        const errorMessage = fnMessage.apply(this, inputArgs);
+        Log.error(errorMessage);
+    } else {
+        throw new Error(`找不到错误代码描述：${code}`);
+    }
+}
 module.exports = {
+    fxError,
     fxSorter,
     fxTerminal,
     fxContinue,

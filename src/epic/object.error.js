@@ -33,5 +33,6 @@ module.exports = {
     fn10028: (arg) => `[AI-10028] The "module" parameter must be one of "FORM", "FILTER", "HALF", "EDIT" values. current = ${arg}`,
     fn10029: (arg) => `[AI-10029] [DEV] You'll use development command, please set "ZT" environment first, format = "<module>/<page>", current = ${arg}`,
     fn10030: (arg, key) => `[AI-10030] [DEV] This method require "${key}" in your resource file, but current "${key}" = ${arg}`,
-    fn10031: (arg) => `[AI-10031] [DEV] Button key must start with "btn", current ${arg}`
+    fn10031: (arg) => `[AI-10031] [DEV] Button key must start with "btn", current ${arg}`,
+    fn10032: (arg) => `[AI-10032] This api is not implemented in current platform os.platform() -> '${arg}'`
 };

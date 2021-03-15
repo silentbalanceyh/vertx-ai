@@ -26,6 +26,7 @@
     "dependencies": {
         "bluebird": "^3.7.2",
         "child_process": "^1.0.2",
+        "clipboard-copy": "^4.0.1",
         "co": "^4.6.0",
         "colors": "^1.4.0",
         "commander": "^7.1.0",

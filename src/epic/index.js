@@ -15,8 +15,6 @@ const aiJava = require('./ai.java');
 const aiReact = require('./ai.react');
 const aiValue = require('./ai.value');
 
-const E = require('./object.error');
-
 const exported = {
     ...aiLog,
     ...aiIo,
@@ -33,7 +31,6 @@ const exported = {
 
     ...aiJava,
     ...aiReact,
-    E,
 };
 /**
  * @overview
