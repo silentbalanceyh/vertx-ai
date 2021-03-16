@@ -70,8 +70,16 @@ const toCsv = (array = [], mapping = {}, seperator) => {
     return lines;
 };
 
-const isFile = (path) => fs.statSync(path).isFile();
-const isDirectory = (path) => fs.statSync(path).isDirectory();
+const isFile = (path) => {
+    if (fs.existsSync(path)) {
+        return fs.statSync(path).isFile();
+    }
+};
+const isDirectory = (path) => {
+    if (fs.existsSync(path)) {
+        return fs.statSync(path).isDirectory();
+    }
+};
 const isExist = (path) => fs.existsSync(path);
 const _outFile = (paths, content, sync) => {
     if (sync) {

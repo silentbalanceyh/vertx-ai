@@ -1,6 +1,5 @@
 const Ec = require('../epic');
 const os = require('os');
-const {v4} = require("uuid");
 
 function copyMacOs(data) {
     return new Promise(function (resolve, reject) {
@@ -76,7 +75,7 @@ module.exports = () => {
     if ("darwin" === platform) {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
-            const generated = v4();
+            const generated = Ec.strUuid();
             console.info(generated);
             content.push(generated);
         }

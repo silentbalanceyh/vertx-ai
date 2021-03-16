@@ -1,8 +1,8 @@
 const fs = require('fs');
 const U = require('underscore');
 const Immutable = require('immutable');
-const Fx = require('./ai.fx');
 const E = require('./object.error');
+const Log = require('./ai.log');
 
 const isFile = (path, file = true) => {
     let existing = fs.existsSync(path);
@@ -62,7 +62,7 @@ const _sure = (type) => (arg, config) => {
     const message = EFUNS[type](arg, type, config);
     const checked = !check(arg, config);
     if (checked) {
-        console.error(message);
+        Log.error(message);
     }
 };
 module.exports = {

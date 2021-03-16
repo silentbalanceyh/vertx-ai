@@ -40,10 +40,10 @@ const _validateArgs = (keys = []) => {
     const skip = Immutable.fromJS(["-h", '-V', '--version', '--help']);
     if (!skip.contains(commandArg)) {
         const $keys = Immutable.fromJS(keys.concat(['help']));
-        const checked = !$keys.contains(commandArg)
+        const isError = !$keys.contains(commandArg);
         // 检测未通过时，打印错误信息
-        Fx.fxError(checked, 10005, commandArg, keys);
-        return checked;
+        Fx.fxError(isError, 10005, commandArg, keys);
+        return !isError;
     } else {
         // 直接跳过，检测未通过
         return false;

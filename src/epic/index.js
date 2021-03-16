@@ -83,5 +83,4 @@ const exported = {
  *
  * @module debug
  */
-console.log(aiFx.fxSorter(exported));
 module.exports = exported;
