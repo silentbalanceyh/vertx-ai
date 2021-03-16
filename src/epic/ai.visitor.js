@@ -289,7 +289,7 @@ const parseZero = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => 
     const fileType = lines.shift();
     Sure.cxEnum(fileType, fileTypes);
     const parser = PARSER[fileType];
-    Fx.fxTerminal(!U.isFunction(parser), E.fn10003(fileType));
+    Fx.fxError(!U.isFunction(parser), 10003, fileType);
     return parser(lines);
 };
 /**
@@ -342,9 +342,7 @@ const parseInput = (required = []) => {
         }
     }
     const $keys = Immutable.fromJS(Object.keys(config));
-    It.itArray(required, (each) => Fx.fxTerminal(
-        1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1]))),
-        E.fn10006(each)));
+    It.itArray(required, (each) => Fx.fxError(1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1]))), 10006, each));
     return config;
 };
 const parseFormat = (args = {}, pairs = []) => {

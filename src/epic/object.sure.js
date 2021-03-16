@@ -61,7 +61,9 @@ const _sure = (type) => (arg, config) => {
     const check = FUNS[type];
     const message = EFUNS[type](arg, type, config);
     const checked = !check(arg, config);
-    Fx.fxTerminal(checked, message);
+    if (checked) {
+        console.error(message);
+    }
 };
 module.exports = {
     cxFunction: _sure('Function'),

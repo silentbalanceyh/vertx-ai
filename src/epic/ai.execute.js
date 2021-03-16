@@ -5,7 +5,6 @@ const Immutable = require('immutable');
 const Log = require('./ai.log');
 const It = require('./ai.it');
 const Fx = require('./ai.fx');
-const E = require('./object.error');
 const Vt = require('./ai.visitor');
 
 const executeHeader = (app) => {
@@ -54,7 +53,7 @@ const _buildOption = (options = []) => {
 const _validateArgs = (keys = []) => {
     const commandArg = process.argv[2];
     const $keys = Immutable.fromJS(keys.concat(['help']));
-    Fx.fxTerminal(!$keys.contains(commandArg), E.fn10005(commandArg, keys));
+    Fx.fxError(!$keys.contains(commandArg), 10005, commandArg, keys);
 };
 
 const executeBody = (commanders = [], Executor = {}) => {
@@ -62,7 +61,7 @@ const executeBody = (commanders = [], Executor = {}) => {
     It.itArray(commanders, (commander) => {
         if (!commander.options) commander.options = [];
         const executor = Executor[commander.executor];
-        Fx.fxTerminal(!U.isFunction(executor), E.fn10004(commander.command));
+        Fx.fxError(!U.isFunction(executor), 10004, commander.command);
         const option = _buildOption(commander.options);
         const cmd = program.command(commander.command)
             .description(commander.description)

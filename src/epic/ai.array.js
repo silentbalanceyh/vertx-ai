@@ -1,4 +1,3 @@
-const E = require('./object.error');
 const Fx = require('./ai.fx');
 const elementZip = (source = [], target = [], merged = false) => {
     const length = Math.min(source.length, target.length);
@@ -17,7 +16,7 @@ const elementZip = (source = [], target = [], merged = false) => {
 const elementFind = (array = [], field, value) => {
     if (field && value) {
         const filtered = array.filter(item => value === item[field]);
-        Fx.fxTerminal(1 < filtered.length, E.fn10021(field, value));
+        Fx.fxError(1 < filtered.length, 10021, field, value);
         return filtered[0];
     }
 };

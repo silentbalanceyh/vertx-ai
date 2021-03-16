@@ -1,5 +1,4 @@
 const Io = require('./ai.io');
-const E = require('./object.error');
 const Fx = require('./ai.fx');
 const log = require('./ai.log');
 const Word = require('./ai.word');
@@ -11,7 +10,7 @@ const reactRoot = (path) => {
     let root = Io.dirParent(current, true);
     // 检查哪个目录中包含了package.json来判断根路径
     root = root.filter(item => fs.existsSync(`${item}${SEPRATOR}package.json`));
-    Fx.fxTerminal(1 < root.length, E.fn10010(root));
+    Fx.fxError(1 < root.length, 10010, root);
     root = root[0];
     return Io.dirResolve(root);
 };
@@ -29,7 +28,7 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
             const folders = Io.dirParent(process.cwd(), true);
             // folder中的元素，往上走两级，必须以src/components结尾
             const target = Io.dirResolve(folders[2]);
-            Fx.fxTerminal(!target.endsWith(`src${SEPRATOR}${type}`), E.fn10016(process.cwd()));
+            Fx.fxError(!target.endsWith(`src${SEPRATOR}${type}`), 10016, process.cwd());
             result.pathComponent = Io.dirResolve(folders[0]);
             result.pathPage = result.pathComponent.split(`src${SEPRATOR}${type}`)[1];
             result.namespace = result.pathComponent.split(`src`)[1];
@@ -45,7 +44,7 @@ const _reactRoot = (actual = {}, filename, error = true, type = "components") =>
             log.info(`Branch, 指定目录：${actual['ui'] ? actual["ui"].yellow : ""}`);
             const pkg = process.cwd() + SEPRATOR + 'package.json';
             if (error) {
-                Fx.fxTerminal(!Io.isExist(pkg), E.fn10017(process.cwd()));
+                Fx.fxError(!Io.isExist(pkg), 10017, process.cwd());
             }
             // 判断actual.name是否符合规范
             let path = actual['ui'].replace(/\./g, SEPRATOR);
@@ -182,7 +181,7 @@ const reactPathResolve = (path = ".", type = "components") => {
             return path;
         } else {
             const count = Word.strSlashCount(path);
-            Fx.fxTerminal(1 !== count || path.startsWith("/"), E.fn10026(path));
+            Fx.fxError(1 !== count || path.startsWith("/"), 10026, path);
             return `src/${type}/` + path;
         }
     }

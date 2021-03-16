@@ -20,7 +20,7 @@ colors.setTheme({
  * @memberOf module:debug
  * @param {String} message 打印的日志信息。
  */
-const error = (message) => console.error(`[Zero AI] `.red.bold + `ERR : ${message}`.red);
+const error = (message) => console.error(`[Zero AI Error] `.red.bold + `${message}`.red);
 /**
  * ## `Ec.info`
  *

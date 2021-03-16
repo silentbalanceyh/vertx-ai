@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const Sure = require('./object.sure');
 const Log = require('./ai.log');
-const E = require('./object.error');
 const Fx = require('./ai.fx');
 const It = require('./ai.it');
 const Arr = require('./ai.array');
@@ -128,16 +127,14 @@ const ioDeleteDir = (path) => {
 };
 
 const ioCopy = (from, to) => {
-    Fx.fxContinue(isExist(from) && !isExist(to), () => {
-        Fx.fxContinue(isFile(from), () => {
-            const content = ioString(from);
-            outString(to, content);
-        })
+    Fx.fxContinue(isExist(from) && !isExist(to) && isFile(from), () => {
+        const content = ioString(from);
+        outString(to, content);
     });
 };
 
 const ioDelete = (path) => {
-    Fx.fxTerminal(SEPRATOR === path.trim(), E.fn10024(path));
+    Fx.fxError(SEPRATOR === path.trim(), 10024, path);
     ioDeleteDir(path);
 };
 const dirChildren = (path, includeCurrent = true) => {
@@ -236,7 +233,7 @@ const ioCsv = (file, separator) => {
 const ioRoot = () => {
     const folderInfo = _makeTrace(__dirname);
     let root = folderInfo.filter(item => item.endsWith("src"));
-    Fx.fxTerminal(1 !== root.length, E.fn10022(__dirname));
+    Fx.fxError(1 !== root.length, 10022, __dirname);
     return root[0];
 };
 const ioName = (path = '.') => {

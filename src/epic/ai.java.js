@@ -1,5 +1,4 @@
 const Io = require('./ai.io');
-const E = require('./object.error');
 const Fx = require('./ai.fx');
 const javaRoot = () => {
     const current = process.cwd();
@@ -12,7 +11,7 @@ const javaRoot = () => {
         root = Io.dirChildren(current);
     }
     root = root.filter(item => item.endsWith('src/main/java'));
-    Fx.fxTerminal(1 < root.length, E.fn10010(root));
+    Fx.fxError(1 < root.length, 10010, root);
     root = root[0];
     return Io.dirResolve(root);
 };
