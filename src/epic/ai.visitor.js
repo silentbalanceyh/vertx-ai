@@ -252,13 +252,17 @@ const PARSER = {
  * @returns {Any} 最终解析出来的数据内容
  */
 const parseZero = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => {
-    const content = fs.readFileSync(path, "utf-8").trim();
-    const lines = content.split(/\n/g);
-    const fileType = lines.shift();
-    Sure.cxEnum(fileType, fileTypes);
-    const parser = PARSER[fileType];
-    Fx.fxError(!U.isFunction(parser), 10003, fileType);
-    return parser(lines);
+    if (fs.existsSync(path)) {
+        const content = fs.readFileSync(path, "utf-8").trim();
+        const lines = content.split(/\n/g);
+        const fileType = lines.shift();
+        Sure.cxEnum(fileType, fileTypes);
+        const parser = PARSER[fileType];
+        Fx.fxError(!U.isFunction(parser), 10003, fileType);
+        return parser(lines);
+    } else {
+        Fx.fxError(10009, path);
+    }
 };
 /**
  * ## `Ec.parseArgs`
