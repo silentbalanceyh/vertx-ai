@@ -1,4 +1,5 @@
 A;
-command,    executor,       description,                            option1,option2, option3, option4
-uuid,       executeUuid,    生成UUID的值，可直接拷贝,                  n=【20】生成的数量
-csv,        executeCsv,     将JsonArray数据转换成csv,                 p=输入文件的路径, c=配置文件路径, s=分割符
+command,    executor,       description,                                option1,option2, option3, option4
+uuid,       executeUuid,    生成UUID的值，可直接拷贝,                      n=「20」生成的数量
+csv,        executeCsv,     将JsonArray数据转换成csv,                     p=输入数据文件路径, c=配置文件路径, s=分割符
+uk,         executeUk,      检查数据文件中的Data数据是否符合唯一值规范,       p=输入数据文件路径, f=需要检查的字段名

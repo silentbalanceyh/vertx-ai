@@ -1,5 +1,4 @@
 const Ec = require('../epic');
-const Immutable = require('immutable');
 /**
  * ## `ai csv`
  *
@@ -39,7 +38,7 @@ const Immutable = require('immutable');
  *
  * |短参|全参|类型|默认|含义|
  * |---|---|---|---|:---|
- * |-p|--path|String|（无）|数据文件路径。|
+ * |-p|--path|String|（无）|「统一格式」数据文件路径。|
  * |-c|--config|String|null|配置文件路径。|
  * |-s|--separator|String|`,`|Csv文件的分隔符设置。|
  *
@@ -47,24 +46,7 @@ const Immutable = require('immutable');
  *
  * #### 4.1. 数据文件格式
  *
- * 数据文件格式必须如下：
- *
- * ```json
- * {
- *     "data": [
- *          {
- *              "name": "Lang1",
- *              "email": "lang.yu1@hpe.com"
- *          },
- *          {
- *              "name": "Lang2",
- *              "email": "lang.yu2@hpe.com"
- *          }
- *     ]
- * }
- * ```
- *
- * 数据部分必须对等，从第一个元素开始执行所有的字段解析，如果字段不匹配则直接跳过。
+ * 「通用（略）」数据部分必须对等，从第一个元素开始执行所有的字段解析，如果字段不匹配则直接跳过。
  *
  * #### 4.2. 带mapping配置文件
  *
@@ -111,16 +93,12 @@ module.exports = () => {
             ['-s', '--separator', ',']
         ]
     );
-    Ec.cxExist(actual.path);
-    // 读取配置信息
-    const data = Ec.ioJObject(actual.path);
-    let $data = Immutable.fromJS(data).get('data');
-    $data = $data && $data.toJS ? $data.toJS() : [];
+    const inputData = Ec.ioDataA(actual.path);
     let mapping = Ec.fxContinue(Ec.isExist(actual.config), () => Ec.parseZero(actual.config));
     // Csv
     Ec.info(`映射配置数据：\n${JSON.stringify(mapping, null, 4)}`)
     Ec.info(`使用分隔符：${actual.separator.green}`);
-    const csvArr = Ec.toCsv($data, mapping, actual.separator);
+    const csvArr = Ec.toCsv(inputData, mapping, actual.separator);
     const csvData = csvArr.join('\n');
     Ec.outString('.' + Ec.SEPARATOR + Ec.strUuid() + ".csv", csvData);
 };

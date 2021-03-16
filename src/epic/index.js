@@ -59,6 +59,40 @@ const exported = {
  * ai <command> [options1|options2|options3...]
  * ```
  *
+ * ### 2. 数据通用格式
+ *
+ * **带data节点**
+ *
+ * ```json
+ * {
+ *     "data": [
+ *          {
+ *              "name": "Lang1",
+ *              "email": "lang.yu1@hpe.com"
+ *          },
+ *          {
+ *              "name": "Lang2",
+ *              "email": "lang.yu2@hpe.com"
+ *          }
+ *     ]
+ * }
+ * ```
+ *
+ * **直接格式**
+ *
+ * ```json
+ * [
+ *      {
+ *          "name": "Lang1",
+ *          "email": "lang.yu1@hpe.com"
+ *      },
+ *      {
+ *          "name": "Lang2",
+ *          "email": "lang.yu2@hpe.com"
+ *      }
+ * ]
+ * ```
+ *
  * @module ai
  */
 /**

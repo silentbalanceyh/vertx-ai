@@ -253,9 +253,29 @@ const ioName = (path = '.') => {
         return path.substring(path.lastIndexOf(SEPRATOR) + 1);
     }
 };
+const ioDataA = (path) => {
+    // 先读取数据信息
+    Sure.cxExist(path);
+    const content = ioString(path);
+    try {
+        const parsed = JSON.parse(content);
+        if (U.isArray(parsed)) {
+            return parsed;
+        } else {
+            if (parsed.data && U.isArray(parsed.data)) {
+                return parsed.data;
+            } else {
+                return [];
+            }
+        }
+    } catch (error) {
+        return [];
+    }
+}
 module.exports = {
     ioName,
     ioRoot,
+    ioDataA,
 
     dirChildren,
     dirParent,
@@ -266,7 +286,6 @@ module.exports = {
     toJObject,
     toJArray,
     toCsv,
-
 
     ioJArray,
     ioJObject,
