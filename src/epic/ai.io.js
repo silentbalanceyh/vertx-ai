@@ -8,7 +8,14 @@ const It = require('./ai.it');
 const Arr = require('./ai.array');
 
 const SEPRATOR = path.sep;
-
+const toTable = (record = {}) => {
+    const content = [];
+    content.push(`参数名\t\t|\t参数值\t\t|`.blue);
+    content.push(`-----------------------------------------`.yellow);
+    Object.keys(record).forEach(field => content.push(`${field}\t\t|\t${record[field]}\t\t|`));
+    content.push(`-----------------------------------------`.yellow);
+    return content.join("\n");
+}
 const toJObject = (content = "") => {
     Sure.cxJString(content);
     return JSON.parse(content);
@@ -247,7 +254,7 @@ module.exports = {
     dirCreate,
     dirResolve,
 
-
+    toTable,
     toJObject,
     toJArray,
     toCsv,

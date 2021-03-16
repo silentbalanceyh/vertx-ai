@@ -362,7 +362,7 @@ const parseFormat = (args = {}, pairs = []) => {
             actual[finalKey] = dft;
         });
     }));
-    Log.info(`命令参数：\n${JSON.stringify(actual, null, 4).blue}`);
+    Log.info(`Zero AI 加载输入参数：\n${Io.toTable(actual)}`);
     return actual;
 };
 module.exports = {
