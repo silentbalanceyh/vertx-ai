@@ -106,15 +106,4 @@ const exported = {
  *
  * @module aj
  */
-/**
- * ## epic核心库
- *
- * @module epic
- */
-
-/**
- * ## debug调试库
- *
- * @module debug
- */
 module.exports = exported;
