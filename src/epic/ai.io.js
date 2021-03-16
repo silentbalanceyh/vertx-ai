@@ -5,6 +5,7 @@ const Log = require('./ai.log');
 const Fx = require('./ai.fx');
 const It = require('./ai.it');
 const Arr = require('./ai.array');
+const U = require('underscore');
 
 const SEPRATOR = path.sep;
 const toTable = (record = {}) => {
@@ -41,7 +42,7 @@ const _findMaxFields = (array = []) => {
 };
 const toCsv = (array = [], mapping = {}, seperator) => {
     let lines = [];
-    if (0 < array.length) {
+    if (U.isArray(array) && 0 < array.length) {
         const keys = _findMaxFields(array);
         // 转换字段信息
         const formatted = {};
@@ -66,6 +67,8 @@ const toCsv = (array = [], mapping = {}, seperator) => {
             lines.push(line.join(seperator));
         });
         return lines;
+    } else {
+        Fx.fxError(10001, `value = ${JSON.stringify(array)}, type = ${typeof array}`, "Array")
     }
     return lines;
 };
