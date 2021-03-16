@@ -4,7 +4,7 @@ const U = require('underscore');
 const Sure = require('./object.sure');
 const E = require('./object.error');
 const Fx = require('./ai.fx');
-const It = require('./ai.collection');
+const It = require('./ai.it');
 const Io = require('./ai.io');
 const Log = require('./ai.log');
 const Word = require('./ai.word');
@@ -221,6 +221,38 @@ const PARSER = {
     "UI;": parseUi, "UI": parseUi,
     "R;": _parseRel, "R": _parseRel
 };
+const ioVisit = (object = {}, path = "") => {
+    let hitValue = zeroData(object, path);
+    if ("object" !== typeof hitValue) {
+        hitValue = {};
+    }
+    return hitValue;
+};
+const ioAttribute = (object = {}, path = "", data) => {
+    let $object = Immutable.fromJS(object);
+    if (data) {
+        if (!U.isArray(path)) {
+            path = path.split('.');
+        }
+        $object = $object.setIn(path, data);
+    }
+    return $object.toJS();
+};
+const zeroData = (object = {}, path = "") => {
+    if (!U.isArray(path)) {
+        path = path.split('.');
+    }
+    const $data = Immutable.fromJS(object);
+    let hitted = $data.getIn(path);
+    if (hitted) {
+        if (U.isFunction(hitted.toJS)) {
+            hitted = hitted.toJS();
+        } else {
+            hitted = "";
+        }
+    }
+    return hitted;
+};
 /**
  * ## `Ec.parseZero`
  *
@@ -291,39 +323,51 @@ const parseArgs = (ensure) => {
         process.exit();
     }
 };
-const zeroData = (object = {}, path = "") => {
-    if (!U.isArray(path)) {
-        path = path.split('.');
-    }
-    const $data = Immutable.fromJS(object);
-    let hitted = $data.getIn(path);
-    if (hitted) {
-        if (U.isFunction(hitted.toJS)) {
-            hitted = hitted.toJS();
+
+const parseInput = (required = []) => {
+    const inputArgs = process.argv.splice(3);
+    const config = {};
+    let key = undefined;
+    let value = undefined;
+    for (let idx = 0; idx <= inputArgs.length; idx++) {
+        if (0 === idx % 2) {
+            key = inputArgs[idx];
         } else {
-            hitted = "";
+            value = inputArgs[idx];
+        }
+        if (key && value) {
+            config[key] = value;
+            key = undefined;
+            value = undefined;
         }
     }
-    return hitted;
+    const $keys = Immutable.fromJS(Object.keys(config));
+    It.itArray(required, (each) => Fx.fxTerminal(
+        1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1]))),
+        E.fn10006(each)));
+    return config;
 };
-const ioVisit = (object = {}, path = "") => {
-    let hitValue = zeroData(object, path);
-    if ("object" !== typeof hitValue) {
-        hitValue = {};
-    }
-    return hitValue;
-};
-const ioAttribute = (object = {}, path = "", data) => {
-    let $object = Immutable.fromJS(object);
-    if (data) {
-        if (!U.isArray(path)) {
-            path = path.split('.');
-        }
-        $object = $object.setIn(path, data);
-    }
-    return $object.toJS();
+const parseFormat = (args = {}, pairs = []) => {
+    const actual = {};
+    pairs.forEach(item => Fx.fxContinue(U.isArray(item), () => {
+        const arg0 = item[0];
+        const arg1 = item[1];
+        let finalKey = arg0.length > arg1.length ? arg0 : arg1;
+        finalKey = finalKey.toString().replace(/-/g, '');
+        const dft = item[2];
+        It.itObject(args, (key, value) => Fx.fxContinue(arg0 === key || arg1 === key, () => {
+            actual[finalKey] = value;
+        }));
+        Fx.fxContinue(!args.hasOwnProperty(arg0) && !args.hasOwnProperty(arg1) && undefined !== dft, () => {
+            actual[finalKey] = dft;
+        });
+    }));
+    Log.info(`命令参数：\n${JSON.stringify(actual, null, 4).blue}`);
+    return actual;
 };
 module.exports = {
+    parseInput,
+    parseFormat,
     parseArgs,
     parseZero,
     ioVisit,

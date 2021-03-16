@@ -4,16 +4,14 @@ const aiSure = require('./object.sure');
 const aiFx = require('./ai.fx');
 const aiExecute = require('./ai.execute');
 const aiVisitor = require('./ai.visitor');
-const aiCollection = require('./ai.collection');
-const aiConsole = require('./ai.console');
+const aiCollection = require('./ai.it');
 
 const aiArray = require('./ai.array');
 const aiWord = require('./ai.word');
 
-
 const aiJava = require('./ai.java');
 const aiReact = require('./ai.react');
-const aiValue = require('./ai.value');
+const aiValue = require('./ai.is');
 
 const exported = {
     ...aiLog,
@@ -25,7 +23,6 @@ const exported = {
     ...aiExecute,
     ...aiVisitor,
     ...aiCollection,
-    ...aiConsole,
     ...aiArray,
     ...aiValue,
 

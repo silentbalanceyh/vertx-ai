@@ -3,10 +3,10 @@ const U = require('underscore');
 const co = require('co');
 const Immutable = require('immutable');
 const Log = require('./ai.log');
-const It = require('./ai.collection');
+const It = require('./ai.it');
 const Fx = require('./ai.fx');
 const E = require('./object.error');
-const Input = require('./ai.console');
+const Vt = require('./ai.visitor');
 
 const executeHeader = (app) => {
     const appInfo = require('../../package.json');
@@ -85,8 +85,8 @@ const executeEnd = () => {
 const executeInput = (required = [], params = []) => {
     const elementArray = required.filter(item => U.isArray(item));
     const isMatrix = 1 < elementArray.length;
-    const args = isMatrix ? Input.parseInput(required) : Input.parseInput([required]);
-    return Input.parseFormat(args, params)
+    const args = isMatrix ? Vt.parseInput(required) : Vt.parseInput([required]);
+    return Vt.parseFormat(args, params)
 };
 module.exports = {
     executeHeader,

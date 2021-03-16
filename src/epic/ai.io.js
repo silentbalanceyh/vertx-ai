@@ -4,7 +4,7 @@ const Sure = require('./object.sure');
 const Log = require('./ai.log');
 const E = require('./object.error');
 const Fx = require('./ai.fx');
-const It = require('./ai.collection');
+const It = require('./ai.it');
 const Arr = require('./ai.array');
 
 const SEPRATOR = path.sep;
