@@ -59,7 +59,17 @@ const exported = {
  * ai <command> [options1|options2|options3...]
  * ```
  *
- * ### 2. 数据通用格式
+ * ### 2. 命令列表
+ *
+ * |命令执行|含义|
+ * |---|:---|
+ * |ai csv|读取数据文件中的Array数组数据转换成csv的文件格式并输出。|
+ * |ai data|专用数据生成器，可生成`Object/Array`两种数据格式。|
+ * |ai key|为输入数据中的Array或Object追加`UUID`格式的字段，字段可配置，默认为`field = key`属性。|
+ * |ai uk|检查输入数据中是否包含了`field1,field2,field3`属性中的重复数据，直接输出结果。|
+ * |ai uuid|随机生成一定数量的UUID字符串，并且拷贝到剪切板中（MacOs）。|
+ *
+ * ### 3. 数据通用格式
  *
  * **带data节点**
  *

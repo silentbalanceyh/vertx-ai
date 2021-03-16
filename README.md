@@ -36,7 +36,6 @@ added 77 packages from 119 contributors in 8.417s
 
 |环境变量名|例子|含义|
 |---|:---|:---|
-|ZL|`export LG=cn`|「前端」默认为`cn`环境变量。|
 |ZT|`export ZT=generated/tool`|「前端」接下来的所有ZT命令都是在generated/tool模块中执行。|
 |ZF|`export ZF=ox-engine/ox-business`|「后端」接下来所有的ZF命令都在对应目录中执行。|
 

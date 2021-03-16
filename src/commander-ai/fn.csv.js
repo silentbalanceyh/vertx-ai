@@ -1,4 +1,23 @@
 const Ec = require('../epic');
+module.exports = () => {
+    const actual = Ec.executeInput(
+        ['-p', '--path'],
+        [
+            ['-p', '--path'],
+            ['-c', '--config', null],
+            ['-s', '--separator', ',']
+        ]
+    );
+    const inputData = Ec.ioDataA(actual.path);
+    let mapping = Ec.fxContinue(Ec.isExist(actual.config), () => Ec.parseZero(actual.config));
+    // Csv
+    Ec.info(`映射配置数据：\n${JSON.stringify(mapping, null, 4)}`)
+    Ec.info(`使用分隔符：${actual.separator.green}`);
+    const csvArr = Ec.toCsv(inputData, mapping, actual.separator);
+    const csvData = csvArr.join('\n');
+    Ec.outString('.' + Ec.SEPARATOR + Ec.strUuid() + ".csv", csvData);
+};
+
 /**
  * ## `ai csv`
  *
@@ -84,21 +103,3 @@ const Ec = require('../epic');
  * @memberOf module:ai
  * @method csv
  */
-module.exports = () => {
-    const actual = Ec.executeInput(
-        ['-p', '--path'],
-        [
-            ['-p', '--path'],
-            ['-c', '--config', null],
-            ['-s', '--separator', ',']
-        ]
-    );
-    const inputData = Ec.ioDataA(actual.path);
-    let mapping = Ec.fxContinue(Ec.isExist(actual.config), () => Ec.parseZero(actual.config));
-    // Csv
-    Ec.info(`映射配置数据：\n${JSON.stringify(mapping, null, 4)}`)
-    Ec.info(`使用分隔符：${actual.separator.green}`);
-    const csvArr = Ec.toCsv(inputData, mapping, actual.separator);
-    const csvData = csvArr.join('\n');
-    Ec.outString('.' + Ec.SEPARATOR + Ec.strUuid() + ".csv", csvData);
-};

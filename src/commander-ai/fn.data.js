@@ -2,6 +2,159 @@ const Ec = require('../epic');
 const U = require('underscore');
 const Mock = require('mockjs');
 const Random = Mock.Random;
+const GENERATOR = {
+    "Guid": () => Ec.strUuid(),                                         // GUID格式
+    "Code": () => Random.string('ABCDEFGHIJKLMNOPQRSTUVWXYZ.', 6),      // 大写专用格式，可带点的编码
+    "HeadCount": () => Random.natural(10, 1000),                        // 职员数量
+    "Mobile": () => "1" + Random.string("123456789", 10),               // 手机号
+    // 座机
+    "Phone": () => "(0" + Random.string("0123456789", 2) + ") " + Random.string("0123456789", 4) + " " + Random.string("0123456789", 4),
+
+    "Http": () => Random.url('http'),                                   // Http地址
+    "Https": () => Random.url('https'),                                 // Https地址
+    "Ftp": () => Random.url('ftp'),                                     // FTP地址
+    "Domain": () => Random.domain(),                                    // 域名
+    "Protocol": () => Random.protocol(),                                // 协议名
+    "IP": () => Random.ip(),                                            // IP地址
+    "Bool": () => Random.bool(),                                        // 布尔值
+    "Color": () => Random.color(),                                      // Web色彩
+    "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),  // 版本号
+    "Percent": () => Random.float(0, 0, 1, 99).toFixed(2),  // 百分数
+
+    // 地理专用
+    "Zip": () => Random.zip(),                                          // 邮编
+    "Email": () => Random.email(),                                      // 邮箱
+    "Region": () => Random.region(),                                    // 区域
+    "Province": () => Random.province(),                                // 省会
+    "City": () => Random.city(),                                        // 城市
+    "CityFull": () => Random.city(true),                                // 城规全称（带前缀）
+    "County": () => Random.county(),                                    // 二级县
+    "CountyFull": () => Random.county(true),                            // 二级县全称
+    "Tld": () => Random.tld(),                                          // 专用
+
+    // 中文
+    "CnName": () => Random.cname(),                                     // 姓名
+    "CnFirst": () => Random.cfirst(),                                   // 姓
+    "CnCompany": () => Random.ctitle() + "公司",                         // 公司
+    "CnDept": () => Random.ctitle(2, 4) + "部",                         // 部门
+    "CnSection": () => Random.ctitle(2, 4) + "科室",                    // 科室
+    "CnScope": () => "范围" + Random.ctitle(3),                         // 范围
+    "CnAddress": () => Random.region() + Random.county(true) + Random.ctitle(), // 地址
+    "CnText": () => Random.cparagraph(),                                // 段落
+    "CnSentence": () => Random.csentence(),                             // 句子
+    "CnTitle": () => Random.ctitle(3, 9),                               // 标题
+    "CnGender": () => Random.pick(["男", "女"]),                         // 性别
+
+    // 英文
+    "EnName": () => Random.name(),                                      // 英文姓名
+    "EnFirst": () => Random.first(),                                    // 英文 First Name
+    "EnLast": () => Random.last(),                                      // 英文 Last Name
+    "EnCompany": () => Random.title() + " Company",                     // 公司
+    "EnDept": () => Random.title(2, 4) + " Department",                  // 部门
+    "EnSection": () => Random.title(2, 4) + " Section",                  // 科室
+    "EnScope": () => "Scope: " + Random.ctitle(2),                      // 范围
+    "EnAddress": () => Random.first() + ', State ' + Random.title(1) + ", Street " + Random.last(), // 地址
+    "EnText": () => Random.paragraph(),                                 // 段楼
+    "EnSentence": () => Random.sentence(),                              // 句子
+    "EnTitle": () => Random.title(3, 9),                                // 标题
+    "EnGender": () => Random.pick(["Female", "Male"]),                  // 性别
+
+    // 时间部分
+    "Iso": () => new Date(),                                            // 当前时间：Iso格式
+    "Now": () => Random.now(),                                          // 当前时间
+    "Date": () => Random.date(),                                        // 日期
+    "DateTime": () => Random.datetime(),                                // 全日期/时间
+    "Time": () => Random.time(),                                        // 时间
+}
+/*
+ * 1 - 10
+ */
+for (let idx = 0; idx < 11; idx++) {
+    GENERATOR[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
+    GENERATOR[`EnString${idx + 1}`] = () => Random.string(idx + 1);
+    GENERATOR[`CnString${idx + 1}`] = () => Random.ctitle(idx + 1);
+}
+
+const generateRecord = (config = {}) => {
+    const record = {};
+    Ec.itObject(config, (field, generator) => {
+        if (U.isArray(generator)) {
+            // 随机提取数组中的某个元素，格式为数组格式
+            record[field] = Random.pick(generator);
+        } else if (generator.startsWith("$FIXED")) {
+            // $FIXED执行器专用
+            record[field] = generator.substring(generator.indexOf(":") + 1).trim();
+        } else {
+            // 标准执行器
+            if (GENERATOR.hasOwnProperty(generator)) {
+                record[field] = GENERATOR[generator]();
+            }
+        }
+    })
+    return record;
+}
+
+const generateData = (input = {}) => {
+    const {json = false, number = 23, config = {}} = input;
+    if (json) {
+        // Object类型
+        return generateRecord(config);
+    } else {
+        // Array类型
+        let records = [];
+        for (let idx = 0; idx < number; idx++) {
+            records.push(generateRecord(config));
+        }
+        return records;
+    }
+}
+module.exports = () => {
+    const actual = Ec.executeInput(
+        ['-c', '--config'],
+        [
+            ['-c', '--config'],
+            ['-o', '--out', '.'],
+            ['-j', '--json', false],
+            ['-n', '--number', 23],
+        ]
+    );
+    const fields = Ec.parseZero(actual.config);
+    if (fields) {
+        // 构造配置
+        const prepared = {};
+        prepared.number = actual.number;
+        prepared.json = actual.json;
+        prepared.config = fields;
+
+        // 根据配置生成数据
+        Ec.info(`处理过后的完整配置信息：\n${JSON.stringify(prepared, null, 4).yellow}`);
+        const data = generateData(prepared);
+
+        // 输出处理
+        if (data) {
+            let out = actual.out;
+            // 是否带有扩展名
+            if (!out.endsWith('json')) {
+                // 追加尾符
+                if (!out.endsWith(Ec.SEPARATOR)) {
+                    out = out + Ec.SEPARATOR;
+                }
+                //
+                out = out + Ec.strUuid() + ".json";
+            }
+            // 基础数据规范
+            let content = {};
+            content.data = data;
+            if (U.isArray(data)) {
+                content.count = actual.number;
+            }
+            Ec.outJson(out, content);
+        } else {
+            Ec.warn(`生成数据失败！！！`)
+        }
+    }
+}
+
 /**
  * ## `ai data`
  *
@@ -249,155 +402,3 @@ const Random = Mock.Random;
  * @memberOf module:ai
  * @method data
  */
-const GENERATOR = {
-    "Guid": () => Ec.strUuid(),                                         // GUID格式
-    "Code": () => Random.string('ABCDEFGHIJKLMNOPQRSTUVWXYZ.', 6),      // 大写专用格式，可带点的编码
-    "HeadCount": () => Random.natural(10, 1000),                        // 职员数量
-    "Mobile": () => "1" + Random.string("123456789", 10),               // 手机号
-    // 座机
-    "Phone": () => "(0" + Random.string("0123456789", 2) + ") " + Random.string("0123456789", 4) + " " + Random.string("0123456789", 4),
-
-    "Http": () => Random.url('http'),                                   // Http地址
-    "Https": () => Random.url('https'),                                 // Https地址
-    "Ftp": () => Random.url('ftp'),                                     // FTP地址
-    "Domain": () => Random.domain(),                                    // 域名
-    "Protocol": () => Random.protocol(),                                // 协议名
-    "IP": () => Random.ip(),                                            // IP地址
-    "Bool": () => Random.bool(),                                        // 布尔值
-    "Color": () => Random.color(),                                      // Web色彩
-    "Version": () => Random.natural(1, 20) + "." + Random.natural(1, 999),  // 版本号
-    "Percent": () => Random.float(0, 0, 1, 99).toFixed(2),  // 百分数
-
-    // 地理专用
-    "Zip": () => Random.zip(),                                          // 邮编
-    "Email": () => Random.email(),                                      // 邮箱
-    "Region": () => Random.region(),                                    // 区域
-    "Province": () => Random.province(),                                // 省会
-    "City": () => Random.city(),                                        // 城市
-    "CityFull": () => Random.city(true),                                // 城规全称（带前缀）
-    "County": () => Random.county(),                                    // 二级县
-    "CountyFull": () => Random.county(true),                            // 二级县全称
-    "Tld": () => Random.tld(),                                          // 专用
-
-    // 中文
-    "CnName": () => Random.cname(),                                     // 姓名
-    "CnFirst": () => Random.cfirst(),                                   // 姓
-    "CnCompany": () => Random.ctitle() + "公司",                         // 公司
-    "CnDept": () => Random.ctitle(2, 4) + "部",                         // 部门
-    "CnSection": () => Random.ctitle(2, 4) + "科室",                    // 科室
-    "CnScope": () => "范围" + Random.ctitle(3),                         // 范围
-    "CnAddress": () => Random.region() + Random.county(true) + Random.ctitle(), // 地址
-    "CnText": () => Random.cparagraph(),                                // 段落
-    "CnSentence": () => Random.csentence(),                             // 句子
-    "CnTitle": () => Random.ctitle(3, 9),                               // 标题
-    "CnGender": () => Random.pick(["男", "女"]),                         // 性别
-
-    // 英文
-    "EnName": () => Random.name(),                                      // 英文姓名
-    "EnFirst": () => Random.first(),                                    // 英文 First Name
-    "EnLast": () => Random.last(),                                      // 英文 Last Name
-    "EnCompany": () => Random.title() + " Company",                     // 公司
-    "EnDept": () => Random.title(2, 4) + " Department",                  // 部门
-    "EnSection": () => Random.title(2, 4) + " Section",                  // 科室
-    "EnScope": () => "Scope: " + Random.ctitle(2),                      // 范围
-    "EnAddress": () => Random.first() + ', State ' + Random.title(1) + ", Street " + Random.last(), // 地址
-    "EnText": () => Random.paragraph(),                                 // 段楼
-    "EnSentence": () => Random.sentence(),                              // 句子
-    "EnTitle": () => Random.title(3, 9),                                // 标题
-    "EnGender": () => Random.pick(["Female", "Male"]),                  // 性别
-
-    // 时间部分
-    "Iso": () => new Date(),                                            // 当前时间：Iso格式
-    "Now": () => Random.now(),                                          // 当前时间
-    "Date": () => Random.date(),                                        // 日期
-    "DateTime": () => Random.datetime(),                                // 全日期/时间
-    "Time": () => Random.time(),                                        // 时间
-}
-/*
- * 1 - 10
- */
-for (let idx = 0; idx < 11; idx++) {
-    GENERATOR[`Number${idx + 1}`] = () => Random.string("0123456789", idx + 1);
-    GENERATOR[`EnString${idx + 1}`] = () => Random.string(idx + 1);
-    GENERATOR[`CnString${idx + 1}`] = () => Random.ctitle(idx + 1);
-}
-
-const generateRecord = (config = {}) => {
-    const record = {};
-    Ec.itObject(config, (field, generator) => {
-        if (U.isArray(generator)) {
-            // 随机提取数组中的某个元素，格式为数组格式
-            record[field] = Random.pick(generator);
-        } else if (generator.startsWith("$FIXED")) {
-            // $FIXED执行器专用
-            record[field] = generator.substring(generator.indexOf(":") + 1).trim();
-        } else {
-            // 标准执行器
-            if (GENERATOR.hasOwnProperty(generator)) {
-                record[field] = GENERATOR[generator]();
-            }
-        }
-    })
-    return record;
-}
-
-const generateData = (input = {}) => {
-    const {json = false, number = 23, config = {}} = input;
-    if (json) {
-        // Object类型
-        return generateRecord(config);
-    } else {
-        // Array类型
-        let records = [];
-        for (let idx = 0; idx < number; idx++) {
-            records.push(generateRecord(config));
-        }
-        return records;
-    }
-}
-module.exports = () => {
-    const actual = Ec.executeInput(
-        ['-c', '--config'],
-        [
-            ['-c', '--config'],
-            ['-o', '--out', '.'],
-            ['-j', '--json', false],
-            ['-n', '--number', 23],
-        ]
-    );
-    const fields = Ec.parseZero(actual.config);
-    if (fields) {
-        // 构造配置
-        const prepared = {};
-        prepared.number = actual.number;
-        prepared.json = actual.json;
-        prepared.config = fields;
-
-        // 根据配置生成数据
-        Ec.info(`处理过后的完整配置信息：\n${JSON.stringify(prepared, null, 4).yellow}`);
-        const data = generateData(prepared);
-
-        // 输出处理
-        if (data) {
-            let out = actual.out;
-            // 是否带有扩展名
-            if (!out.endsWith('json')) {
-                // 追加尾符
-                if (!out.endsWith(Ec.SEPARATOR)) {
-                    out = out + Ec.SEPARATOR;
-                }
-                //
-                out = out + Ec.strUuid() + ".json";
-            }
-            // 基础数据规范
-            let content = {};
-            content.data = data;
-            if (U.isArray(data)) {
-                content.count = actual.number;
-            }
-            Ec.outJson(out, content);
-        } else {
-            Ec.warn(`生成数据失败！！！`)
-        }
-    }
-}

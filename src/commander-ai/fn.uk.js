@@ -1,4 +1,36 @@
 const Ec = require('../epic');
+module.exports = () => {
+    const actual = Ec.executeInput(
+        [
+            ['-p', '--path'],
+            ['-f', '--field']
+        ],
+        [
+            ['-p', '--path'],
+            ['-f', '--field']
+        ]
+    );
+    const inputData = Ec.ioDataA(actual.path);
+    const field = actual.field;
+    if (field) {
+        const fieldArr = field.toString().split(',');
+        Ec.info(`检查字段：${JSON.stringify(fieldArr).blue}`);
+        fieldArr.forEach(field => {
+            const checked = {};
+            inputData.forEach(each => {
+                const value = each[field];
+                if (value && checked.hasOwnProperty(value)) {
+                    Ec.info(`字段出现重复值：${field} = ${value}`.red);
+                }
+                checked[value] = true;
+            });
+        })
+        Ec.info("系统检查重复值完成！".cyan);
+    } else {
+        Ec.fxError(10001, field, "String");
+    }
+}
+
 /**
  * ## `ai uk`
  *
@@ -36,34 +68,3 @@ const Ec = require('../epic');
  * @memberOf module:ai
  * @method uk
  */
-module.exports = () => {
-    const actual = Ec.executeInput(
-        [
-            ['-p', '--path'],
-            ['-f', '--field']
-        ],
-        [
-            ['-p', '--path'],
-            ['-f', '--field']
-        ]
-    );
-    const inputData = Ec.ioDataA(actual.path);
-    const field = actual.field;
-    if (field) {
-        const fieldArr = field.toString().split(',');
-        Ec.info(`检查字段：${JSON.stringify(fieldArr).blue}`);
-        fieldArr.forEach(field => {
-            const checked = {};
-            inputData.forEach(each => {
-                const value = each[field];
-                if (value && checked.hasOwnProperty(value)) {
-                    Ec.info(`字段出现重复值：${field} = ${value}`.red);
-                }
-                checked[value] = true;
-            });
-        })
-        Ec.info("系统检查重复值完成！".cyan);
-    } else {
-        Ec.fxError(10001, field, "String");
-    }
-}

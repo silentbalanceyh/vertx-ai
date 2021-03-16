@@ -19,6 +19,29 @@ const applyEach = (data = {}, field = 'key') => {
         }
     }
 };
+module.exports = () => {
+    const actual = Ec.executeInput(
+        [
+            ['-p', '--path']
+        ],
+        [
+            ['-p', '--path'],
+            ['-f', '--field', 'key']
+        ]
+    );
+
+    Ec.cxExist(actual.path);
+    Ec.itFileSync(actual.path, (item) => {
+        // 读取基础数据信息
+        const content = Ec.ioString(item);
+        // 顶层引用
+        const rootRef = JSON.parse(content);
+        applyEach(rootRef, actual.field);
+        // 路径替换
+        Ec.outJson(item, rootRef);
+    });
+}
+
 /**
  * ## `ai key`
  *
@@ -56,25 +79,3 @@ const applyEach = (data = {}, field = 'key') => {
  * @memberOf module:ai
  * @method key
  */
-module.exports = () => {
-    const actual = Ec.executeInput(
-        [
-            ['-p', '--path']
-        ],
-        [
-            ['-p', '--path'],
-            ['-f', '--field', 'key']
-        ]
-    );
-
-    Ec.cxExist(actual.path);
-    Ec.itFileSync(actual.path, (item) => {
-        // 读取基础数据信息
-        const content = Ec.ioString(item);
-        // 顶层引用
-        const rootRef = JSON.parse(content);
-        applyEach(rootRef, actual.field);
-        // 路径替换
-        Ec.outJson(item, rootRef);
-    });
-}
