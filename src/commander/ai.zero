@@ -3,3 +3,5 @@ command,    executor,       description,                                option1,
 uuid,       executeUuid,    生成UUID的值，可直接拷贝,                      n=「20」生成的数量
 csv,        executeCsv,     将JsonArray数据转换成csv,                     p=输入数据文件路径, c=配置文件路径, s=分割符
 uk,         executeUk,      检查数据文件中的Data数据是否符合唯一值规范,       p=输入数据文件路径, f=需要检查的字段名
+data,       executeData,    根据配置文件生成数据,                          c=配置文件路径, o=「.」输出文件基本路径, j=「false」是否Array, n=「23」如果是Array则生效
+key,        executeKey,     为数据模板添加key属性（UUID格式）,              p=输入数据文件路径, f=「key」标识key的字段名

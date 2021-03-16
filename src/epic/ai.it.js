@@ -75,16 +75,20 @@ const itArray = (array = [], executor = () => {
 };
 
 const itFileSync = (path = "", callback) => {
-    const etat = fs.statSync(path);
-    if (etat.isDirectory()) {
-        const dir = fs.readdirSync(path);
-        itArray(dir, (item) => Fx.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
-            let divider = path.endsWith(SEPRATOR) ? SEPRATOR : "";
-            let hitFile = path + divider + item;
-            itFileSync(hitFile, callback);
-        }))
+    if (fs.existsSync(path)) {
+        const etat = fs.statSync(path);
+        if (etat.isDirectory()) {
+            const dir = fs.readdirSync(path);
+            itArray(dir, (item) => Fx.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
+                let divider = path.endsWith(SEPRATOR) ? "" : SEPRATOR;
+                let hitFile = path + divider + item;
+                itFileSync(hitFile, callback);
+            }))
+        } else {
+            callback(path);
+        }
     } else {
-        callback(path);
+        Log.warn(`路径不存在：${path}`)
     }
 };
 

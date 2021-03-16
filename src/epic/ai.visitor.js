@@ -221,38 +221,6 @@ const PARSER = {
     "UI;": parseUi, "UI": parseUi,
     "R;": _parseRel, "R": _parseRel
 };
-const ioVisit = (object = {}, path = "") => {
-    let hitValue = zeroData(object, path);
-    if ("object" !== typeof hitValue) {
-        hitValue = {};
-    }
-    return hitValue;
-};
-const ioAttribute = (object = {}, path = "", data) => {
-    let $object = Immutable.fromJS(object);
-    if (data) {
-        if (!U.isArray(path)) {
-            path = path.split('.');
-        }
-        $object = $object.setIn(path, data);
-    }
-    return $object.toJS();
-};
-const zeroData = (object = {}, path = "") => {
-    if (!U.isArray(path)) {
-        path = path.split('.');
-    }
-    const $data = Immutable.fromJS(object);
-    let hitted = $data.getIn(path);
-    if (hitted) {
-        if (U.isFunction(hitted.toJS)) {
-            hitted = hitted.toJS();
-        } else {
-            hitted = "";
-        }
-    }
-    return hitted;
-};
 /**
  * ## `Ec.parseZero`
  *
@@ -368,6 +336,4 @@ module.exports = {
     parseFormat,
     parseArgs,
     parseZero,
-    ioVisit,
-    ioAttribute,
 };
