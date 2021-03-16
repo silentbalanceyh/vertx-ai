@@ -8,9 +8,9 @@ echo -e "Command List: "
 echo -e "    \033[33mdoc\033[0m = \"\033[34mGenerate document of Zero Ai Research\033[0m\""
 echo -e "    \033[33mai\033[0m = \"\033[34mRun Zero Ai on server ${PORT}\033[0m\""
 if [ "doc" == "$1" ]; then
-  ./scripts/zrun-doc-generate.sh
+  ./script/zrun-doc-generate.sh
 elif [ "ai" == "$1" ]; then
-  ./scripts/zrun-doc-server.sh ${PORT} doc-web
+  ./script/zrun-doc-server.sh ${PORT} doc-web
 else
   echo "Invalid input command of $1"
 fi

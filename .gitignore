@@ -64,3 +64,4 @@ typings/
 .markeditor
 .configs
 backup
+package-lock.json

@@ -42,7 +42,7 @@
         "node-baidu-translate": "^0.1.0",
         "random-js": "^2.1.0",
         "superagent": "^6.1.0",
-        "underscore": "^1.12.0",
+        "underscore": "^1.12.1",
         "uuid": "^8.3.2"
     },
     "homepage": "http://www.vertxai.cn",

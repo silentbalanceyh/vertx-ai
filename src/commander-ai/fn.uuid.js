@@ -57,15 +57,21 @@ function copyMacOs(data) {
  * @method uuid
  */
 module.exports = () => {
+    /*
+     * 参数解析
+     */
     const actual = Ec.executeInput(
         [],
         [
             ['-n', '--number', 20]
         ]
     );
+    /*
+     * 基本信息
+     */
     const number = actual.number;
-    Ec.info(`UUID生成器，生成数量：${number}`);
     const platform = os.platform();
+    Ec.info(`UUID生成器，生成数量：${number}`);
     Ec.info(`当前操作系统：${platform}`);
     if ("darwin" === platform) {
         const content = [];
@@ -77,6 +83,9 @@ module.exports = () => {
         copyMacOs(content.join('\n'))
             .then(sign => Ec.info(`生成的UUID已经全部成功拷贝到剪切板中！`))
     } else {
+        /*
+         * 不支持的操作系统
+         */
         Ec.fxError(10032, platform);
     }
 };
