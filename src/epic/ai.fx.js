@@ -94,8 +94,8 @@ const fxSorter = (input = {}) => {
  *
  * @memberOf module:debug
  * @param {Boolean/Function/Number} cond 条件，条件函数和错误代码。
- * @param {Number/Any} code 错误代码或首参。
- * @param {Any[]} args 返回剩余参数信息。
+ * @param {*} code 错误代码或首参。
+ * @param {*} args 返回剩余参数信息。
  */
 const fxError = (cond, code, ...args) => {
     /*

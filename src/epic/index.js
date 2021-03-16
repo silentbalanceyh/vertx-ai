@@ -11,7 +11,6 @@ const aiWord = require('./ai.word');
 
 const aiJava = require('./ai.java');
 const aiReact = require('./ai.react');
-const aiValue = require('./ai.is');
 
 const exported = {
     ...aiLog,
@@ -24,7 +23,6 @@ const exported = {
     ...aiVisitor,
     ...aiCollection,
     ...aiArray,
-    ...aiValue,
 
     ...aiJava,
     ...aiReact,
