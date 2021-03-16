@@ -1,2 +1,5 @@
 A;
 command,    executor,       description,                            option1,option2, option3, option4
+pageC,      executeCPage,   完整模块生成 ListComplex,                 c=配置文件路径
+pageQ,      executeQPage,   完整模块生成 ListQuery,                   c=配置文件路径
+pageO,      executeOPage,   完整模块生成 ListOpen,                    c=配置文件路径
