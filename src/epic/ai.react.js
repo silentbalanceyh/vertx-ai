@@ -2,7 +2,6 @@ const Io = require('./ai.io');
 const Fx = require('./ai.fx');
 const Log = require('./ai.log');
 const Word = require('./ai.word');
-const Exec = require('./ai.execute');
 
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +21,7 @@ const reactLanguage = () => {
     const env = Io.ioProp(root + SEPRATOR + '.env.development');
     return env['Z_LANGUAGE'] ? env['Z_LANGUAGE'] : 'cn';
 };
-const reactConfig = (module) => {
+const reactConfig = (module, component) => {
     // 路径分析专用
     const slash = Word.strSlashCount(module);
     // 10027：检查ZT环境的格式
@@ -37,32 +36,57 @@ const reactConfig = (module) => {
         configuration.pathRoot = reactRoot();
         {
             // 资源路径，组件路径
-            configuration.pathResource = `src/cab/${language}/${module}`;
-            configuration.pathComponent = `src/components/${module}`;
-            configuration.pathContainer = `src/container/${module}`;
+            configuration.pathResource = `src/cab/${language}/${component}/${module}`;
+            configuration.pathUi = `src/${component}/${module}`;
         }
         return configuration;
     }
 }
-const reactEnsure = () => {
+const reactEnsure = (category = 'components') => {
     const module = process.env.ZT;
     // 10029: 检查ZT环境变量
     Fx.fxError(!module, 10029, module, 'ZT');
     if (module) {
-        Log.info(`开启ZT模块开发环境，当前模块：${module.red}，特殊命令只能在${`「ZT」`.red}环境使用。`)
-        const moduleConfig = reactConfig(module);
+        Log.info(`「启用ZT环境」，当前模块：${module.red}，特殊命令只能在${`ZT`.red}环境使用。`)
+        const moduleConfig = reactConfig(module, category);
         if (moduleConfig) {
-            Log.info(`Zero AI`.cyan + ` 基础环境......`.yellow);
+            Log.info(`Zero AI `.cyan + ` 0. 基础环境......`.rainbow);
             Log.info(`环境变量：` + `ZT = ${module}`.red);
             Log.info(`模块信息：${moduleConfig.module.blue}`);
             Log.info(`语言信息：${moduleConfig.language.blue}`);
             Log.info(`项目目录：${moduleConfig.pathRoot.blue}`);
-            Log.info(`Zero AI`.cyan + ` 结束！！`.yellow);
             return moduleConfig;
         }
     }
 }
+/*
+ * 目录创建专用
+ */
+const reactRuntime = (config = {}, files = {}) => {
+    Log.info(`Zero AI `.cyan + ` 1. 目录检查......`.rainbow);
+    // 资源目录
+    const runtime = {};
+    runtime.resource = config.pathRoot + '/' + config.pathResource;
+    runtime.resourceFiles = {};
+    Io.dirCreate(runtime.resource);
+    // 组件目录
+    runtime.ui = config.pathRoot + '/' + config.pathUi;
+    runtime.uiFiles = {};
+    Io.dirCreate(runtime.ui);
+
+    // 其他目录专用计算
+    runtime.namespace = runtime.ui + '/Cab.json';
+    const {
+        resource = [],
+        ui = []
+    } = files;
+    resource.forEach(each => runtime.resourceFiles[each] = runtime.resource + '/' + each + ".json");
+    ui.forEach(each => runtime.uiFiles[each] = runtime.ui + '/' + each + ".js");
+    config.runtime = Fx.fxSorter(runtime);
+}
 module.exports = {
     // 环境确认
     reactEnsure,
+    // 1. 目录创建
+    reactRuntime
 };
