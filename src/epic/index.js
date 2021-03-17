@@ -108,13 +108,22 @@ const exported = {
 /**
  * ## aj命令
  *
+ * ### 1. 基本使用
+ *
  * aj命令的专用语法如下：
  *
  * ```shell
  * aj <command> [options1|options2|options3...]
  * ```
  *
- * ### 1. 标准化配置
+ * ### 2. 命令列表
+ *
+ * |命令执行|含义|
+ * |---|:---|
+ * |aj icomplex|「模块」生成`ExListComplex`专用模块。|
+ * |aj iform|「组件」生成`ExForm`专用组件。|
+ *
+ * ### 3. 标准化配置
  *
  * ```js
  * {
@@ -162,6 +171,7 @@ const exported = {
  * |MODULE|`#MODULE#`|当前模块的文字描述名称。|
  * |API|`#API#`|构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。|
  * |IDENTIFIER|`#IDENTIFIER#`|模型的统一标识符，最终会绑定到identifier中。|
+ * |NAME|`#NAME#`|绑定文件设定，直接赋值`input.params.NAME = tpl.target`生成单文件专用。|
  *
  *
  * @module aj
