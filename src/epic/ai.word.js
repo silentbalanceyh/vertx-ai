@@ -14,9 +14,26 @@ const strSlashCount = (literal = "") => {
 };
 const SEPARATOR = SEP;
 const strUuid = () => v4();
+const strWidth = (input) => {
+    let content = "";
+    const space = 16 - input.length;
+    for (let i = 0; i < space; i++) {
+        content += " ";
+    }
+    return content + input;
+}
+const strExpr = (content, params = {}) => {
+    Object.keys(params).forEach(name => {
+        const expression = new RegExp(`#${name}#`, 'g');
+        content = content.replace(expression, params[name]);
+    });
+    return content;
+}
 module.exports = {
     strFirstUpper,
     strSlashCount,
     strUuid,
+    strWidth,
+    strExpr,
     SEPARATOR
 };

@@ -84,13 +84,13 @@ const isDirectory = (path) => {
     }
 };
 const isExist = (path) => fs.existsSync(path);
-const _outFile = (paths, content, sync) => {
+const _outFile = (paths, content, sync = true) => {
     if (sync) {
         fs.writeFileSync(paths, content);
-        Log.info(`（Sync）成功将数据写入到文件：${paths}！`.cyan);
+        Log.info(`（Sync）成功将数据写入到文件：${paths.cyan}！`);
     } else {
         fs.writeFile(paths, content, (res) => {
-            Log.info(`（Async）成功将数据写入到文件：${paths}！`.cyan);
+            Log.info(`（Async）成功将数据写入到文件：${paths.cyan}！`);
         });
     }
 };
