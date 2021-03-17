@@ -1,13 +1,17 @@
 const Ec = require('../epic');
-
+/**
+ * ## `aj lcomplex`
+ *
+ * @memberOf module:aj
+ * @method lcomplex
+ */
 module.exports = () => {
     const actual = Ec.executeInput(
         [
             ['-c', '--config']
         ],
         [
-            ['-c', '--config', 'ui.json'],
-            ['-t', '--type', 'Complex']
+            ['-c', '--config', 'ui.json']
         ]
     );
     // 基本环境监察，得到基础配置信息
@@ -16,7 +20,6 @@ module.exports = () => {
     Ec.cxExist(actual.config);
     const inputConfig = Ec.ioJObject(actual.config);
     // 基础配置
-    inputConfig.type = actual.type;
     inputConfig.tpl = "list"; // 模板目录
     configuration.input = inputConfig;
     // 构造目录
