@@ -79,26 +79,52 @@ const reactReady = (config = {}, files = {}) => {
     // 其他目录专用计算
     Log.info(`Zero AI `.cyan + ` 2. 文件表：`.rainbow);
     runtime.namespaceFile = runtime.ui + '/Cab.json';
+
+    // 资源文件/脚本文件
     const {
         resource = [],
-        ui = []
+        ui = [],
     } = files;
-    resource.filter(each => undefined !== each).forEach(each => {
-        const file = runtime.resource + '/' + each + ".json";
-        runtime.resourceFiles[each] = file;
-        Log.info(`${Word.strWidth(each)} = ${file.blue}`);
-    });
-    ui.filter(each => undefined !== each).forEach(each => {
-        const file = runtime.ui + '/' + each + ".js";
-        runtime.uiFiles[each] = file;
-        Log.info(`${Word.strWidth(each)} = ${file.yellow}`);
-    });
+    const tpl = config.tpl;
+    /*
+     * 如果配置了 tpl.target 则是单文件拷贝
+     */
+    if (tpl.target) {
+        /*
+         * fileJs模式
+         */
+        const filename = tpl.target;
+        runtime.resourceFiles[filename] = runtime.resource + '/' + filename + ".json";
+        runtime.uiFiles[filename] = runtime.ui + '/' + filename + ".js";
+    } else {
+        /*
+         * 非fileJs模式
+         */
+        resource.filter(each => undefined !== each).forEach(each => {
+            const file = runtime.resource + '/' + each + ".json";
+            runtime.resourceFiles[each] = file;
+            Log.info(`${Word.strWidth(each)} = ${file.blue}`);
+        });
+        ui.filter(each => undefined !== each).forEach(each => {
+            const file = runtime.ui + '/' + each + ".js";
+            runtime.uiFiles[each] = file;
+            Log.info(`${Word.strWidth(each)} = ${file.yellow}`);
+        });
+    }
     config.runtime = Fx.fxSorter(runtime);
 }
 const reactTpl = (name, config = {}) => {
-    const {input = {}} = config;
+    const {input = {}, tpl = {}} = config;
     // 读取模板
-    const tplFile = path.join(__dirname, `../cab/${input.tpl}/${name}.tpl`);
+    let tplFile;
+    if (tpl.source) {
+        const extension = config.extension;
+        // 特殊参数注入`#NAME#`
+        input.params.NAME = tpl.target;
+        tplFile = path.join(__dirname, `../cab/${tpl.type}/${tpl.source}.${extension}.tpl`);
+    } else {
+        tplFile = path.join(__dirname, `../cab/${tpl.type}/${name}.tpl`);
+    }
     if (fs.existsSync(tplFile)) {
         // 读取文件内容
         const content = Io.ioString(tplFile);
@@ -107,7 +133,9 @@ const reactTpl = (name, config = {}) => {
         Log.warn(`Zero AI 对不起，文件不存在`.yellow + `：${tplFile.red}`);
     }
 }
-// --------------------- 创建名空间文件 -----------------------
+// ==========================================================
+// 名空间文件 Cab.json
+// ==========================================================
 const reactTplNamespace = (config) => {
     const runtime = config.runtime;
     Log.info(`Zero AI `.cyan + ` \t3.1. 创建名空间文件......`.rainbow);
@@ -117,26 +145,38 @@ const reactTplNamespace = (config) => {
         Io.outJson(runtime.namespaceFile, namespace, true);
     }
 }
+// ==========================================================
+// 资源文件
+// ==========================================================
 const reactTplResource = (config) => {
     const runtime = config.runtime;
     Log.info(`Zero AI `.cyan + ` \t3.2. 构造资源文件......`.rainbow);
     const resourceFiles = runtime.resourceFiles;
     Object.keys(resourceFiles).forEach(filename => {
         const fullName = `${filename}.json`;
-        const content = reactTpl(fullName, config);
+        const content = reactTpl(fullName, {
+            ...config,
+            extension: 'json'
+        });
         if (content) {
             const contentJson = JSON.parse(content);
             Io.outJson(resourceFiles[filename], contentJson, true);
         }
     });
 }
+// ==========================================================
+// 脚本文件
+// ==========================================================
 const reactTplUi = (config) => {
     const runtime = config.runtime;
     Log.info(`Zero AI `.cyan + ` \t3.3. 构造界面文件......`.rainbow);
     const uiFiles = runtime.uiFiles;
     Object.keys(uiFiles).forEach(filename => {
         const fullName = `${filename}.js`;
-        const content = reactTpl(fullName, config);
+        const content = reactTpl(fullName, {
+            ...config,
+            extension: 'js'
+        });
         if (content) {
             Io.outString(uiFiles[filename], content, true);
         }
@@ -163,12 +203,12 @@ const reactConfig = (config = {}) => {
     if (configuration) {
         Sr.cxExist(filename);
         const inputConfig = Io.ioJObject(filename);
-        inputConfig.tpl = tpl;
+        configuration.tpl = tpl;
         configuration.input = inputConfig;
         // 构造和准备
         reactReady(configuration, {
             resource,
-            ui,
+            ui
         });
         return configuration;
     }

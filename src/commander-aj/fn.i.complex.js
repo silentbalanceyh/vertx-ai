@@ -10,7 +10,9 @@ module.exports = () => {
     // 基本环境监察，得到基础配置信息
     const configuration = Ec.reactConfig({
         filename: actual.config,
-        tpl: 'list',
+        tpl: {
+            type: 'list',
+        },
         resource: [
             "UI.Add",           // 添加表单资源文件
             "UI.Edit",          // 编程表单资源文件
@@ -37,10 +39,10 @@ module.exports = () => {
  * #### 2.1. 基本介绍
  *
  * ```shell
- * # 2.1. 命令语法
+ * # 2.1.1. 命令语法
  * aj icomplex
  *
- * # 2.2. 执行测试
+ * # 2.1.2. 执行测试
  * aj icomplex
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......

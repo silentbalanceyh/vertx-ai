@@ -130,7 +130,11 @@ const exported = {
  *              API: '构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。',
  *              IDENTIFIER: '模型的统一标识符，最终会绑定到identifier中。'
  *          },
- *          tpl: '使用的模板tpl文件目录，cab/下的目录名'
+ *          tpl: {
+ *              type: '使用的模板tpl文件目录，cab/下的目录名',
+ *              source: '「单文件」单文件的拷贝源',
+ *              target: '「单文件」单文件的目标拷贝文件'
+ *          }
  *      },
  *      runtime: {
  *          namespaceFile: 'Cab.json文件生成路径',
