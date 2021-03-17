@@ -1,9 +1,9 @@
 const Ec = require('../epic');
 /**
- * ## `aj lcomplex`
+ * ## `aj icomplex`
  *
  * @memberOf module:aj
- * @method lcomplex
+ * @method icomplex
  */
 module.exports = () => {
     const actual = Ec.executeInput(
