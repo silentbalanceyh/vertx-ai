@@ -50,7 +50,7 @@
  * |10026|`path`|「前端」输入路径非法，不在支持的Zero Ui专用路径规范中。|
  * |10027|`modulePath`|「前端」输入路径必须是`<module>/<page>`格式，当前路径并非该格式，和规范冲突。|
  * |10028|`arg`|「前端」模块参数不在枚举值中，必须是四者之一：`FORM, FILTER, HALF, EDIT`。|
- * |10029|`zt`|「开发专用」环境变量`ZT`的格式不对，必须是`<module>/<page>`格式。|
+ * |10029|`zt`|「带期望」环境变量缺失或者格式不对，必须是`<module>/<page>`格式。|
  * |10030|`arg, key`|「开发专用」方法要求资源文件中必须包含`key`属性，当前`key`属性值不对。|
  * |10031|`id`|「开发专用」当前HTML按钮元素要求`btn`前缀，输入前缀不合法。|
  * |10032|`platform`|操作系统不支持当前命令，或者该操作系统平台中还未实现该命令的执行逻辑。|
@@ -95,7 +95,7 @@ module.exports = {
     fn10026: (path) => `[AI-10026] The path is invalid, ${path}, system support one of ".", "src/components/xxx", "xxx".`,
     fn10027: (modulePath) => `[AI-10027] The path must be format with "<module>/<page>", could not be others, current = ${modulePath}`,
     fn10028: (arg) => `[AI-10028] The "module" parameter must be one of "FORM", "FILTER", "HALF", "EDIT" values. current = ${arg}`,
-    fn10029: (zt) => `[AI-10029] [DEV] You'll use development command, please set "ZT" environment first, format = "<module>/<page>", current = ${zt}`,
+    fn10029: (zt, name) => `[AI-10029] [DEV] You'll use development command, please set "${name}" environment first, format = "<module>/<page>", current = ${zt}`,
     fn10030: (arg, key) => `[AI-10030] [DEV] This method require "${key}" in your resource file, but current "${key}" = ${arg}`,
     fn10031: (id) => `[AI-10031] [DEV] Button key must start with "btn", current ${id}`,
     fn10032: (platform) => `[AI-10032] This api is not implemented in current platform os.platform() -> '${platform}'`
