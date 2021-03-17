@@ -4,7 +4,7 @@ const Fx = require('./ai.fx');
  *
  * （后期将升级或被废弃）
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @deprecated
  * @param {Array} source 原数组
  * @param {Array} target 目标数组
@@ -32,7 +32,7 @@ const elementZip = (source = [], target = [], merged = false) => {
  *
  * 在输入数组中查找`field = value`的唯一元素对象。
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {Array} array 输入数组信息
  * @param {String} field 查找的字段信息
  * @param {Any} value 执行过滤和匹配的`field = value`的值

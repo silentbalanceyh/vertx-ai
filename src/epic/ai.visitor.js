@@ -246,7 +246,7 @@ const PARSER = {
  * |`UI;`|Jsx文件专用解析器，根据文件模板解析数据。|
  * |`J;`|Java文件专用解析器，解析Java源代码文件数据专用。|
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {String} path 解析文件的路径
  * @param {Array} fileTypes 文件前缀类型
  * @returns {Any} 最终解析出来的数据内容
@@ -267,7 +267,7 @@ const parseZero = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => 
 /**
  * ## `Ec.parseArgs`
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {Number} ensure 参数允许的长度解析，如果长度不合法，则直接退出
  * @returns {Object} 解析成功后的数据信息
  */

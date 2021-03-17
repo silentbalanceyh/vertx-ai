@@ -17,7 +17,7 @@ colors.setTheme({
  *
  * 工具专用日志，`ERROR`级别，（黄色），消息前缀包含`[Zero AI]`前缀。
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {String} message 打印的日志信息。
  */
 const error = (message) => console.error(`[Zero AI Error] `.red.bold + `${message}`.red);
@@ -26,7 +26,7 @@ const error = (message) => console.error(`[Zero AI Error] `.red.bold + `${messag
  *
  * 工具专用日志，`INFO`级别，（普通日志），消息前缀包含`[Zero AI]`前缀。
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {String} message 打印的日志信息。
  */
 const info = (message) => console.info(`[Zero AI]`.green.bold + ` ${message}`);
@@ -35,7 +35,7 @@ const info = (message) => console.info(`[Zero AI]`.green.bold + ` ${message}`);
  *
  * 工具专用日志，`INFO`级别，（警告日志），消息前缀包含`[Zero AI]`前缀。
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {String} message 打印的日志信息。
  */
 const warn = (message) => console.warn(`[Zero AI]`.yellow.bold + ` ${message}`.yellow);

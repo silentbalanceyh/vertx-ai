@@ -42,7 +42,7 @@ const sortString = (left = "", right = "", asc = true) => {
  * });
  * ```
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {Boolean/Function} condition 条件或条件函数。
  * @param {Function} executor 满足条件时的执行函数。
  * @returns {Any} 如果有executor则返回该函数的执行返回值。
@@ -57,7 +57,7 @@ const fxContinue = (condition, executor) => {
  *
  * 「调试专用」对输入对象按属性执行字典序的排列，生成新的对象，方便打印和查看对象基本信息。
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {Object} input 输入排序之前的对象
  * @returns {Object} 返回排序后的对象
  */
@@ -92,7 +92,7 @@ const fxSorter = (input = {}) => {
  * * 第一个参数有三种形态，带条件的有两种形态：Boolean/Function，不带条件时直接表示错误代码。
  * * 第二个参数会受到第一个参数的影响，要么错误代码，要么剩余参数的首参。
  *
- * @memberOf module:debug
+ * @memberOf module:_debug
  * @param {Boolean/Function/Number} cond 条件，条件函数和错误代码。
  * @param {*} code 错误代码或首参。
  * @param {*} args 返回剩余参数信息。

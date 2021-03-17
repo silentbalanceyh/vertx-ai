@@ -59,7 +59,7 @@ const itObject = (object = {}, executor = () => {
  * |item|`Object/<Any>`|每一个数组中的元素，任意类型。|
  * |index|Number|该元素在数组中的索引值。|
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {Array} array 被迭代的数组
  * @param {Function} executor 第二参数，必须是一个标准的JavaScript函数
  * @returns {Array} 返回执行完成后的数组

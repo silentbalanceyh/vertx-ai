@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>_debug - Zero UI框架专用前端文档</title>
+    
+    <meta name="description" content="前端开发框架，官方地址：http://www.vertx-ui.cn" />
+    
+        <meta name="keywords" content="zero,zero-ui,vert.x" />
+        <meta name="keyword" content="zero,zero-ui,vert.x" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/zero.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="http://www.vertxai.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ai</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui</a></h2><h2><a href="http://www.vertxui.cn/document/doc-web-extension/index.html" target="_blank" class="menu-item" id="website_link" >「Api」Zero Ui Extension</a></h2><h2><a href="http://www.vertxui.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero UI</a></h2><h2><a href="http://www.vertxai.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Ai</a></h2><h2><a href="http://www.vertxup.cn" target="_blank" class="menu-item" id="website_link" >「Home」Zero Framework</a></h2><h2><a href="http://www.origin-x.cn" target="_blank" class="menu-item" id="website_link" >「Home」Origin X Engine</a></h2><h3>Classes</h3><ul><li><a href="E.html">E</a></li></ul><h3>Modules</h3><ul><li><a href="module-_debug.html">_debug</a><ul class='methods'><li data-type='method'><a href="module-_debug.html#.error">error</a></li><li data-type='method'><a href="module-_debug.html#.fxContinue">fxContinue</a></li><li data-type='method'><a href="module-_debug.html#.fxError">fxError</a></li><li data-type='method'><a href="module-_debug.html#.fxSorter">fxSorter</a></li><li data-type='method'><a href="module-_debug.html#.info">info</a></li><li data-type='method'><a href="module-_debug.html#.warn">warn</a></li></ul></li><li><a href="module-_epic.html">_epic</a><ul class='methods'><li data-type='method'><a href="module-_epic.html#.elementUnique">elementUnique</a></li><li data-type='method'><a href="module-_epic.html#.elementZip">elementZip</a></li><li data-type='method'><a href="module-_epic.html#.executeBody">executeBody</a></li><li data-type='method'><a href="module-_epic.html#.executeHeader">executeHeader</a></li><li data-type='method'><a href="module-_epic.html#.executeInput">executeInput</a></li><li data-type='method'><a href="module-_epic.html#.itArray">itArray</a></li><li data-type='method'><a href="module-_epic.html#.parseArgs">parseArgs</a></li><li data-type='method'><a href="module-_epic.html#.parseZero">parseZero</a></li></ul></li><li><a href="module-ai.html">ai</a><ul class='methods'><li data-type='method'><a href="module-ai.html#.csv">csv</a></li><li data-type='method'><a href="module-ai.html#.data">data</a></li><li data-type='method'><a href="module-ai.html#.key">key</a></li><li data-type='method'><a href="module-ai.html#.uk">uk</a></li><li data-type='method'><a href="module-ai.html#.uuid">uuid</a></li></ul></li><li><a href="module-aj.html">aj</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">_debug</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description usertext"><h2>调试专用</h2></div>
+            
+
+            
+                
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".error"><span class="type-signature">(static) </span>error<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.error</code></h2>
+<p>工具专用日志，<code>ERROR</code>级别，（黄色），消息前缀包含<code>[Zero AI]</code>前缀。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>打印的日志信息。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fxContinue"><span class="type-signature">(static) </span>fxContinue<span class="signature">(condition, executor)</span><span class="type-signature"> &rarr; {Any}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.fxContinue</code></h2>
+<h3>1. 基本介绍</h3>
+<p>专用二分函数，条件满足时执行<code>executor</code>函数，示例代码如：</p>
+<pre class="prettyprint source lang-js"><code>Fx.fxContinue(0 &lt; items.length, () => {
+     const prefixes = inflect.pluralize(prefix);
+     result[prefixes] = items;
+});
+</code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean/Function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>条件或条件函数。</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>executor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>满足条件时的执行函数。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>如果有executor则返回该函数的执行返回值。</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fxError"><span class="type-signature">(static) </span>fxError<span class="signature">(cond, code, &hellip;args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.fxError</code></h2>
+<h3>1. 基本介绍</h3>
+<p>参考下边调用代码</p>
+<pre class="prettyprint source lang-js"><code>// 第一种调用方法：第一参直接是错误代码
+Ec.fxError(10001, arg1, arg2);
+
+// 第二种调用方法：第一参是Boolean值，true就输出，第二参是错误代码
+const checked = true;
+Ec.fxError(checked, 10001, arg1, arg2);
+
+// 第三种调用方法：第一参是Function，执行后结果为true就输出，第二参是错误代码
+const fnChecked = () => true;
+Ec.fxError(fnChecked, 10001, arg1, arg2);
+</code></pre>
+<h3>2. 注意点</h3>
+<ul>
+<li>第一个参数有三种形态，带条件的有两种形态：Boolean/Function，不带条件时直接表示错误代码。</li>
+<li>第二个参数会受到第一个参数的影响，要么错误代码，要么剩余参数的首参。</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cond</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean/Function/Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>条件，条件函数和错误代码。</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>code</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>错误代码或首参。</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>返回剩余参数信息。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fxSorter"><span class="type-signature">(static) </span>fxSorter<span class="signature">(input)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.fxSorter</code></h2>
+<p>「调试专用」对输入对象按属性执行字典序的排列，生成新的对象，方便打印和查看对象基本信息。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>输入排序之前的对象</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>返回排序后的对象</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".info"><span class="type-signature">(static) </span>info<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.info</code></h2>
+<p>工具专用日志，<code>INFO</code>级别，（普通日志），消息前缀包含<code>[Zero AI]</code>前缀。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>打印的日志信息。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".warn"><span class="type-signature">(static) </span>warn<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h2><code>Ec.warn</code></h2>
+<p>工具专用日志，<code>INFO</code>级别，（警告日志），消息前缀包含<code>[Zero AI]</code>前缀。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>打印的日志信息。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Mar 17 2021 12:02:41 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

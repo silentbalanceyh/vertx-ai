@@ -54,7 +54,7 @@ const _validateArgs = (keys = []) => {
  *
  * 执行命令时打印头信息
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {String} app 应用程序名
  */
 const executeHeader = (app) => {
@@ -77,7 +77,7 @@ const executeHeader = (app) => {
  *
  * 执行命令的主方法
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {Array} commanders 指令集
  * @param {Object} Executor 指令执行集`field = Function`格式
  */
@@ -106,7 +106,7 @@ const executeBody = (commanders = [], Executor = {}) => {
 /**
  * ## `Ec.executeEnd`
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * 执行命令时打印尾信息
  */
 const executeEnd = () => {
@@ -145,7 +145,7 @@ const executeEnd = () => {
  * ['-n', '--number', 20]
  * ```
  *
- * @memberOf module:epic
+ * @memberOf module:_epic
  * @param {Array} required 必须参数设置
  * @param {Array} optional 可选参数设置
  * @returns {Object} 生成最终的参数集

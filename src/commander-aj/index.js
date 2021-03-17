@@ -1,5 +1,9 @@
-const pageC = require('./fn.pageC')
+const executeCPage = require('./fn.page.complex');
+const executeQPage = require('./fn.page.query');
+const executeOPage = require('./fn.page.open');
 const exported = {
-    pageC,
+    executeCPage,
+    executeQPage,
+    executeOPage,
 };
 module.exports = exported;
