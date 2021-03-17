@@ -314,7 +314,10 @@ const parseInput = (required = []) => {
         }
     }
     const $keys = Immutable.fromJS(Object.keys(config));
-    It.itArray(required, (each) => Fx.fxError(1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1]))), 10006, each));
+    It.itArray(required, (each) => {
+        const checked = 1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1])));
+        Fx.fxError(checked, 10006, each);
+    });
     return config;
 };
 const parseFormat = (args = {}, pairs = []) => {

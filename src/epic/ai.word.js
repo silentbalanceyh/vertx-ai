@@ -14,7 +14,7 @@ const strSlashCount = (literal = "") => {
 };
 const SEPARATOR = SEP;
 const strUuid = () => v4();
-const strWidth = (input) => {
+const strWidth = (input = "") => {
     let content = "";
     const space = 16 - input.length;
     for (let i = 0; i < space; i++) {

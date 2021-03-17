@@ -63,7 +63,8 @@ const _sure = (type) => (arg, config) => {
     const checked = !check(arg, config);
     if (checked) {
         Log.error(message);
-    }
+        throw new Error(`错误！${message}`);
+    } else return true;
 };
 module.exports = {
     cxFunction: _sure('Function'),

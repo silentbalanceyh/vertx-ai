@@ -150,7 +150,7 @@ const executeEnd = () => {
  */
 const executeInput = (required = [], optional = []) => {
     const elementArray = required.filter(item => U.isArray(item));
-    const isMatrix = 1 < elementArray.length;
+    const isMatrix = 1 <= elementArray.length;
     const args = isMatrix ? Vt.parseInput(required) : Vt.parseInput([required]);
     return Vt.parseFormat(args, optional)
 };

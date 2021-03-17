@@ -2,6 +2,7 @@ const Io = require('./ai.io');
 const Fx = require('./ai.fx');
 const Log = require('./ai.log');
 const Word = require('./ai.word');
+const Sr = require('./object.sure');
 
 const fs = require('fs');
 const path = require('path');
@@ -21,7 +22,7 @@ const reactLanguage = () => {
     const env = Io.ioProp(root + SEPRATOR + '.env.development');
     return env['Z_LANGUAGE'] ? env['Z_LANGUAGE'] : 'cn';
 };
-const reactConfig = (module, component) => {
+const reactDetect = (module, component) => {
     // 路径分析专用
     const slash = Word.strSlashCount(module);
     // 10027：检查ZT环境的格式
@@ -49,7 +50,7 @@ const reactEnsure = (category = 'components') => {
     Fx.fxError(!module, 10029, module, 'ZT');
     if (module) {
         Log.info(`「启用ZT环境」，当前模块：${module.red}，特殊命令只能在${`ZT`.red}环境使用。`)
-        const moduleConfig = reactConfig(module, category);
+        const moduleConfig = reactDetect(module, category);
         if (moduleConfig) {
             Log.info(`Zero AI `.cyan + ` 0. 基础环境......`.rainbow);
             Log.info(`环境变量：` + `ZT = ${module}`.red);
@@ -82,12 +83,12 @@ const reactReady = (config = {}, files = {}) => {
         resource = [],
         ui = []
     } = files;
-    resource.forEach(each => {
+    resource.filter(each => undefined !== each).forEach(each => {
         const file = runtime.resource + '/' + each + ".json";
         runtime.resourceFiles[each] = file;
         Log.info(`${Word.strWidth(each)} = ${file.blue}`);
     });
-    ui.forEach(each => {
+    ui.filter(each => undefined !== each).forEach(each => {
         const file = runtime.ui + '/' + each + ".js";
         runtime.uiFiles[each] = file;
         Log.info(`${Word.strWidth(each)} = ${file.yellow}`);
@@ -110,9 +111,11 @@ const reactTpl = (name, config = {}) => {
 const reactTplNamespace = (config) => {
     const runtime = config.runtime;
     Log.info(`Zero AI `.cyan + ` \t3.1. 创建名空间文件......`.rainbow);
-    const namespace = {};
-    namespace.ns = config.namespace;
-    Io.outJson(runtime.namespaceFile, namespace, true);
+    if (!fs.existsSync(runtime.namespaceFile)) {
+        const namespace = {};
+        namespace.ns = config.namespace;
+        Io.outJson(runtime.namespaceFile, namespace, true);
+    }
 }
 const reactTplResource = (config) => {
     const runtime = config.runtime;
@@ -149,9 +152,28 @@ const reactRun = (config) => {
     reactTplUi(config);
     Log.info(`Zero AI `.cyan + ` 4. 命令执行完成！！！`.rainbow);
 }
+const reactConfig = (config = {}) => {
+    const {
+        filename,
+        tpl,
+        resource = [],
+        ui = []
+    } = config;
+    const configuration = reactEnsure();
+    if (configuration) {
+        Sr.cxExist(filename);
+        const inputConfig = Io.ioJObject(filename);
+        inputConfig.tpl = tpl;
+        configuration.input = inputConfig;
+        // 构造和准备
+        reactReady(configuration, {
+            resource,
+            ui,
+        });
+        return configuration;
+    }
+}
 module.exports = {
-    // 环境确认
-    reactEnsure,
-    reactReady,
+    reactConfig,
     reactRun,
 };

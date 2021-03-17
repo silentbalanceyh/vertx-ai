@@ -126,6 +126,8 @@ const fxError = (cond, code, ...args) => {
             args.forEach(arg => inputArgs.push(arg));
             const errorMessage = fnMessage.apply(this, inputArgs);
             Log.error(errorMessage);
+            console.error(errorMessage);
+            throw new Error(`错误：${errorMessage}`);
         }
     } else {
         throw new Error(`找不到错误代码描述：${code}`);
@@ -134,5 +136,5 @@ const fxError = (cond, code, ...args) => {
 module.exports = {
     fxError,
     fxSorter,
-    fxContinue
+    fxContinue,
 };
