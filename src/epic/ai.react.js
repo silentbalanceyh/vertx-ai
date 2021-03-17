@@ -127,12 +127,26 @@ const reactTplResource = (config) => {
         }
     });
 }
+const reactTplUi = (config) => {
+    const runtime = config.runtime;
+    Log.info(`Zero AI `.cyan + ` \t3.3. 构造界面文件......`.rainbow);
+    const uiFiles = runtime.uiFiles;
+    Object.keys(uiFiles).forEach(filename => {
+        const fullName = `${filename}.js`;
+        const content = reactTpl(fullName, config);
+        if (content) {
+            Io.outString(uiFiles[filename], content);
+        }
+    })
+}
 const reactRun = (config) => {
     Log.info(`Zero AI `.cyan + ` 3. 执行React命令......`.rainbow);
     // 1. 创建名空间文件
     reactTplNamespace(config);
-    // 2. 基础页 UI.js
+    // 2. 资源文件
     reactTplResource(config);
+    // 3. 构造代码文件
+    reactTplUi(config);
 }
 module.exports = {
     // 环境确认
