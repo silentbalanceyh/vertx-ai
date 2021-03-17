@@ -67,7 +67,68 @@
                 <div class="description usertext"><h2>aj命令</h2>
 <p>aj命令的专用语法如下：</p>
 <pre class="prettyprint source lang-shell"><code>aj &lt;command> [options1|options2|options3...]
-</code></pre></div>
+</code></pre>
+<h3>1. 标准化配置</h3>
+<pre class="prettyprint source lang-js"><code>{
+     module: 'ZT环境变量设置的模块',
+     language: 'Z_LANGUAGE语言环境变量设置，默认「cn」',
+     pathRoot: '系统根据执行目录计算的当前项目根目录',
+     pathResource: '资源目录',
+     pathUi: '生成代码目录',
+     namespace: 'Cab.json中所需的名空间值',
+     input: {
+         params: {
+             MODULE: '当前模块的文字描述名称',
+             API: '构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。',
+             IDENTIFIER: '模型的统一标识符，最终会绑定到identifier中。'
+         },
+         tpl: '使用的模板tpl文件目录，cab/下的目录名'
+     },
+     runtime: {
+         namespaceFile: 'Cab.json文件生成路径',
+         resource: '资源文件的根目录',
+         resourceFiles: {
+             'fileName1': '资源文件地址，json后缀，模板则是fileName1.tpl文件',
+             'fileName2': '......'
+         },
+         ui: '代码文件根目录',
+         uiFiles: {
+             'fileName1': '代码文件地址，js后缀，模板则是fileName1.tpl文件',
+             'fileName2': '......'
+         }
+     }
+}
+</code></pre>
+<h3>2. 标准化模板参数</h3>
+<blockquote>
+<p><code>tpl</code>文件中替换的部分会使用配置文件中的参数来替换。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th>替换部分</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MODULE</td>
+<td><code>#MODULE#</code></td>
+<td style="text-align:left">当前模块的文字描述名称。</td>
+</tr>
+<tr>
+<td style="text-align:left">API</td>
+<td><code>#API#</code></td>
+<td style="text-align:left">构造标准接口<code>/api/xxx</code>的RESTful接口专用路径替换部分。</td>
+</tr>
+<tr>
+<td style="text-align:left">IDENTIFIER</td>
+<td><code>#IDENTIFIER#</code></td>
+<td style="text-align:left">模型的统一标识符，最终会绑定到identifier中。</td>
+</tr>
+</tbody>
+</table></div>
             
 
             
@@ -217,6 +278,130 @@
 
 <div class="description usertext">
     <h2><code>aj icomplex</code></h2>
+<h3>1. 命令</h3>
+<p>使用该命令生成完整的<code>ExListComplex</code>完整组件页。</p>
+<h3>2. 执行</h3>
+<h4>2.1. 基本介绍</h4>
+<pre class="prettyprint source lang-shell"><code># 2.1. 命令语法
+aj icomplex
+
+# 2.2. 执行测试
+aj icomplex
+# ...省略部分...
+[Zero AI] Zero AI 系统启动......
+[Zero AI] Zero AI 加载输入参数：
+{
+     &quot;config&quot;: &quot;ui.json&quot;
+}
+[Zero AI] 「启用ZT环境」，当前模块：generated/test，特殊命令只能在ZT环境使用。
+[Zero AI] Zero AI  0. 基础环境......
+[Zero AI] 环境变量：ZT = generated/test
+[Zero AI] 模块信息：generated/test
+[Zero AI] 语言信息：cn
+[Zero AI] 项目目录：&lt;项目根目录>
+[Zero AI] Zero AI  1. 目录检查......
+[Zero AI] Zero AI  2. 文件表：
+[Zero AI]           UI.Add = &lt;项目根目录>/src/cab/cn/components/generated/test/UI.Add.json
+[Zero AI]          UI.Edit = &lt;项目根目录>/src/cab/cn/components/generated/test/UI.Edit.json
+[Zero AI]        UI.Filter = &lt;项目根目录>/src/cab/cn/components/generated/test/UI.Filter.json
+[Zero AI]               UI = &lt;项目根目录>/src/cab/cn/components/generated/test/UI.json
+[Zero AI]               UI = &lt;项目根目录>/src/components/generated/test/UI.js
+[Zero AI]               Op = &lt;项目根目录>/src/components/generated/test/Op.js
+[Zero AI]          UI.Form = &lt;项目根目录>/src/components/generated/test/UI.Form.js
+[Zero AI] Zero AI  3. 执行React命令......
+[Zero AI] Zero AI       3.1. 创建名空间文件......
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/components/generated/test/Cab.json！
+[Zero AI] Zero AI       3.2. 构造资源文件......
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/cab/cn/components/generated/test/UI.Add.json！
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/cab/cn/components/generated/test/UI.Edit.json！
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/cab/cn/components/generated/test/UI.Filter.json！
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/cab/cn/components/generated/test/UI.json！
+[Zero AI] Zero AI       3.3. 构造界面文件......
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/components/generated/test/UI.js！
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/components/generated/test/Op.js！
+[Zero AI] （Sync）成功将数据写入到文件：&lt;项目根目录>/src/components/generated/test/UI.Form.js！
+[Zero AI] Zero AI  4. 命令执行完成！！！
+</code></pre>
+<p>代码执行完成后会在项目中生成Zero UI专用模块<code>generated/test</code>的所有页面以及组件。</p>
+<ul>
+<li>执行代码之前先执行<code>export ZT=generated/test</code>确保<code>ZT</code>环境变量有值。</li>
+<li>执行位置可以是当前项目中的任意一个路径，脚本会自己计算当前项目的根目录（Zero UI专用）。</li>
+<li>该命令执行时模板文件位置位于<code>src/cab/list</code>目录中，且模板文件以<code>tpl</code>结尾。</li>
+</ul>
+<h4>2.2. 生成的文件说明</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">文件名</th>
+<th style="text-align:left">模板</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Cab.json</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">名空间关联文件，计算得来。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.Add.json</td>
+<td style="text-align:left">UI.Add.json.tpl</td>
+<td style="text-align:left">「无字段」添加表单专用资源文件。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.Edit.json</td>
+<td style="text-align:left">UI.Edit.json.tpl</td>
+<td style="text-align:left">「无字段」编辑表单专用资源文件。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.Filter.json</td>
+<td style="text-align:left">UI.Filter.json.tpl</td>
+<td style="text-align:left">过滤表单专用资源文件（高级搜索用）。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.json</td>
+<td style="text-align:left">UI.json.tpl</td>
+<td style="text-align:left">主界面资源文件。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.js</td>
+<td style="text-align:left">UI.js.tpl</td>
+<td style="text-align:left">主界面脚本文件。</td>
+</tr>
+<tr>
+<td style="text-align:left">Op.js</td>
+<td style="text-align:left">Op.js.tpl</td>
+<td style="text-align:left">Action/Callback专用Js事件脚本。</td>
+</tr>
+<tr>
+<td style="text-align:left">UI.Form.js</td>
+<td style="text-align:left">UI.Form.js.tpl</td>
+<td style="text-align:left">三个表单合一的专用Js脚本。</td>
+</tr>
+</tbody>
+</table>
+<h3>3. 选项</h3>
+<h4>3.1. 基本说明</h4>
+<table>
+<thead>
+<tr>
+<th>短参</th>
+<th>全参</th>
+<th>类型</th>
+<th>默认</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>--config</td>
+<td>String</td>
+<td><code>ui.json</code></td>
+<td style="text-align:left">配置文件路径。</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -266,7 +451,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Mar 17 2021 19:17:07 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Mar 17 2021 21:26:17 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

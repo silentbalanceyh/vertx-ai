@@ -114,6 +114,52 @@ const exported = {
  * aj <command> [options1|options2|options3...]
  * ```
  *
+ * ### 1. 标准化配置
+ *
+ * ```js
+ * {
+ *      module: 'ZT环境变量设置的模块',
+ *      language: 'Z_LANGUAGE语言环境变量设置，默认「cn」',
+ *      pathRoot: '系统根据执行目录计算的当前项目根目录',
+ *      pathResource: '资源目录',
+ *      pathUi: '生成代码目录',
+ *      namespace: 'Cab.json中所需的名空间值',
+ *      input: {
+ *          params: {
+ *              MODULE: '当前模块的文字描述名称',
+ *              API: '构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。',
+ *              IDENTIFIER: '模型的统一标识符，最终会绑定到identifier中。'
+ *          },
+ *          tpl: '使用的模板tpl文件目录，cab/下的目录名'
+ *      },
+ *      runtime: {
+ *          namespaceFile: 'Cab.json文件生成路径',
+ *          resource: '资源文件的根目录',
+ *          resourceFiles: {
+ *              'fileName1': '资源文件地址，json后缀，模板则是fileName1.tpl文件',
+ *              'fileName2': '......'
+ *          },
+ *          ui: '代码文件根目录',
+ *          uiFiles: {
+ *              'fileName1': '代码文件地址，js后缀，模板则是fileName1.tpl文件',
+ *              'fileName2': '......'
+ *          }
+ *      }
+ * }
+ * ```
+ *
+ *
+ * ### 2. 标准化模板参数
+ *
+ * > `tpl`文件中替换的部分会使用配置文件中的参数来替换。
+ *
+ * |参数|替换部分|含义|
+ * |:---|---|:---|
+ * |MODULE|`#MODULE#`|当前模块的文字描述名称。|
+ * |API|`#API#`|构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。|
+ * |IDENTIFIER|`#IDENTIFIER#`|模型的统一标识符，最终会绑定到identifier中。|
+ *
+ *
  * @module aj
  */
 /**
