@@ -84,7 +84,7 @@ const isDirectory = (path) => {
     }
 };
 const isExist = (path) => fs.existsSync(path);
-const _outFile = (paths, content, sync = true) => {
+const _outFile = (paths, content, sync) => {
     if (sync) {
         fs.writeFileSync(paths, content);
         Log.info(`（Sync）成功将数据写入到文件：${paths.cyan}！`);
@@ -94,7 +94,7 @@ const _outFile = (paths, content, sync = true) => {
         });
     }
 };
-const outJson = (paths, content) => Fx.fxContinue(!!content, () => _outFile(paths, JSON.stringify(content, null, 4)));
+const outJson = (paths, content, sync = false) => Fx.fxContinue(!!content, () => _outFile(paths, JSON.stringify(content, null, 4), sync));
 const outString = (paths, content, sync = false) => Fx.fxContinue(!!content, () => _outFile(paths, content, sync));
 const dirResolve = (path = "") => {
     let result = path.trim();

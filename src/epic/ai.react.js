@@ -112,7 +112,7 @@ const reactTplNamespace = (config) => {
     Log.info(`Zero AI `.cyan + ` \t3.1. 创建名空间文件......`.rainbow);
     const namespace = {};
     namespace.ns = config.namespace;
-    Io.outJson(runtime.namespaceFile, namespace);
+    Io.outJson(runtime.namespaceFile, namespace, true);
 }
 const reactTplResource = (config) => {
     const runtime = config.runtime;
@@ -123,7 +123,7 @@ const reactTplResource = (config) => {
         const content = reactTpl(fullName, config);
         if (content) {
             const contentJson = JSON.parse(content);
-            Io.outJson(resourceFiles[filename], contentJson);
+            Io.outJson(resourceFiles[filename], contentJson, true);
         }
     });
 }
@@ -135,7 +135,7 @@ const reactTplUi = (config) => {
         const fullName = `${filename}.js`;
         const content = reactTpl(fullName, config);
         if (content) {
-            Io.outString(uiFiles[filename], content);
+            Io.outString(uiFiles[filename], content, true);
         }
     })
 }
@@ -147,6 +147,7 @@ const reactRun = (config) => {
     reactTplResource(config);
     // 3. 构造代码文件
     reactTplUi(config);
+    Log.info(`Zero AI `.cyan + ` 4. 命令执行完成！！！`.rainbow);
 }
 module.exports = {
     // 环境确认
