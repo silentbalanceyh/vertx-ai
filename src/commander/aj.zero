@@ -1,4 +1,5 @@
 A;
 command,    executor,           description,                            option1,option2, option3, option4
-icomplex,   executeComplex,     完整模块生成`ExListXxx`模块,              c=配置文件路径
-iform,      executeForm,        完整生成表单`ExForm`专用,                 c=配置文件路径,u=表单文件名
+icomplex,   reactComplex,       完整模块生成`ExListXxx`模块,              c=配置文件路径
+iform,      reactForm,          完整生成表单`ExForm`专用,                 c=配置文件路径,u=表单文件名
+jperm,      javaPermission,     用于生成Excel的专用权限模板,               c=配置文件路径

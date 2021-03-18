@@ -1,7 +1,9 @@
-const executeComplex = require('./fn.i.complex');
-const executeForm = require('./fn.i.form');
+const reactComplex = require('./fn.i.complex');
+const reactForm = require('./fn.i.form');
+const javaPermission = require('./fn.j.permission');
 const exported = {
-    executeComplex,
-    executeForm,
+    reactComplex,
+    reactForm,
+    javaPermission,
 };
 module.exports = exported;

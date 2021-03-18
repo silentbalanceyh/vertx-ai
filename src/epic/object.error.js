@@ -54,6 +54,14 @@
  * |10030|`arg, key`|「开发专用」方法要求资源文件中必须包含`key`属性，当前`key`属性值不对。|
  * |10031|`id`|「开发专用」当前HTML按钮元素要求`btn`前缀，输入前缀不合法。|
  * |10032|`platform`|操作系统不支持当前命令，或者该操作系统平台中还未实现该命令的执行逻辑。|
+ * |10033|`path`|当前路径不符合Zero专用规范（基础Java/Maven规范）。|
+ * |10034|`path`|当前路径不符合Ox平台专用规范。|
+ *
+ * ### 3. 规范
+ *
+ * #### 3.1. Zero规范
+ *
+ * #### 3.2. Ox规范
  *
  * @class E
  */
@@ -95,8 +103,10 @@ module.exports = {
     fn10026: (path) => `[AI-10026] The path is invalid, ${path}, system support one of ".", "src/components/xxx", "xxx".`,
     fn10027: (modulePath) => `[AI-10027] The path must be format with "<module>/<page>", could not be others, current = ${modulePath}`,
     fn10028: (arg) => `[AI-10028] The "module" parameter must be one of "FORM", "FILTER", "HALF", "EDIT" values. current = ${arg}`,
-    fn10029: (zt, name) => `[AI-10029] [DEV] You'll use development command, please set "${name}" environment first, format = "<module>/<page>", current = ${zt}`,
+    fn10029: (zt, name) => `[AI-10029] [DEV] You'll use development command, please set "${name}" environment first, current = ${zt}. React format = "<module>/<page>", Java for other.`,
     fn10030: (arg, key) => `[AI-10030] [DEV] This method require "${key}" in your resource file, but current "${key}" = ${arg}`,
     fn10031: (id) => `[AI-10031] [DEV] Button key must start with "btn", current ${id}`,
-    fn10032: (platform) => `[AI-10032] This api is not implemented in current platform os.platform() -> '${platform}'`
+    fn10032: (platform) => `[AI-10032] This api is not implemented in current platform os.platform() -> '${platform}'`,
+    fn10033: (path) => `[AI-10033] (Zero) Current path '${path}' is not correct Zero work folder under specification`,
+    fn10034: (path) => `[AI-10034] (Ox) Current path '${path}' is not correct Ox work folder`
 };

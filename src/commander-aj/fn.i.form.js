@@ -1,4 +1,26 @@
 const Ec = require('../epic');
+
+module.exports = () => {
+    const actual = Ec.executeInput(
+        [
+            ['-u', '--ui']
+        ],
+        [
+            ['-c', '--config', 'ui.json'],
+            ['-u', '--ui']
+        ]
+    );
+    // 基本环境监察，得到基础配置信息
+    const configuration = Ec.reactConfig({
+        filename: actual.config,
+        tpl: {
+            type: 'form',
+            source: 'UI',
+            target: actual.ui,
+        }
+    });
+    if (configuration) Ec.reactRun(configuration);
+}
 /**
  * ## `aj iform`
  *
@@ -67,24 +89,3 @@ const Ec = require('../epic');
  * @memberOf module:aj
  * @method iform
  */
-module.exports = () => {
-    const actual = Ec.executeInput(
-        [
-            ['-u', '--ui']
-        ],
-        [
-            ['-c', '--config', 'ui.json'],
-            ['-u', '--ui']
-        ]
-    );
-    // 基本环境监察，得到基础配置信息
-    const configuration = Ec.reactConfig({
-        filename: actual.config,
-        tpl: {
-            type: 'form',
-            source: 'UI',
-            target: actual.ui,
-        }
-    });
-    if (configuration) Ec.reactRun(configuration);
-}

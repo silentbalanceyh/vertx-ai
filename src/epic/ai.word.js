@@ -12,6 +12,15 @@ const strSlashCount = (literal = "") => {
     }
     return counter;
 };
+const strShapeCount = (literal = "") => {
+    let counter = 0;
+    for (let idx = 0; idx < literal.length; idx++) {
+        if ("#" === literal.charAt(idx)) {
+            counter++;
+        }
+    }
+    return counter;
+}
 const SEPARATOR = SEP;
 const strUuid = () => v4();
 const strWidth = (input = "") => {
@@ -32,6 +41,7 @@ const strExpr = (content, params = {}) => {
 module.exports = {
     strFirstUpper,
     strSlashCount,
+    strShapeCount,
     strUuid,
     strWidth,
     strExpr,
