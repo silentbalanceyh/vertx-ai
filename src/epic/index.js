@@ -192,6 +192,10 @@ const exported = {
  * |API|`#API#`|构造标准接口`/api/xxx`的RESTful接口专用路径替换部分。|
  * |IDENTIFIER|`#IDENTIFIER#`|模型的统一标识符，最终会绑定到identifier中。|
  * |NAME|`#NAME#`|绑定文件设定，直接赋值`input.params.NAME = tpl.target`生成单文件专用。|
+ * |SIGMA|`#SIGMA`|SIGMA统一标识符，用于标识租户、应用。|
+ * |ROLE_ID|`#ROLE_ID#`|操作的角色ID。|
+ * |PREFIX|无|生成文件专用参数，不在模板中。|
+ * |SHEET|无|工作专用的Sheet名，不在模板中。|
  *
  *
  * @module aj
