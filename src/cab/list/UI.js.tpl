@@ -19,7 +19,7 @@ const componentUp = (reference, prevProps) => {
 )
 class Component extends React.PureComponent {
     state = {
-        $ready: false
+        $ready: true
     };
 
     componentDidMount() {
