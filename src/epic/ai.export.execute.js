@@ -2,10 +2,10 @@ const program = require('commander');
 const U = require('underscore');
 const co = require('co');
 const Immutable = require('immutable');
-const Log = require('./ai.log');
-const It = require('./ai.it');
-const Fx = require('./ai.fx');
-const Vt = require('./ai.visitor');
+const Log = require('./ai.export.log');
+const It = require('./ai.export.it');
+const Fx = require('./ai.export.fx');
+const Vt = require('./ai.export.visitor');
 
 
 const _buildOption = (options = []) => {

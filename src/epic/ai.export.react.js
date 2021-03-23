@@ -1,7 +1,7 @@
-const Io = require('./ai.io');
-const Fx = require('./ai.fx');
-const Log = require('./ai.log');
-const Word = require('./ai.word');
+const Io = require('./ai.export.io');
+const Fx = require('./ai.export.fx');
+const Log = require('./ai.export.log');
+const Word = require('./ai.export.word');
 const Sr = require('./object.sure');
 
 const fs = require('fs');

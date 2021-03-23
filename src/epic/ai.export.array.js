@@ -1,4 +1,4 @@
-const Fx = require('./ai.fx');
+const Fx = require('./ai.export.fx');
 /**
  * ## `Ec.elementZip`
  *
@@ -35,7 +35,7 @@ const elementZip = (source = [], target = [], merged = false) => {
  * @memberOf module:_epic
  * @param {Array} array 输入数组信息
  * @param {String} field 查找的字段信息
- * @param {Any} value 执行过滤和匹配的`field = value`的值
+ * @param value 执行过滤和匹配的`field = value`的值
  * @returns {*} 返回查找的唯一元素
  */
 const elementUnique = (array = [], field, value) => {

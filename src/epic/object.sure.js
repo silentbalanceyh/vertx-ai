@@ -2,7 +2,7 @@ const fs = require('fs');
 const U = require('underscore');
 const Immutable = require('immutable');
 const E = require('./object.error');
-const Log = require('./ai.log');
+const Log = require('./ai.export.log');
 
 const isFile = (path, file = true) => {
     let existing = fs.existsSync(path);

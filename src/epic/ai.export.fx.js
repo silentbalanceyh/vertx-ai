@@ -1,5 +1,5 @@
 const U = require('underscore');
-const Log = require('./ai.log');
+const Log = require('./ai.export.log');
 const E = require('./object.error');
 const fxCond = (arg) => {
     if (U.isFunction(arg)) {
@@ -45,7 +45,7 @@ const sortString = (left = "", right = "", asc = true) => {
  * @memberOf module:_debug
  * @param {Boolean/Function} condition 条件或条件函数。
  * @param {Function} executor 满足条件时的执行函数。
- * @returns {Any} 如果有executor则返回该函数的执行返回值。
+ * @returns 如果有executor则返回该函数的执行返回值。
  */
 const fxContinue = (condition, executor) => {
     if (fxCond(condition) && U.isFunction(executor)) {

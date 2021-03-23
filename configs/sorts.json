@@ -8,29 +8,29 @@
         "document", 
         "node_modules", 
         "script", 
-        "scripts", 
-        "src"
+        "src", 
+        "test"
     ], 
     "__positions": {
         "_sass": 4, 
-        "src": 10, 
+        "src": 9, 
         "summary.md": 2, 
         "script": 8, 
         "backup": 5, 
         "node_modules": 7, 
-        "scripts": 9, 
+        "test": 10, 
         "document": 6, 
         "_layouts": 3, 
         "readme.md": 1
     }, 
     "__raw_positions": {
         "_sass": 4, 
-        "src": 10, 
+        "src": 9, 
         "summary.md": 2, 
         "script": 8, 
         "_layouts": 3, 
         "node_modules": 7, 
-        "scripts": 9, 
+        "test": 10, 
         "document": 6, 
         "backup": 5, 
         "readme.md": 1

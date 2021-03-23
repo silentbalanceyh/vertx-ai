@@ -1,5 +1,5 @@
-const Log = require('./ai.log');
-const Fx = require('./ai.fx');
+const Log = require('./ai.export.log');
+const Fx = require('./ai.export.fx');
 const U = require('underscore');
 const fs = require('fs');
 const inflect = require('i')();

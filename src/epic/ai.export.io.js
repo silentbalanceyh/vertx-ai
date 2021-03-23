@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const Sure = require('./object.sure');
-const Log = require('./ai.log');
-const Fx = require('./ai.fx');
-const It = require('./ai.it');
-const Arr = require('./ai.array');
+const Log = require('./ai.export.log');
+const Fx = require('./ai.export.fx');
+const It = require('./ai.export.it');
+const Arr = require('./ai.export.array');
 const U = require('underscore');
 
 const SEPRATOR = path.sep;

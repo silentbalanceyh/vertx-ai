@@ -7,6 +7,7 @@ module.exports = () => {
             ['-c', '--config', 'workspace.json']
         ]
     );
+    Ec.cxExist(actual.config);
     // 基本环境
     const configuration = Ec.javaConfig({
         filename: actual.config,
@@ -14,7 +15,10 @@ module.exports = () => {
             type: 'perm',
             source: 'permission.xlsx'
         }
-    });
+    },
+        process.env.ZF,
+        Ec.Cfg.detectOx
+    );
     if (configuration) Ec.excelRun(configuration);
 }
 /**

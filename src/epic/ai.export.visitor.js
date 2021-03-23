@@ -2,12 +2,11 @@ const fs = require('fs');
 const Immutable = require('immutable');
 const U = require('underscore');
 const Sure = require('./object.sure');
-const E = require('./object.error');
-const Fx = require('./ai.fx');
-const It = require('./ai.it');
-const Io = require('./ai.io');
-const Log = require('./ai.log');
-const Word = require('./ai.word');
+const Fx = require('./ai.export.fx');
+const It = require('./ai.export.it');
+const Io = require('./ai.export.io');
+const Log = require('./ai.export.log');
+const Word = require('./ai.export.word');
 
 const _parseButtons = (value) => {
     if (value.startsWith('(') && value.endsWith(')')) {

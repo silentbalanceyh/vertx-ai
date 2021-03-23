@@ -1,89 +1,8 @@
-const Io = require('./ai.io');
-const Fx = require('./ai.fx');
-const Log = require('./ai.log');
-const Word = require('./ai.word');
-const Sr = require('./object.sure');
+const Log = require('./ai.export.log');
+const Word = require('./ai.export.word');
 
 const Excel = require('exceljs');
 const path = require('path');
-const fs = require('fs');
-const ensureMaven = (path, module) => {
-    if (!Io.isFile(path)) {
-        Fx.fxError(10017, module);
-    }
-}
-const ensureZero = (path, module) => {
-    if (!Io.isDirectory(path)) {
-        Fx.fxError(10033, module);
-    }
-}
-const ensureOx = (path, module) => {
-    if (!Io.isDirectory(path)) {
-        Fx.fxError(10034, module);
-    }
-}
-const javaDetect = (module) => {
-    const configuration = {};
-    // pom.xml 文件检查
-    const pom = module + `/pom.xml`;
-    ensureMaven(pom, module);
-    configuration.pathPom = pom;
-
-    // 「Zero」src/main/java 检查
-    const source = module + '/src/main/java';
-    ensureZero(source, module);
-    configuration.pathSource = source;
-    // 「Zero」src/main/resources 检查
-    const resource = module + '/src/main/resources';
-    ensureZero(resource, module);
-    configuration.pathResource = resource;
-
-    // 「Ox」src/main/resources/cab
-    const cab = resource + '/cab';
-    ensureOx(cab, module);
-    configuration.pathOxCab = cab;
-    // 「Ox」src/main/resources/init/oob
-    const oob = resource + '/init/oob';
-    ensureOx(oob, module);
-    configuration.pathOxOOB = oob;
-    // 「Ox」src/main/resources/runtime
-    const runtime = resource + '/runtime';
-    ensureOx(runtime, module);
-    configuration.pathOxRuntime = runtime;
-    return configuration;
-}
-const javaEnsure = (filename) => {
-    let module = process.env.ZF;
-    const configuration = Io.ioJObject(filename);
-    const {ZF, ...prepared} = configuration;
-    if (!module) {
-        module = ZF;
-    }
-    Fx.fxError(!module, 10029, module, 'ZT');
-    if (module) {
-        Log.info(`「Java环境」，后端工作路径：${module.red}。`);
-        const moduleConfig = javaDetect(module);
-        if (moduleConfig) {
-            Log.info(`Zero AI `.cyan + ` 0. 基础环境......`.rainbow);
-            Log.info(`Zero AI `.cyan + ` 工作目录：${module.blue}`);
-            moduleConfig.input = prepared;
-            return moduleConfig;
-        }
-    }
-};
-const javaConfig = (config = {}) => {
-    const {
-        filename,
-        tpl,
-    } = config;
-    Sr.cxExist(filename);
-    const configuration = javaEnsure(filename);
-    if (configuration) {
-        configuration.tpl = tpl;
-        return configuration;
-    }
-}
-
 // ==========================================================
 // Excel
 // ==========================================================
@@ -167,6 +86,5 @@ const excelRun = (config = {}) => {
     });
 }
 module.exports = {
-    javaConfig,
     excelRun,
 };
