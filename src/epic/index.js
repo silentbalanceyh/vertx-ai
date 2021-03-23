@@ -38,7 +38,7 @@ const exported = {
  *
  * # Zero Ai研发文档
  *
- * 该文档提供给研发人员直接研发下列工具专用，最新版本`0.3.0`。
+ * 该文档提供给研发人员直接研发下列工具专用，最新版本`0.3.2`。
  *
  * ## 1. 命令清单
  *
@@ -71,6 +71,7 @@ const exported = {
  * |aj icomplex|「模块」生成`ExListComplex`专用模块。|
  * |aj iform|「组件」生成`ExForm`专用组件。|
  * |aj jperm|「后端」生成权限专用的Excel数据文件。|
+ * |aj jplugin|「后端」针对新建的Maven项目执行Ox中集成项目的初始化代码骨架。|
  *
  */
 /**
