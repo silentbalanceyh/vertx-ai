@@ -2,24 +2,11 @@ const Ec = require('../epic');
 
 module.exports = () => {
     const actual = Ec.executeInput(
-        [],
         [
-            ['-c', '--config', 'workspace.json']
+            ["-r", "--role"],
+            ["-i", "--input"]
         ]
     );
-    Ec.cxExist(actual.config);
-    // 基本环境
-    const configuration = Ec.javaConfig({
-        filename: actual.config,
-        tpl: {
-            type: 'perm',
-            source: 'permission.xlsx'
-        }
-    },
-        process.env.ZF,
-        Ec.Cfg.detectOx
-    );
-    if (configuration) Ec.excelRun(configuration);
 }
 /**
  * ## `aj jperm`
