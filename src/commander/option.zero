@@ -14,3 +14,5 @@ m=module
 a=all
 y=yes
 v=value
+r=role
+i=input

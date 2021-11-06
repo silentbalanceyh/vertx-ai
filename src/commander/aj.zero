@@ -2,6 +2,6 @@ A;
 command,    executor,           description,                            option1,option2, option3, option4
 icomplex,   reactComplex,       完整模块生成`ExListXxx`模块,              c=配置文件路径
 iform,      reactForm,          完整生成表单`ExForm`专用,                 c=配置文件路径,u=表单文件名
-jperm,      javaPermission,     用于生成Excel的权限数据,                  c=配置文件路径
+jperm,      javaPermission,     用于生成Excel的权限数据,                  r=角色ID,i=输入的额外目录
 jrow,       javaRow,            用于更新Excel的行数据,                   c=配置文件路径
 jplugin,    javaPlugin,         用于初始化第三方集成模块专用,              c=配置文件路径,m=模块名称,p=工作路径
