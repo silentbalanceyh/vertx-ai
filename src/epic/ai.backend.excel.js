@@ -94,6 +94,8 @@ const excelGenerate = async (role, file, index, prefix) => {
                     const original = cellRef.value;
                     if ("#ROLE_ID#" === original) {
                         cellRef.value = role;
+                    } else if ("e501b47a-c08b-4c83-b12b-95ad82873e96" === original) {
+                        cellRef.value = role;
                     }
                 })
             })
