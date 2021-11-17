@@ -1,20 +1,6 @@
 const Ec = require('../epic');
 const os = require('os');
 
-function copyMacOs(data) {
-    return new Promise(function (resolve, reject) {
-        const proc = require('child_process').spawn('pbcopy');
-        proc.on('error', function (err) {
-            reject(err);
-        });
-        proc.on('close', function (err) {
-            resolve();
-        });
-        proc.stdin.write(data);
-        proc.stdin.end();
-    })
-}
-
 module.exports = () => {
     /*
      * 参数解析
@@ -39,7 +25,7 @@ module.exports = () => {
             console.info(generated);
             content.push(generated);
         }
-        copyMacOs(content.join('\n'))
+        Ec.outMacOs(content.join('\n'))
             .then(sign => Ec.info(`生成的UUID已经全部成功拷贝到剪切板中！`))
     } else {
         /*

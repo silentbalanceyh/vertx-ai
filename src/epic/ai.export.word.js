@@ -1,5 +1,6 @@
 const path = require('path');
 const {v4} = require("uuid");
+const Mock = require('mockjs');
 const SEP = path.sep;
 const strFirstUpper = (value = "") =>
     value.substr(0, 1).toUpperCase() + value.substr(1, value.length);
@@ -23,6 +24,8 @@ const strShapeCount = (literal = "") => {
 }
 const SEPARATOR = SEP;
 const strUuid = () => v4();
+const strRandom = (length = 64) =>
+    Mock.Random.string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length)
 const strWidth = (input = "") => {
     let content = "";
     const space = 16 - input.length;
@@ -45,5 +48,6 @@ module.exports = {
     strUuid,
     strWidth,
     strExpr,
+    strRandom,
     SEPARATOR
 };

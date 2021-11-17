@@ -272,6 +272,17 @@ const ioDataA = (path) => {
         return [];
     }
 }
+const outMacOs = (data) => new Promise(function (resolve, reject) {
+    const proc = require('child_process').spawn('pbcopy');
+    proc.on('error', function (err) {
+        reject(err);
+    });
+    proc.on('close', function (err) {
+        resolve();
+    });
+    proc.stdin.write(data);
+    proc.stdin.end();
+})
 module.exports = {
     ioName,
     ioRoot,
@@ -300,6 +311,7 @@ module.exports = {
 
     outJson,
     outString,
+    outMacOs,
 
     isFile,
     isDirectory,
