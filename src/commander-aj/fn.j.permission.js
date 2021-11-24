@@ -4,10 +4,12 @@ const path = require('path');
 module.exports = () => {
     const actual = Ec.executeInput(
         [
-            ["-r", "--role"]
+            ["-r", "--role"],
+            ["-o", "--out"]
         ],
         [
             ["-r", "--role"],
+            ["-o", "--out"],
             ["-i", "--input"]
         ]
     );
@@ -20,6 +22,7 @@ module.exports = () => {
         configuration.filesInput = filesInput.map(item => item.path);
     }
     configuration.role = actual.role;
+    configuration.out = actual.out;
     Ec.excelRun(configuration);
 }
 /**
