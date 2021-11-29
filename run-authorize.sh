@@ -20,5 +20,7 @@ echo "拷贝 zero-ui 权限"
 cp -rf ${ROOT}/zero-ui/src/main/resources/plugin/ui/oob/role/ADMIN.SUPER/* ./src/cab/perm/
 echo "拷贝 zero-wf 权限"
 cp -rf ${ROOT}/zero-wf/src/main/resources/plugin/wf/oob/role/ADMIN.SUPER/* ./src/cab/perm/
+echo "拷贝 zero-psi 权限"
+cp -rf ${ROOT}/zero-psi/src/main/resources/plugin/psi/oob/role/ADMIN.SUPER/* ./src/cab/perm/
 echo "Success, 权限拷贝完成！！"
 
