@@ -50,12 +50,12 @@ const excelRun = (config = {}) => {
     Log.info(`Zero AI `.cyan + ` 3. 生成 输入文件 权限...`.yellow);
     filesInput.forEach((file, index) => excelGenerate(config, file, index, "input"))
 }
-const excelResource = async (config = {}, parameters = {}, pid = []) => {
+const excelResource = async (config = {}, parameters = {}, pid = [], sheetName = "DATA-RES") => {
     const workbook = new Excel.Workbook();
     await workbook.xlsx.readFile(config.resource);
     Log.info(`Zero AI `.cyan + ` 2.1. 数据加载中，替换原始文件……`);
     if (workbook) {
-        const worksheetRef = workbook.getWorksheet("DATA-RES");
+        const worksheetRef = workbook.getWorksheet(sheetName);
         if (worksheetRef) {
             const maxRow = worksheetRef['_rows'].length;
             const maxColumn = worksheetRef['_columns'].length;
@@ -111,7 +111,7 @@ const excelRes = (file = {}, parameters = {}) => {
         const res = {};
         res.resource = file.auth;
         res.identifier = "falcon." + file.identifier;
-        return excelResource(res, parameters, pid);
+        return excelResource(res, parameters, pid, "DATA-PERM");
     }).then(nil => {
         Log.info(`Zero AI `.cyan + ` 5. 权限文件生成完成...`.green);
         const viewJson = Io.ioJObject(file.json);
