@@ -1,6 +1,6 @@
 {
     "name": "vertx-ai",
-    "version": "0.3.15",
+    "version": "0.3.16",
     "description": "Zero Ai Coder",
     "main": "src/ai.js",
     "bin": {
