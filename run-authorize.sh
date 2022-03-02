@@ -22,5 +22,9 @@ echo "拷贝 zero-wf 权限"
 cp -rf ${ROOT}/zero-wf/src/main/resources/plugin/wf/oob/role/ADMIN.SUPER/* ./src/cab/perm/
 echo "拷贝 zero-psi 权限"
 cp -rf ${ROOT}/zero-psi/src/main/resources/plugin/psi/oob/role/ADMIN.SUPER/* ./src/cab/perm/
+echo "拷贝 zero-is 权限"
+cp -rf ${ROOT}/zero-is/src/main/resources/plugin/is/oob/role/ADMIN.SUPER/* ./src/cab/perm/
+echo "拷贝 zero-battery 权限"
+cp -rf ${ROOT}/zero-battery/src/main/resources/plugin/battery/oob/role/ADMIN.SUPER/* ./src/cab/perm/
 echo "Success, 权限拷贝完成！！"
 
