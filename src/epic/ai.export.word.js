@@ -1,6 +1,7 @@
 const path = require('path');
 const {v4} = require("uuid");
 const Mock = require('mockjs');
+const CryptoJS = require('crypto-js');
 const SEP = path.sep;
 const strFirstUpper = (value = "") =>
     value.substr(0, 1).toUpperCase() + value.substr(1, value.length);
@@ -41,6 +42,9 @@ const strExpr = (content, params = {}) => {
     });
     return content;
 }
+const strMD5 = (content) => {
+    return CryptoJS.MD5(String(content)).toString().toUpperCase();
+}
 module.exports = {
     strFirstUpper,
     strSlashCount,
@@ -49,5 +53,6 @@ module.exports = {
     strWidth,
     strExpr,
     strRandom,
+    strMD5,
     SEPARATOR
 };

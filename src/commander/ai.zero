@@ -7,3 +7,4 @@ data,       executeData,    根据配置文件生成数据,                     
 key,        executeKey,     为数据模板添加key属性（UUID格式）,              p=输入数据文件路径, f=「key」标识key的字段名
 init,       executeInit,    初始化Zero Ui工程,                           n=项目名称（必须填写，最终写入package.json）
 str,        executeString,  生成随机字符串，可直接拷贝,                     n=「1」生成的数量, l=「64」长度信息（默认64）
+md5,        executeMD5,     加密字符串，可直接拷贝,                        i=输入字符串

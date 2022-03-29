@@ -5,6 +5,7 @@ const executeKey = require('./fn.key');
 const executeData = require('./fn.data');
 const executeInit = require('./fn.init');
 const executeString = require('./fn.random');
+const executeMD5 = require('./fn.md5');
 const exported = {
     executeUuid,        // ai uuid
     executeCsv,         // ai csv
@@ -13,5 +14,6 @@ const exported = {
     executeData,        // ai data
     executeInit,        // ai init
     executeString,      // ai str
+    executeMD5,         // ai md5
 };
 module.exports = exported;
