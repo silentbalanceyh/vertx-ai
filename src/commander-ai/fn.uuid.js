@@ -1,6 +1,8 @@
 const Ec = require('../epic');
 const os = require('os');
 
+const os_compatible = ['darwin', 'win32'];
+
 module.exports = () => {
     /*
      * 参数解析
@@ -18,14 +20,14 @@ module.exports = () => {
     const platform = os.platform();
     Ec.info(`UUID生成器，生成数量：${number}`);
     Ec.info(`当前操作系统：${platform}`);
-    if ("darwin" === platform) {
+    if (os_compatible.indexOf(platform) > -1) {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
             const generated = Ec.strUuid();
             console.info(generated);
             content.push(generated);
         }
-        Ec.outMacOs(content.join('\n'))
+        Ec.outCopy(content.join('\n'))
             .then(sign => Ec.info(`生成的UUID已经全部成功拷贝到剪切板中！`))
     } else {
         /*

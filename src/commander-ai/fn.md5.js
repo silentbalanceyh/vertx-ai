@@ -1,6 +1,8 @@
 const Ec = require('../epic');
 const os = require('os');
 
+const os_compatible = ['darwin', 'win32'];
+
 module.exports = () => {
     /*
      * 参数解析
@@ -18,10 +20,10 @@ module.exports = () => {
     const platform = os.platform();
     Ec.info(`当前操作系统：${platform}`);
 
-    if ("darwin" === platform) {
+    if (os_compatible.indexOf(platform) > -1) {
         const content = Ec.strMD5(input);
         console.info(content);
-        Ec.outMacOs(content)
+        Ec.outCopy(content)
             .then(sign => Ec.info(`加密的字符串已经成功拷贝到剪切板中！`))
     } else {
         /*
