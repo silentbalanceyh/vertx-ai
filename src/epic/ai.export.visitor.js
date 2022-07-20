@@ -253,7 +253,7 @@ const PARSER = {
 const parseZero = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => {
     if (fs.existsSync(path)) {
         const content = fs.readFileSync(path, "utf-8").trim();
-        const lines = content.split(/\n/g);
+        const lines = content.split(/\r?\n/g); //for darwin, it is \n; for win32, it is \r\n.
         const fileType = lines.shift();
         Sure.cxEnum(fileType, fileTypes);
         const parser = PARSER[fileType];

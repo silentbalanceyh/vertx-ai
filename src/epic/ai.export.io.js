@@ -6,6 +6,8 @@ const Fx = require('./ai.export.fx');
 const It = require('./ai.export.it');
 const Arr = require('./ai.export.array');
 const U = require('underscore');
+const os = require("os");
+const Ec = require("./index");
 
 const SEPRATOR = path.sep;
 const toTable = (record = {}) => {
@@ -211,7 +213,11 @@ const _makeTrace = (path = "") => {
         if (previous) {
             item = `${previous}${formated}`;
         } else {
-            item = `${formated}`;
+            if (os.platform() === 'win32') {
+                item = `${trace}`
+            } else {
+                item = `${formated}`;
+            }
         }
         folderInfo.push(item);
     });
@@ -272,8 +278,19 @@ const ioDataA = (path) => {
         return [];
     }
 }
-const outMacOs = (data) => new Promise(function (resolve, reject) {
-    const proc = require('child_process').spawn('pbcopy');
+
+const outCopy = (data) => new Promise(function (resolve, reject) {
+    const platform = os.platform();
+    let cmd='';
+    if (os.platform()==='win32'){
+        cmd = 'clip';
+    } else if (os.platform()==='darwin'){
+        cmd = 'pbcopy';
+    } else {
+        Ec.fxError(10032, platform);
+    }
+
+    const proc = require('child_process').spawn(cmd);
     proc.on('error', function (err) {
         reject(err);
     });
@@ -311,7 +328,7 @@ module.exports = {
 
     outJson,
     outString,
-    outMacOs,
+    outCopy,
 
     isFile,
     isDirectory,
