@@ -30,9 +30,9 @@ const excelGenerate = async (config = {}, file, index, prefix) => {
                     }
                 })
             })
-            const segment = file.split('/');
+            const segment = file.split(path.sep);
             const filename = segment[segment.length - 1];
-            const target = prefix ? `${out}/${prefix}.${filename}` : `${out}/${filename}`;
+            const target = prefix ? `${out}${path.sep}${prefix}.${filename}` : `${out}${path.sep}${filename}`;
             excelLog(index, `创建新数据文件 ${target}`);
             await workbook.xlsx.writeFile(target);
         } else {
@@ -42,7 +42,7 @@ const excelGenerate = async (config = {}, file, index, prefix) => {
 }
 const excelRun = (config = {}) => {
     Log.info(`Zero AI `.cyan + ` 1. 准备生成角色对应权限：ID = "${config.role.green}" ...`);
-    Io.dirCreate(`${process.cwd()}/${config.out}`);
+    Io.dirCreate(`${process.cwd()}${path.sep}${config.out}`);
     // 1. 执行替换
     const {files = [], filesInput = []} = config;
     Log.info(`Zero AI `.cyan + ` 2. 生成 Zero Extension 权限...`.yellow);
