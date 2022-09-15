@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export ROOT=/Users/lang/Develop/Source/ox-workshop/vertx-zero/vertx-pin
+export ROOT=/Users/lang/zero-cloud/vertx-zero/vertx-pin
 echo "拷贝 zero-ambient 权限"
 cp -rf ${ROOT}/zero-ambient/src/main/resources/plugin/ambient/oob/role/ADMIN.SUPER/* ./src/cab/perm/
 echo "拷贝 zero-atom 权限"
