@@ -4,6 +4,7 @@ const __LOG = require('./ai.unified.fn._.logging');
 const __STR = require('./ai.export.interface.fn.string');
 const __SK = require('./ai.export.impl.fn.seek');
 const U = require('underscore');
+const {config} = require("exceljs");
 
 const ensureMaven = (path, module) => {
     if (!__IO.isFile(path)) {
@@ -114,9 +115,20 @@ const javaConfig = (config = {}, path, ...fnPlugins) => {
     }
 }
 const javaSmartMod = (path = ".") => {
+    // 目录基础检查
+    const pathStart = __IO.ioSwitch(path);
+    const pathFile = `${pathStart}/initialize.json`;
+    __FX.fxError(!__IO.isExist(pathFile), 10035, path);
     // 查找带有 pom.xml 的根路径
+    __LOG.info(`Zero AI `.cyan + ` 检索模块目录构造配置信息。`);
     const modulePath = __SK.seekResource(path);
-    console.log(modulePath);
+    // 构造模块规范，查找目录设置
+    const configuration = {};
+    configuration.pathBase = modulePath;
+    configuration.path = pathStart;
+    configuration.out = pathFile;
+    configuration.prefix = pathStart.replace(`${modulePath}/`, "");
+    return configuration;
 }
 module.exports = {
     Cfg: {

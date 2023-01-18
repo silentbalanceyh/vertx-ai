@@ -6,6 +6,7 @@ const __FX = require('./ai.under.fn.fx.terminal');
 const __IO = require('./ai.path.fn.io.typed');
 const __V = require('./zero.__.v.constant');
 const __U = require('./zero.__.fn.find.util');
+const path = require("path");
 const ioName = (path = '.') => {
     const stat = fs.statSync(path);
     if (stat.isDirectory()) {
@@ -40,8 +41,19 @@ const ioDataA = (path) => {
         return [];
     }
 }
+const ioSwitch = (pathDir = ".") => {
+    // 截取当前运行目录
+    let pathStart;
+    if (pathDir.startsWith("/")) {
+        pathStart = pathDir;
+    } else {
+        pathStart = path.resolve(process.cwd(), pathDir);
+    }
+    return pathStart;
+}
 module.exports = {
     ioName,
     ioRoot,
     ioDataA,
+    ioSwitch,
 }

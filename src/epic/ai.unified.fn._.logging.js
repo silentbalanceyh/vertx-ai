@@ -1,5 +1,4 @@
 const colors = require("colors");
-
 colors.setTheme({
     silly: 'rainbow',
     input: 'grey',
@@ -42,5 +41,5 @@ const warn = (message) => console.warn(`[Zero AI]`.yellow.bold + ` ${message}`.y
 module.exports = {
     info,
     warn,
-    error
+    error,
 };

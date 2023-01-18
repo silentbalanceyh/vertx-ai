@@ -1,4 +1,5 @@
 const fs = require('fs');
+const U = require("underscore");
 const isFile = (path) => {
     if (fs.existsSync(path)) {
         return fs.statSync(path).isFile();
@@ -15,4 +16,5 @@ module.exports = {
     isExist,
     isFile,
     isDirectory,
+    isFunction: (input) => U.isFunction(input),
 }

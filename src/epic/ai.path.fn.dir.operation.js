@@ -1,10 +1,12 @@
 const __FX = require("./ai.under.fn.fx.terminal");
 const fs = require("fs");
 const path = require("path");
+const U = require("underscore");
 const __LOG = require("./ai.unified.fn._.logging");
 const __V = require("./zero.__.v.constant");
 const __U = require("./zero.__.fn.find.util");
 const __IS = require("./ai.unified.fn.is.decision");
+const __IO = require("./ai.path.fn.io.specification");
 const dirResolve = (path = "") => {
     let result = path.trim();
     if (result.endsWith(__V.FILE_DELIMITER)) {
@@ -12,9 +14,26 @@ const dirResolve = (path = "") => {
     }
     return result;
 };
-const dirParentPom = (pathDir = ".") => {
-    const pathes = path.resolve(__dirname, pathDir);
-    console.log(pathes + "Hello");
+const dirTree = (pathDir = ".", pathFilterFn) => {
+    // 截取当前运行目录
+    const pathStart = __IO.ioSwitch(pathDir);
+    // 往上查找项目根目录
+    const pathArr = pathStart.split(__V.FILE_DELIMITER);
+    const pathIt = [];
+    while (0 < pathArr.length) {
+        const folder = pathArr.join("/");
+        if ('' !== folder) {
+            if (U.isFunction(pathFilterFn)) {
+                if (pathFilterFn(folder)) {
+                    pathIt.push(folder);
+                }
+            } else {
+                pathIt.push(folder);
+            }
+        }
+        pathArr.pop();
+    }
+    return pathIt;
 }
 const dirParent = (path, includeCurrent = false) => {
     let result = [];
@@ -40,7 +59,7 @@ const dirChildren = (path, includeCurrent = true) => {
         const directory = dirResolve(path) + __V.FILE_DELIMITER;
         folders.forEach(item => __FX.fxContinue(!item.startsWith('.'), () => {
             const absolute = directory + item;
-            if (isDirectory(absolute)) {
+            if (__IS.isDirectory(absolute)) {
                 result.push(absolute);
                 result = result.concat(dirChildren(absolute, false));
             }
@@ -65,5 +84,5 @@ module.exports = {
     dirChildren,
     dirParent,
     dirResolve,
-    dirParentPom,
+    dirTree,
 }

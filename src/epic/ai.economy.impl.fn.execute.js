@@ -64,7 +64,7 @@ const executeHeader = (app) => {
     __LOG.info(`Zero AI 代码生成工具  : `.rainbow + app.yellow);
     __LOG.info('HomePage   : '.bold + appInfo.homepage.blue);
     __LOG.info('Github     : '.bold + appInfo.github.blue);
-    __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 14.x ) 支持ES6, ES7.」`.yellow);
+    __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 18.x ) 支持ES6, ES7.」`.yellow);
     __LOG.info("Zero AI 系统启动......".cyan);
     if (3 > process.argv.length) {
         __LOG.error("命令缺失，请输入正确的命令！");

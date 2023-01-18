@@ -3,12 +3,14 @@ const func_interface_util = require("./ai.export.interface.util");
 const func_interface_string = require('./ai.export.interface.fn.string');
 
 const func_impl_parse = require('./ai.export.impl.fn.parse');
+const func_impl_seek = require("./ai.export.impl.fn.seek");
 
 const func_impl_excel = require('./ai.economy.impl.fn.excel');
 const func_impl_plugin = require('./ai.economy.impl.fn.plugin');
 const func_impl_react = require('./ai.economy.impl.fn.react');
 const func_impl_java = require('./ai.economy.impl.fn.java');
 const func_impl_execute = require('./ai.economy.impl.fn.execute');
+const func_impl_json = require('./ai.economy.impl.fn.json');
 
 const exported = {
     ...func_interface_io,
@@ -16,12 +18,14 @@ const exported = {
     ...func_interface_string,
 
     ...func_impl_parse,
+    ...func_impl_seek,
 
     ...func_impl_execute,
     ...func_impl_excel,
     ...func_impl_react,
     ...func_impl_plugin,
     ...func_impl_java,
+    ...func_impl_json,
 };
 /**
  * @overview
