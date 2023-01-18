@@ -1,9 +1,9 @@
 const fs = require("fs");
 const __LOG = require("./ai.unified.fn._.logging");
 const __FX = require("./ai.under.fn.fx.terminal");
-const __IO = require('./ai.unbind.fn.io.typed');
+const __IO = require('./ai.path.fn.io.typed');
 const __IS = require("./ai.unified.fn.is.decision");
-const __OUT = require("./ai.unbind.fn.out.content");
+const __OUT = require("./ai.path.fn.out.content");
 const __V = require("./zero.__.v.constant");
 
 const __ioDeleteDir = (path) => {

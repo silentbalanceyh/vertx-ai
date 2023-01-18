@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // Import
-const __TO = require("./ai.unbind.fn.to.typed");
+const __TO = require("./ai.uncork.fn.to.typed");
 const __IS = require('./ai.unified.fn.is.decision');
 const __V = require('./zero.__.v.constant');
 const __ELE = require("./ai.uncork.fn.element.feature");

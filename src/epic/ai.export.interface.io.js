@@ -1,12 +1,12 @@
 const __IS = require('./ai.unified.fn.is.decision');
-const __TO = require('./ai.unbind.fn.to.typed');
-const __OUT = require("./ai.unbind.fn.out.content");
+const __TO = require('./ai.uncork.fn.to.typed');
+const __OUT = require("./ai.path.fn.out.content");
 
-const __IO_CMD = require("./ai.unbind.fn.io.command");
-const __IO_SPEC = require('./ai.unbind.fn.io.specification');
-const __IO_TYPED = require('./ai.unbind.fn.io.typed');
+const __IO_CMD = require("./ai.path.fn.io.command");
+const __IO_SPEC = require('./ai.path.fn.io.specification');
+const __IO_TYPED = require('./ai.path.fn.io.typed');
 
-const __DIR = require("./ai.unbind.fn.dir.operation");
+const __DIR = require("./ai.path.fn.dir.operation");
 
 const __IO = {
     ...__IO_CMD,

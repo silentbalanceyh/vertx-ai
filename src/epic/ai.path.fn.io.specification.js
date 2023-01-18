@@ -3,7 +3,7 @@ const U = require("underscore");
 
 const __CX = require('./ai.under.fn.cx.evaluate');
 const __FX = require('./ai.under.fn.fx.terminal');
-const __IO = require('./ai.unbind.fn.io.typed');
+const __IO = require('./ai.path.fn.io.typed');
 const __V = require('./zero.__.v.constant');
 const __U = require('./zero.__.fn.find.util');
 const ioName = (path = '.') => {

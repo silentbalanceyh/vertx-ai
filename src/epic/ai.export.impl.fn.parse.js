@@ -1,12 +1,12 @@
 const fs = require('fs');
 const Immutable = require('immutable');
 const U = require('underscore');
-const Sure = require('./ai.under.fn.cx.evaluate');
-const Fx = require('./ai.under.fn.fx.terminal');
-const It = require('./ai.uncork.fn.it.feature');
-const Io = require('./ai.export.interface.io');
-const Log = require('./ai.unified.fn._.logging');
-const Word = require('./ai.export.word');
+const __CX = require('./ai.under.fn.cx.evaluate');
+const __FX = require('./ai.under.fn.fx.terminal');
+const __IT = require('./ai.uncork.fn.it.feature');
+const __IO = require('./ai.export.interface.io');
+const __LOG = require('./ai.unified.fn._.logging');
+const __STR = require('./ai.export.interface.fn.string');
 
 const _parseButtons = (value) => {
     if (value.startsWith('(') && value.endsWith(')')) {
@@ -19,7 +19,7 @@ const _parseButtons = (value) => {
             const eachVals = eachVal.split(':');
             button.text = eachVals[0];
             if (eachVals[1]) {
-                button.key = `btn${Word.strFirstUpper(eachVals[1])}`;
+                button.key = `btn${__STR.strFirstUpper(eachVals[1])}`;
             }
             if (eachVals[2]) {
                 button.type = eachVals[2];
@@ -103,7 +103,7 @@ const _parseLine = (line = "") => {
             return _parser[type](prefix, value);
         }
     } else {
-        Log.warn(`不合法格式（不包含#）跳过配置行${line}`)
+        __LOG.warn(`不合法格式（不包含#）跳过配置行${line}`)
     }
     return {};
 };
@@ -158,7 +158,7 @@ const _parseRel = (lines = []) => {
 };
 
 const _parseOption = (item = "", name = "option") => {
-    const root = Io.ioRoot();
+    const root = __IO.ioRoot();
     const prop = parseZero(root + "/commander/" + name + ".zero", ["P;"]);
     const kv = _parseExpr(item);
     const pair = {};
@@ -175,7 +175,7 @@ const _parseArray = (lines = []) => {
     lines.forEach(line => {
         const valueArr = line.toString().trim().split(',');
         const entity = {};
-        It.itPair(fieldArr, valueArr, (first, second) => {
+        __IT.itPair(fieldArr, valueArr, (first, second) => {
             first = first ? first.trim() : first;
             second = second ? second.trim() : second;
             if (first.startsWith('option')) {
@@ -255,12 +255,12 @@ const parseZero = (path, fileTypes = ['J;', 'P;', 'A;', 'KV;', "UI;", 'R;']) => 
         const content = fs.readFileSync(path, "utf-8").trim();
         const lines = content.split(/\r?\n/g); //for darwin, it is \n; for win32, it is \r\n.
         const fileType = lines.shift();
-        Sure.cxEnum(fileType, fileTypes);
+        __CX.cxEnum(fileType, fileTypes);
         const parser = PARSER[fileType];
-        Fx.fxError(!U.isFunction(parser), 10003, fileType);
+        __FX.fxError(!U.isFunction(parser), 10003, fileType);
         return parser(lines);
     } else {
-        Fx.fxError(10009, path);
+        __FX.fxError(10009, path);
     }
 };
 /**
@@ -290,7 +290,7 @@ const parseArgs = (ensure) => {
         }
         return config;
     } else {
-        Log.error(`参数丢失，期望参数: ${ensure / 2} 个.`);
+        __LOG.error(`参数丢失，期望参数: ${ensure / 2} 个.`);
         process.exit();
     }
 };
@@ -313,28 +313,28 @@ const parseInput = (required = []) => {
         }
     }
     const $keys = Immutable.fromJS(Object.keys(config));
-    It.itArray(required, (each) => {
+    __IT.itArray(required, (each) => {
         const checked = 1 < each.length && (!($keys.contains(each[0]) || $keys.contains(each[1])));
-        Fx.fxError(checked, 10006, each);
+        __FX.fxError(checked, 10006, each);
     });
     return config;
 };
 const parseFormat = (args = {}, pairs = []) => {
     const actual = {};
-    pairs.forEach(item => Fx.fxContinue(U.isArray(item), () => {
+    pairs.forEach(item => __FX.fxContinue(U.isArray(item), () => {
         const arg0 = item[0];
         const arg1 = item[1];
         let finalKey = arg0.length > arg1.length ? arg0 : arg1;
         finalKey = finalKey.toString().replace(/-/g, '');
         const dft = item[2];
-        It.itObject(args, (key, value) => Fx.fxContinue(arg0 === key || arg1 === key, () => {
+        __IT.itObject(args, (key, value) => __FX.fxContinue(arg0 === key || arg1 === key, () => {
             actual[finalKey] = value;
         }));
-        Fx.fxContinue(!args.hasOwnProperty(arg0) && !args.hasOwnProperty(arg1) && undefined !== dft, () => {
+        __FX.fxContinue(!args.hasOwnProperty(arg0) && !args.hasOwnProperty(arg1) && undefined !== dft, () => {
             actual[finalKey] = dft;
         });
     }));
-    Log.info(`Zero AI 加载输入参数：\n${JSON.stringify(actual, null, 4).blue}`);
+    __LOG.info(`Zero AI 加载输入参数：\n${JSON.stringify(actual, null, 4).blue}`);
     return actual;
 };
 module.exports = {

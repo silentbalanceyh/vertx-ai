@@ -1,14 +1,13 @@
-const path = require('path');
 const {v4} = require("uuid");
 const Mock = require('mockjs');
 const CryptoJS = require('crypto-js');
-const SEP = path.sep;
+const __V = require("./zero.__.v.constant");
 const strFirstUpper = (value = "") =>
     value.substr(0, 1).toUpperCase() + value.substr(1, value.length);
 const strSlashCount = (literal = "") => {
     let counter = 0;
     for (let idx = 0; idx < literal.length; idx++) {
-        if (SEP === literal.charAt(idx)) {
+        if (__V.FILE_DELIMITER === literal.charAt(idx)) {
             counter++;
         }
     }
@@ -23,7 +22,6 @@ const strShapeCount = (literal = "") => {
     }
     return counter;
 }
-const SEPARATOR = SEP;
 const strUuid = () => v4();
 const strRandom = (length = 64) =>
     Mock.Random.string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length)
@@ -54,5 +52,5 @@ module.exports = {
     strExpr,
     strRandom,
     strMD5,
-    SEPARATOR
+    SEPARATOR: __V.FILE_DELIMITER,
 };

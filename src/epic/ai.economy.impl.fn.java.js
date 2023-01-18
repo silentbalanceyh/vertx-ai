@@ -1,23 +1,23 @@
-const Io = require('./ai.export.interface.io');
-const Fx = require('./ai.under.fn.fx.terminal');
-const Log = require('./ai.unified.fn._.logging');
-const Word = require('./ai.export.word');
-const Sk = require('./ai.export.seek');
+const __IO = require('./ai.export.interface.io');
+const __FX = require('./ai.under.fn.fx.terminal');
+const __LOG = require('./ai.unified.fn._.logging');
+const __STR = require('./ai.export.interface.fn.string');
+const __SK = require('./ai.export.impl.fn.seek');
 const U = require('underscore');
 
 const ensureMaven = (path, module) => {
-    if (!Io.isFile(path)) {
-        Fx.fxError(10017, module);
+    if (!__IO.isFile(path)) {
+        __FX.fxError(10017, module);
     }
 }
 const ensureZero = (path, module) => {
-    if (!Io.isDirectory(path)) {
-        Fx.fxError(10033, module);
+    if (!__IO.isDirectory(path)) {
+        __FX.fxError(10033, module);
     }
 }
 const ensureOx = (path, module) => {
-    if (!Io.isDirectory(path)) {
-        Fx.fxError(10034, module);
+    if (!__IO.isDirectory(path)) {
+        __FX.fxError(10034, module);
     }
 }
 const detectMaven = (modulePath) => {
@@ -58,7 +58,7 @@ const detectPlugin = (modulePath, configuration = {}) => {
     const resource = configuration.pathResource;
     const packagePath = `/cn/originx/${module}/`;
     configuration.modulePackage = `cn.originx.${module}`;
-    configuration.moduleAlias = Word.strFirstUpper(module).substring(0, 2);
+    configuration.moduleAlias = __STR.strFirstUpper(module).substring(0, 2);
     configuration.moduleLog = module.toUpperCase();
     // 源代码
     configuration.sourceComponent = source + packagePath + 'component';
@@ -95,18 +95,18 @@ const javaConfig = (config = {}, path, ...fnPlugins) => {
         tpl,
     } = config;
     let modulePath = path;
-    const inputConfig = Io.ioJObject(filename);
+    const inputConfig = __IO.ioJObject(filename);
     const {ZF, ...prepared} = inputConfig;
     if (!modulePath) {
         modulePath = ZF;
     }
-    Fx.fxError(!modulePath, 10029, modulePath, 'ZF');
+    __FX.fxError(!modulePath, 10029, modulePath, 'ZF');
     if (modulePath) {
-        Log.info(`「Java环境」，后端工作路径：${modulePath.red}。`);
+        __LOG.info(`「Java环境」，后端工作路径：${modulePath.red}。`);
         const configuration = detectWith.apply(this, [modulePath, module].concat(fnPlugins));
         if (configuration) {
-            Log.info(`Zero AI `.cyan + ` 0. 基础环境......`.rainbow);
-            Log.info(`Zero AI `.cyan + ` 工作目录：${modulePath.blue}`);
+            __LOG.info(`Zero AI `.cyan + ` 0. 基础环境......`.rainbow);
+            __LOG.info(`Zero AI `.cyan + ` 工作目录：${modulePath.blue}`);
             configuration.input = prepared;
             configuration.tpl = tpl;
             return configuration;
@@ -115,7 +115,7 @@ const javaConfig = (config = {}, path, ...fnPlugins) => {
 }
 const javaSmartMod = (path = ".") => {
     // 查找带有 pom.xml 的根路径
-    const modulePath = Sk.seekResource(path);
+    const modulePath = __SK.seekResource(path);
     console.log(modulePath);
 }
 module.exports = {

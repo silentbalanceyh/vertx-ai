@@ -1,31 +1,27 @@
 const func_interface_io = require('./ai.export.interface.io');
 const func_interface_util = require("./ai.export.interface.util");
+const func_interface_string = require('./ai.export.interface.fn.string');
 
-const aiExecute = require('./ai.export.execute');
-const aiVisitor = require('./ai.export.visitor');
+const func_impl_parse = require('./ai.export.impl.fn.parse');
 
-const aiWord = require('./ai.export.word');
-
-const aiJava = require('./ai.backend.excel');
-const aiReact = require('./ai.export.react');
-const aiOx = require('./ai.backend.origin');
-
-const aiConfig = require('./ai.export.config');
+const func_impl_excel = require('./ai.economy.impl.fn.excel');
+const func_impl_plugin = require('./ai.economy.impl.fn.plugin');
+const func_impl_react = require('./ai.economy.impl.fn.react');
+const func_impl_java = require('./ai.economy.impl.fn.java');
+const func_impl_execute = require('./ai.economy.impl.fn.execute');
 
 const exported = {
     ...func_interface_io,
     ...func_interface_util,
+    ...func_interface_string,
 
-    ...aiWord,
+    ...func_impl_parse,
 
-    ...aiExecute,
-    ...aiVisitor,
-
-    ...aiJava,
-    ...aiReact,
-    ...aiOx,
-
-    ...aiConfig,
+    ...func_impl_execute,
+    ...func_impl_excel,
+    ...func_impl_react,
+    ...func_impl_plugin,
+    ...func_impl_java,
 };
 /**
  * @overview
