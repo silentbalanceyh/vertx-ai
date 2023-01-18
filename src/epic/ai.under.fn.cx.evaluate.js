@@ -1,8 +1,10 @@
 const fs = require('fs');
 const U = require('underscore');
 const Immutable = require('immutable');
-const E = require('./object.error');
-const Log = require('./ai.export.log');
+
+// Import
+const __LOG = require('./ai.unified.fn._.logging');
+const __EC = require('./ai.unified.fn.fn.error.code');
 
 const isFile = (path, file = true) => {
     let existing = fs.existsSync(path);
@@ -47,22 +49,22 @@ const FUNS = {
     }
 };
 const EFUNS = {
-    Function: E.fn10001,
-    String: E.fn10001,
-    JString: E.fn10001,
-    Valid: E.fn10001,
-    Enum: E.fn10002,
-    File: E.fn10007,
-    Directory: E.fn10008,
-    Exist: E.fn10009,
-    Empty: E.fn10023,
+    Function: __EC.fn10001,
+    String: __EC.fn10001,
+    JString: __EC.fn10001,
+    Valid: __EC.fn10001,
+    Enum: __EC.fn10002,
+    File: __EC.fn10007,
+    Directory: __EC.fn10008,
+    Exist: __EC.fn10009,
+    Empty: __EC.fn10023,
 };
-const _sure = (type) => (arg, config) => {
+const _sure = (type) => (arg, config = {}) => {
     const check = FUNS[type];
     const message = EFUNS[type](arg, type, config);
     const checked = !check(arg, config);
     if (checked) {
-        Log.error(message);
+        __LOG.error(message);
         throw new Error(`错误！${message}`);
     } else return true;
 };

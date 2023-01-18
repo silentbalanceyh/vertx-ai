@@ -1,15 +1,15 @@
-const Io = require('./ai.export.io');
+const Io = require('./ai.export.interface.io');
 const Word = require('./ai.export.word');
-const Log = require('./ai.export.log');
+const Log = require('./ai.unified.fn._.logging');
 const path = require('path');
 const fs = require('fs');
 const writeFile = (config, params = {}) => {
-    const { source, target } = config;
-    if(fs.existsSync(source) && target){
+    const {source, target} = config;
+    if (fs.existsSync(source) && target) {
         const content = Io.ioString(source);
         const normalized = Word.strExpr(content, params);
         Io.outString(target, normalized, true);
-    }else{
+    } else {
         Log.warn(`Zero AI 对不起，文件不存在`.yellow + `：${source}`);
     }
 }
@@ -29,19 +29,19 @@ const writeDir = (config = {}) => {
 const fileRaw = (targetFile, tplFile, filename, filenameTpl) => {
     const file = {};
     file.target = `${targetFile}/${filename}`;
-    const fileTpl = filenameTpl ? filenameTpl: `${filename}.tpl`;
+    const fileTpl = filenameTpl ? filenameTpl : `${filename}.tpl`;
     file.source = `${tplFile}/${fileTpl}`;
     return file;
 }
 const fileInfix = (targetFile, tplFile, input = {}) => {
     Log.info(`Zero AI `.cyan + ` \t2.1. backlog日志配置......`);
     const content = fileRaw(targetFile, tplFile, 'infix.xml');
-    const { params = {}} = input;
+    const {params = {}} = input;
     writeFile(content, params);
 }
 
 const fileConfiguration = (resourcePath, tplFile, input = {}) => {
-    const { params = {}} = input;
+    const {params = {}} = input;
     Log.info(`Zero AI `.cyan + ` \t2.2.1. 「默认」集成配置......`);
     let json = fileRaw(resourcePath, tplFile,
         "integration.json");
@@ -64,7 +64,7 @@ const fileConfiguration = (resourcePath, tplFile, input = {}) => {
 }
 
 const fileJava = (tplFile, input = {}) => {
-    const { params = {}, config = {}} = input;
+    const {params = {}, config = {}} = input;
     Log.info(`Zero AI `.cyan + ` \t2.3.1. 常量处理......`);
     let java = fileRaw(config.sourceCv, tplFile,
         `${config.moduleAlias}Cv.java`, `Cv.java.tpl`);
@@ -120,18 +120,18 @@ const fileJava = (tplFile, input = {}) => {
 
     java = fileRaw(config.sourceOutput, tplFile,
         `${config.moduleAlias}IoAdd.java`, `Io.Impl.java.tpl`);
-    writeFile(java, {OP:"Add",...params});
+    writeFile(java, {OP: "Add", ...params});
     java = fileRaw(config.sourceOutput, tplFile,
         `${config.moduleAlias}IoUpdate.java`, `Io.Impl.java.tpl`);
-    writeFile(java, {OP:"Update",...params});
+    writeFile(java, {OP: "Update", ...params});
     java = fileRaw(config.sourceOutput, tplFile,
         `${config.moduleAlias}IoDelete.java`, `Io.Impl.java.tpl`);
-    writeFile(java, {OP:"Delete",...params});
+    writeFile(java, {OP: "Delete", ...params});
 }
 
 const pluginRun = (config = {}) => {
     Log.info(`Zero AI `.cyan + ` 1. 执行Plugin命令......`.rainbow);
-    const { tpl = {}} = config;
+    const {tpl = {}} = config;
     const tplPath = path.join(__dirname, `../cab/${tpl.type}`);
     writeDir(config);
 

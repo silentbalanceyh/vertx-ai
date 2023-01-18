@@ -1,4 +1,4 @@
-const Fx = require('./ai.export.fx');
+const __FX = require('./ai.under.fn.fx.terminal');
 /**
  * ## `Ec.elementZip`
  *
@@ -41,7 +41,7 @@ const elementZip = (source = [], target = [], merged = false) => {
 const elementUnique = (array = [], field, value) => {
     if (field && value) {
         const filtered = array.filter(item => value === item[field]);
-        Fx.fxError(1 < filtered.length, 10021, field, value);
+        __FX.fxError(1 < filtered.length, 10021, field, value);
         return filtered[0];
     }
 };

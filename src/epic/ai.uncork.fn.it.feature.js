@@ -1,16 +1,17 @@
-const Log = require('./ai.export.log');
-const Fx = require('./ai.export.fx');
 const U = require('underscore');
 const fs = require('fs');
 const inflect = require('i')();
-const path = require('path');
-const SEPRATOR = path.sep;
+
+// Import
+const __FX = require('./ai.under.fn.fx.terminal');
+const __LOG = require('./ai.unified.fn._.logging');
+const __V = require('./zero.__.v.constant');
 
 const _eachFn = (executor, callback, method = "") => {
     if (U.isFunction(executor)) {
         return callback();
     } else {
-        Log.warn(`[Zero AI] (${method}) The 'executor' argument must be function, but now ${executor}`);
+        __LOG.warn(`[Zero AI] (${method}) The 'executor' argument must be function, but now ${executor}`);
     }
 };
 
@@ -79,8 +80,8 @@ const itFileSync = (path = "", callback) => {
         const etat = fs.statSync(path);
         if (etat.isDirectory()) {
             const dir = fs.readdirSync(path);
-            itArray(dir, (item) => Fx.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
-                let divider = path.endsWith(SEPRATOR) ? "" : SEPRATOR;
+            itArray(dir, (item) => __FX.fxContinue(!item.startsWith('_') && !item.startsWith('.'), () => {
+                let divider = path.endsWith(__V.FILE_DELIMITER) ? "" : __V.FILE_DELIMITER;
                 let hitFile = path + divider + item;
                 itFileSync(hitFile, callback);
             }))
@@ -88,7 +89,7 @@ const itFileSync = (path = "", callback) => {
             callback(path);
         }
     } else {
-        Log.warn(`路径不存在：${path}`)
+        __LOG.warn(`路径不存在：${path}`)
     }
 };
 
@@ -102,7 +103,7 @@ const itCompress = (object = {}, prefix = "") => {
             result[key] = value;
         }
     });
-    Fx.fxContinue(0 < items.length, () => {
+    __FX.fxContinue(0 < items.length, () => {
         const prefixes = inflect.pluralize(prefix);
         result[prefixes] = items;
     });

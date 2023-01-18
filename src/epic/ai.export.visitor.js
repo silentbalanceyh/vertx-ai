@@ -1,11 +1,11 @@
 const fs = require('fs');
 const Immutable = require('immutable');
 const U = require('underscore');
-const Sure = require('./object.sure');
-const Fx = require('./ai.export.fx');
-const It = require('./ai.export.it');
-const Io = require('./ai.export.io');
-const Log = require('./ai.export.log');
+const Sure = require('./ai.under.fn.cx.evaluate');
+const Fx = require('./ai.under.fn.fx.terminal');
+const It = require('./ai.uncork.fn.it.feature');
+const Io = require('./ai.export.interface.io');
+const Log = require('./ai.unified.fn._.logging');
 const Word = require('./ai.export.word');
 
 const _parseButtons = (value) => {

@@ -1,6 +1,9 @@
 const U = require('underscore');
-const Log = require('./ai.export.log');
-const E = require('./object.error');
+
+// Import
+const __LOG = require('./ai.unified.fn._.logging');
+const __EC = require('./ai.unified.fn.fn.error.code');
+
 const fxCond = (arg) => {
     if (U.isFunction(arg)) {
         arg = arg();
@@ -109,23 +112,23 @@ const fxError = (cond, code, ...args) => {
     if (U.isFunction(cond)) {
         checked = cond();
         const fnError = `fn${code}`;
-        fnMessage = E[fnError];
+        fnMessage = __EC[fnError];
 
     } else if (U.isBoolean(cond)) {
         checked = cond;
         const fnError = `fn${code}`;
-        fnMessage = E[fnError];
+        fnMessage = __EC[fnError];
     } else if (U.isNumber(cond)) {
         checked = true;
         const fnError = `fn${cond}`;
-        fnMessage = E[fnError];
+        fnMessage = __EC[fnError];
         inputArgs.push(code);
     }
     if (U.isFunction(fnMessage)) {
         if (checked) {
             args.forEach(arg => inputArgs.push(arg));
             const errorMessage = fnMessage.apply(this, inputArgs);
-            Log.error(errorMessage);
+            __LOG.error(errorMessage);
             console.error(errorMessage);
             throw new Error(`错误：${errorMessage}`);
         }

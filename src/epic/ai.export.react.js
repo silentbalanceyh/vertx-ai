@@ -1,8 +1,8 @@
-const Io = require('./ai.export.io');
-const Fx = require('./ai.export.fx');
-const Log = require('./ai.export.log');
+const Io = require('./ai.export.interface.io');
+const Fx = require('./ai.under.fn.fx.terminal');
+const Log = require('./ai.unified.fn._.logging');
 const Word = require('./ai.export.word');
-const Sr = require('./object.sure');
+const Sr = require('./ai.under.fn.cx.evaluate');
 
 const fs = require('fs');
 const path = require('path');

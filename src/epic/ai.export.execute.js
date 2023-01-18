@@ -2,9 +2,9 @@ const program = require('commander');
 const U = require('underscore');
 const co = require('co');
 const Immutable = require('immutable');
-const Log = require('./ai.export.log');
-const It = require('./ai.export.it');
-const Fx = require('./ai.export.fx');
+const Log = require('./ai.unified.fn._.logging');
+const It = require('./ai.uncork.fn.it.feature');
+const Fx = require('./ai.under.fn.fx.terminal');
 const Vt = require('./ai.export.visitor');
 
 

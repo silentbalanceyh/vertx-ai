@@ -1,12 +1,9 @@
-const aiLog = require('./ai.export.log');
-const aiIo = require('./ai.export.io');
-const aiSure = require('./object.sure');
-const aiFx = require('./ai.export.fx');
+const func_interface_io = require('./ai.export.interface.io');
+const func_interface_util = require("./ai.export.interface.util");
+
 const aiExecute = require('./ai.export.execute');
 const aiVisitor = require('./ai.export.visitor');
-const aiCollection = require('./ai.export.it');
 
-const aiArray = require('./ai.export.array');
 const aiWord = require('./ai.export.word');
 
 const aiJava = require('./ai.backend.excel');
@@ -16,16 +13,13 @@ const aiOx = require('./ai.backend.origin');
 const aiConfig = require('./ai.export.config');
 
 const exported = {
-    ...aiLog,
-    ...aiIo,
-    ...aiSure,
-    ...aiFx,
+    ...func_interface_io,
+    ...func_interface_util,
+
     ...aiWord,
 
     ...aiExecute,
     ...aiVisitor,
-    ...aiCollection,
-    ...aiArray,
 
     ...aiJava,
     ...aiReact,

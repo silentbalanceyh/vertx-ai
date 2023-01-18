@@ -1,7 +1,8 @@
-const Io = require('./ai.export.io');
-const Fx = require('./ai.export.fx');
-const Log = require('./ai.export.log');
+const Io = require('./ai.export.interface.io');
+const Fx = require('./ai.under.fn.fx.terminal');
+const Log = require('./ai.unified.fn._.logging');
 const Word = require('./ai.export.word');
+const Sk = require('./ai.export.seek');
 const U = require('underscore');
 
 const ensureMaven = (path, module) => {
@@ -57,7 +58,7 @@ const detectPlugin = (modulePath, configuration = {}) => {
     const resource = configuration.pathResource;
     const packagePath = `/cn/originx/${module}/`;
     configuration.modulePackage = `cn.originx.${module}`;
-    configuration.moduleAlias = Word.strFirstUpper(module).substring(0,2);
+    configuration.moduleAlias = Word.strFirstUpper(module).substring(0, 2);
     configuration.moduleLog = module.toUpperCase();
     // 源代码
     configuration.sourceComponent = source + packagePath + 'component';
@@ -75,12 +76,12 @@ const detectPlugin = (modulePath, configuration = {}) => {
 }
 const detectWith = (modulePath, module, ...fnPlugin) => {
     let configuration = detectMaven(modulePath);
-    if(module){
+    if (module) {
         configuration.module = module;
     }
-    for( let idx = 0; idx < fnPlugin.length; idx++ ){
+    for (let idx = 0; idx < fnPlugin.length; idx++) {
         const detectFn = fnPlugin[idx];
-        if(U.isFunction(detectFn)){
+        if (U.isFunction(detectFn)) {
             // 会被改掉
             configuration = detectFn(modulePath, configuration);
         }
@@ -112,11 +113,16 @@ const javaConfig = (config = {}, path, ...fnPlugins) => {
         }
     }
 }
-
+const javaSmartMod = (path = ".") => {
+    // 查找带有 pom.xml 的根路径
+    const modulePath = Sk.seekResource(path);
+    console.log(modulePath);
+}
 module.exports = {
-    Cfg:{
+    Cfg: {
         detectOx,
         detectPlugin,
     },
     javaConfig,
+    javaSmartMod,
 }
