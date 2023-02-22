@@ -34,10 +34,10 @@ added 77 packages from 119 contributors in 8.417s
 
 ### 2.1. 环境变量表
 
-|环境变量名|例子|含义|
-|---|:---|:---|
-|ZT|`export ZT=generated/tool`|「前端」接下来的所有ZT命令都是在generated/tool模块中执行。|
-|ZF|`export ZF=ox-engine/ox-business`|「后端」接下来所有的ZF命令都在对应目录中执行。|
+| 环境变量名 | 例子                                | 含义                                    |
+|-------|:----------------------------------|:--------------------------------------|
+| ZT    | `export ZT=generated/tool`        | 「前端」接下来的所有ZT命令都是在generated/tool模块中执行。 |
+| ZF    | `export ZF=ox-engine/ox-business` | 「后端」接下来所有的ZF命令都在对应目录中执行。              |
 
 ### 2.2. 注意点
 
@@ -45,6 +45,8 @@ added 77 packages from 119 contributors in 8.417s
     * `src/components/generated/tool` - Zero中的组件开发目录
     * `src/cab/cn/components/generated/tool` - Zero中的资源文件目录
 * ZF环境变量设置后，设置目录下必须包含`pom.xml`文件（后端项目基础结构，Maven检测）
+
+
 
 
 
