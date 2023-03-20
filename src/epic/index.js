@@ -57,6 +57,7 @@ const exported = {
  * |ai key|为输入数据中的Array或Object追加`UUID`格式的字段，字段可配置，默认为`field = key`属性。|
  * |ai uk|检查输入数据中是否包含了`field1,field2,field3`属性中的重复数据，直接输出结果。|
  * |ai uuid|随机生成一定数量的UUID字符串，并且拷贝到剪切板中（MacOs）。|
+ * |ai init|「前端」生成项目的初始化代码骨架。|
  *
  * ### 3.2. Zero命令
  *
@@ -66,6 +67,7 @@ const exported = {
  * |aj iform|「组件」生成`ExForm`专用组件。|
  * |aj jperm|「后端」生成权限专用的Excel数据文件。|
  * |aj jplugin|「后端」针对新建的Maven项目执行Ox中集成项目的初始化代码骨架。|
+ * |aj jinit|「后端」生成项目的初始化代码骨架。|
  *
  */
 /**
