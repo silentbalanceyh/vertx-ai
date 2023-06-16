@@ -1,11 +1,12 @@
 {
     "name": "vertx-ai",
-    "version": "0.3.24",
-    "description": "Zero Ai Coder",
+    "version": "0.3.25",
+    "description": "Zero Ecotope AI",
     "main": "src/ai.js",
     "bin": {
         "ai": "./src/ai.js",
-        "aj": "./src/aj.js"
+        "aj": "./src/aj.js",
+        "art": "./src/art.js"
     },
     "scripts": {
         "test": "src/index.test.js"
@@ -29,7 +30,7 @@
         "clipboard-copy": "^4.0.1",
         "co": "^4.6.0",
         "colors": "^1.4.0",
-        "commander": "^10.0.1",
+        "commander": "^11.0.0",
         "crypto-js": "^4.1.1",
         "dox": "^1.0.0",
         "exceljs": "^4.3.0",
@@ -39,7 +40,7 @@
         "immutable": "^4.3.0",
         "linebyline": "^1.3.0",
         "lodash": "^4.17.21",
-        "mkdirp": "^3.0.0",
+        "mkdirp": "^3.0.1",
         "mockjs": "^1.1.0",
         "random-js": "^2.1.0",
         "superagent": "^8.0.9",

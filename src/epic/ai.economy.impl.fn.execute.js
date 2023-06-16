@@ -61,11 +61,11 @@ const executeHeader = (app) => {
     const appInfo = require('../../package.json');
     program.allowUnknownOption();
     program.version(appInfo.version);
-    __LOG.info(`Zero AI 代码生成工具  : `.rainbow + app.yellow);
+    __LOG.info(`Zero Ecotope AI工具项  : `.rainbow + app.yellow);
     __LOG.info('HomePage   : '.bold + appInfo.homepage.blue);
     __LOG.info('Github     : '.bold + appInfo.github.blue);
     __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 18.x ) 支持ES6, ES7.」`.yellow);
-    __LOG.info("Zero AI 系统启动......".cyan);
+    __LOG.info("AI 系统启动......".cyan);
     if (3 > process.argv.length) {
         __LOG.error("命令缺失，请输入正确的命令！");
     }

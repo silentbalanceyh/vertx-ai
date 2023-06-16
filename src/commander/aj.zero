@@ -1,9 +1,8 @@
 A;
 command,    executor,           description,                            option1,option2, option3, option4
-icomplex,   reactComplex,       完整模块生成`ExListXxx`模块,               c=配置文件路径
-iform,      reactForm,          完整生成表单`ExForm`专用,                  c=配置文件路径,u=表单文件名
-jperm,      javaPermission,     用于生成Excel的权限数据,                    r=角色ID,i=输入的额外目录,o=输出路径
-jrs,        javaResource,       用于生成Excel的资源定义和默认权限,           c=配置文件路径,o=输出路径
-jplugin,    javaPlugin,         用于初始化第三方集成模块专用,                c=配置文件路径,m=模块名称,p=工作路径
-jmod,       javaMod,            执行模块化专用初始化命令,                   p=输入路径（initialize.json）路径,e=扩展名过滤,w=替换模式
-jinit,      javaInit,           初始化Zero Api工程,                       n=项目名称（必须填写，最终写入pom.xml）
+perm,       javaPermission,     用于生成Excel的权限数据,                    r=角色ID,i=输入的额外目录,o=输出路径
+rs,         javaResource,       用于生成Excel的资源定义和默认权限,           c=配置文件路径,o=输出路径
+plugin,     javaPlugin,         用于初始化第三方集成模块专用,                c=配置文件路径,m=模块名称,p=工作路径
+mod,        javaMod,            执行模块化专用初始化命令,                   p=输入路径（initialize.json）路径,e=扩展名过滤,w=替换模式
+init,       javaInit,           初始化Zero Api工程,                       n=项目名称（必须填写，最终写入pom.xml）
+bundle,     javaBundle,         初始化OSGI Bundle工程,                    p=输入路径，若无则取当前路径
