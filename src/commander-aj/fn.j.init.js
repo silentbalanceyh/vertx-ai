@@ -23,10 +23,10 @@ module.exports = () => {
     Ec.info(`执行工程初始化：${target}`);
     const cmdGit = `rm -rf ${target}/.git`;
     child.execSync(cmdGit, {stdio: 'inherit'});
-   Ec.info(`工程初始化完成：${target}，您可以开始您的Zero Api之行了！`.help);
+    Ec.info(`工程初始化完成：${target}，您可以开始您的Zero Api之行了！`.help);
 }
 /**
- * ## `aj jinit`
+ * ## `aj init`
  *
  * ### 1. 命令
  *
@@ -36,10 +36,10 @@ module.exports = () => {
  *
  * ```shell
  * # 2.1. 命令语法
- * aj jinit -name <name>
+ * aj init -name <name>
  *
  * # 2.2. 执行测试
- * aj jinit -name test-demo-api
+ * aj init -name test-demo-api
  * [Zero AI] Zero AI 代码生成工具  : <标准工具>
  * [Zero AI] HomePage   : http://www.vertxai.cn
  * [Zero AI] Github     : https://github.com/silentbalanceyh/vertx-ai.git
@@ -68,5 +68,5 @@ module.exports = () => {
  * |-n|--name|String|（无）|项目名称以及目录名称。|
  *
  * @memberOf module:aj
- * @method jinit
+ * @method init
  */

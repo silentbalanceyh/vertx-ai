@@ -14,20 +14,20 @@ module.exports = () => {
     Ec.cxExist(actual.config);
     // 基本环境
     const configuration = Ec.javaConfig({
-        filename: actual.config,
-        module: actual.module,
-        tpl:{
-            type: 'plugin'
-        }
-    },
-        "." === actual.path ? process.cwd(): actual.path,
+            filename: actual.config,
+            module: actual.module,
+            tpl: {
+                type: 'plugin'
+            }
+        },
+        "." === actual.path ? process.cwd() : actual.path,
         Ec.Cfg.detectPlugin
     );
-    if(configuration) Ec.pluginRun(configuration);
+    if (configuration) Ec.pluginRun(configuration);
 }
 
 /**
- * ## `aj jplugin`
+ * ## `aj plugin`
  *
  * ### 1. 命令
  *
@@ -39,10 +39,10 @@ module.exports = () => {
  *
  * ```shell
  * # 2.1.1. 命令语法
- * aj jplugin -m pbc
+ * aj plugin -m pbc
  *
  * # 2.1.2. 执行测试
- * aj jplugin -m pbc
+ * aj plugin -m pbc
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
  * [Zero AI] Zero AI 加载输入参数：
@@ -116,5 +116,5 @@ module.exports = () => {
  * |-c|--config|String|`workspace.json`|配置文件路径。|
  *
  * @memberOf module:aj
- * @method jplugin
+ * @method plugin
  **/

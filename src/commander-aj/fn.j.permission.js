@@ -26,7 +26,7 @@ module.exports = () => {
     Ec.excelRun(configuration);
 }
 /**
- * ## `aj jperm`
+ * ## `aj perm`
  *
  * ### 1. 命令
  *
@@ -38,13 +38,14 @@ module.exports = () => {
  *
  * ```shell
  * # 2.1.1. 命令语法
- * aj jperm -r <role> -i <input>
+ * aj perm -r <role> -i <input>
  *
  * # 2.1.2. 执行测试
- * ai jperm -r ccc -i input
+ * ai perm -r ccc -i input
  *
  * [Zero AI] Zero AI  1. 准备生成角色对应权限：ID = "ccc" ...
  * [Zero AI] Zero AI  2. 生成 Zero Extension 权限...
+ * ```
  *
  * ### 3. 选项
  *
@@ -56,5 +57,5 @@ module.exports = () => {
  * |-i|--input|String|无|另外一个目录，用来合并新权限。|
  *
  * @memberOf module:aj
- * @method jperm
+ * @method perm
  **/
