@@ -13,7 +13,9 @@ Zero工具箱为一个工具类型的项目，主要为后端项目和前端项�
 使用以下命令安装该工具
 
 ```
+# 旧版
 npm install -g vertx-ai
+# 新版（从 0.3.25）
 ```
 
 等你看到下边的输出信息后，证明安装过程已完成，目前最新版本：**0.3.0**。
@@ -21,7 +23,8 @@ npm install -g vertx-ai
 ```
 /usr/local/bin/ai -> /usr/local/lib/node_modules/vertx-ai/src/ai.js
 /usr/local/bin/aj -> /usr/local/lib/node_modules/vertx-ai/src/aj.js
-+ vertx-ai@0.3.0
+/usr/local/bin/art -> /usr/local/lib/node_modules/vertx-ai/src/ar.js
++ zero-ai@0.3.25
 added 77 packages from 119 contributors in 8.417s
 ```
 
@@ -29,8 +32,9 @@ added 77 packages from 119 contributors in 8.417s
 
 > 下边是工具列表，主要分为两种：独立工具/Zero专用工具
 
-* 独立工具：可直接调用`ai xxx`方式执行的工具。
-* 专用工具：调用`aj xxx`，并且需要设置对应环境变量。
+* 基础自动化工具：可直接调用`ai xxx`方式执行的工具。
+* 后端工具：调用`aj xxx`，部分命令需要设置对应环境变量。
+* 前端工具：调用`art xxx`。
 
 ### 2.1. 环境变量表
 
