@@ -30,8 +30,7 @@ module.exports = () => {
     // 后期脚本
     const commands = [
         `rm -rf ${target}/.zero/*`,
-        `rm -rf ${target}/document/doc-web/*`,
-        `rm -rf ${target}/document/doc-web-extension/*`,
+        `rm -rf ${target}/document/doc-web`,
         `rm -rf ${target}/guide/`,
         `rm -rf ${target}/_config.yml`,
         `rm -rf ${target}/CNAME`,
@@ -39,12 +38,19 @@ module.exports = () => {
         `rm -rf ${target}/LICENSE`,
         `rm -rf ${target}/package-lock.json`,
         `rm -rf ${target}/yarn.lock`,
+        `rm -rf ${target}/run-cache.sh`,
+        `rm -rf ${target}/run-ux.sh`,
+        `rm -rf ${target}/run-zero-dependency.sh`,
+        `rm -rf ${target}/SUMMARY.md`,
     ]
     Ec.info(`执行后期处理：......`.yellow);
     commands.forEach(command => {
         Ec.info(`资源清理中：${command.prompt}`);
         child.execSync(command, {stdio: 'inherit'})
-    })
+    });
+    // 重铸 .gitignore 文件
+    Ec.info(`重铸 .gitignore`);
+    child.execSync(`mv ${target}/.gitignore.tpl ${target}/.gitignore`, {stdio: 'inherit'})
     Ec.info(`工程初始化完成：${target}，您可以开始您的Zero Ui之行了！`.help);
 }
 /**
