@@ -5,9 +5,7 @@ module.exports = () => {
         [
             ['-n', '--name']
         ],
-        [
-            ['-n', '--name']
-        ]
+        []
     );
     // 第一步：环境检查
     if (Ec.isExist(".git")) {
