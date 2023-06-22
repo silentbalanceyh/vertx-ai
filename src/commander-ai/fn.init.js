@@ -5,7 +5,9 @@ module.exports = () => {
         [
             ['-n', '--name']
         ],
-        []
+        [
+            ['-n', '--name']
+        ]
     );
     // 第一步：环境检查
     if (Ec.isExist(".git")) {
@@ -15,7 +17,7 @@ module.exports = () => {
     // 第二步：检查 vertx-ui
     const target = actual.name;
     Ec.info(`工程构建目录：${target}`);
-    const cmd = `git clone https://gitee.com/silentbalanceyh/vertx-ui.git ${target}`;
+    const cmd = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${target}`;
     child.execSync(cmd, {stdio: 'inherit'});
     // 删除目标目录中的 .git 文件夹
     Ec.info(`执行工程初始化：${target}`);

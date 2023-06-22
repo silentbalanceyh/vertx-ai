@@ -1,25 +1,28 @@
 # Zero工具箱
 
-Zero工具箱为一个工具类型的项目，主要为后端项目和前端项目打造的辅助开发人员进行快速开发的命令行工具，该框架的前端项目和后端项目的地址如下：
+Zero工具箱为一个工具类型的项目，主要为后端项目和前端项目打造的辅助开发人员进行快速开发的命令行工具，该工具可以帮助开发人员执行`Zero/Zero Ui`
+的智能化开发，版本会持续发布到npm社区。
 
-* 前端：[http://www.vertxui.cn](http://www.vertxui.cn)
-* 后端：[http://www.vertxup.cn](http://www.vertxup.cn)
-* 详细文档：[Zero Ai文档](http://www.vertxai.cn/document/doc-web/index.html)
+* 详细文档：[Zero Ai命令](http://www.vertxai.cn/document/doc-web/index.html)
 
-该工具可以帮助开发人员执行`Zero/Zero Ui`的智能化开发，工具最新版本为`0.3.2`，目前已发布到npm社区。
+## 0. 引导
+
+- （后端）Zero Ecotope：<https://www.zerows.io>
+- （前端）Zero UI：<https://www.vertxui.cn>
+- （工具）Zero AI：<https://www.vertxai.cn>
+- （标准）Zero Schema：<https://www.vertx-cloud.cn>
 
 ## 1. 安装流程
+
+> Windows必须启用 WSL 才可用
 
 使用以下命令安装该工具
 
 ```
-# 旧版
-npm install -g vertx-ai
-# 新版（从 0.3.25）
 npm install -g zero-ai
 ```
 
-等你看到下边的输出信息后，证明安装过程已完成，目前最新版本：**0.3.0**。
+等你看到下边的输出信息后，证明安装过程已完成：
 
 ```
 /usr/local/bin/ai -> /usr/local/lib/node_modules/vertx-ai/src/ai.js
@@ -29,27 +32,25 @@ npm install -g zero-ai
 added 77 packages from 119 contributors in 8.417s
 ```
 
-## 2. 基本说明
+## 2. 常用命令说明
 
-> 下边是工具列表，主要分为两种：独立工具/Zero专用工具
+### 2.1. 三大命令
 
-* 基础自动化工具：可直接调用`ai xxx`方式执行的工具。
-* 后端工具：调用`aj xxx`，部分命令需要设置对应环境变量。
-* 前端工具：调用`art xxx`。
+- ai：标准命令
+- aj：后端专用命令（For Java）
+- art：前端开发命令（For React）
 
-### 2.1. 环境变量表
+### 2.2. 工程初始化
 
-| 环境变量名 | 例子                                | 含义                                    |
-|-------|:----------------------------------|:--------------------------------------|
-| ZT    | `export ZT=generated/tool`        | 「前端」接下来的所有ZT命令都是在generated/tool模块中执行。 |
-| ZF    | `export ZF=ox-engine/ox-business` | 「后端」接下来所有的ZF命令都在对应目录中执行。              |
+```shell
+# 前端工程初始化
+ai init -name <name>
+# 前端工程更新
+ai sync
 
-### 2.2. 注意点
-
-* ZT环境变量设置后，必须存在目录`src/xxx`，如`ZT=generated/tool`，那么必须存在`src/generate/tool`目录，基础信息对应到
-    * `src/components/generated/tool` - Zero中的组件开发目录
-    * `src/cab/cn/components/generated/tool` - Zero中的资源文件目录
-* ZF环境变量设置后，设置目录下必须包含`pom.xml`文件（后端项目基础结构，Maven检测）
+# 后端工程初始化
+aj init
+```
 
 
 

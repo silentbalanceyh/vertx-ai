@@ -17,16 +17,16 @@ module.exports = () => {
     // 2. 创建 .zero 目录
     const cmdDir = `mkdir -p ${path}`;
     child.execSync(cmdDir, {stdio: 'inherit'});
+    const pathSource = `${path}/scaffold-ui`
     // 3. 删除 .zero/vertx-ui 目录
-    if (Ec.isExist(`${path}/vertx-ui`)) {
-        Ec.info(`发现存在旧代码，正在删除：${path}/vertx-ui`);
-        const cmdDel = `rm -rf ${path}/vertx-ui`;
+    if (Ec.isExist(pathSource)) {
+        Ec.info(`发现存在旧代码，正在删除：${pathSource}`);
+        const cmdDel = `rm -rf ${pathSource}`;
         child.execSync(cmdDel, {stdio: 'inherit'});
     }
     // 4. 重新拉取代码
-    const pathSource = `${path}/vertx-ui`
     Ec.info(`拉取最新代码：${pathSource}`);
-    const cmdGit = `git clone https://gitee.com/silentbalanceyh/vertx-ui.git ${pathSource}`;
+    const cmdGit = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${pathSource}`;
     child.execSync(cmdGit, {stdio: 'inherit'});
     const cmdRm = `rm -rf ${pathSource}/.git`;
     child.execSync(cmdRm, {stdio: 'inherit'});
