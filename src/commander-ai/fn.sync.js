@@ -2,6 +2,21 @@ const Ec = require("../epic");
 const child = require('child_process');
 
 module.exports = () => {
+
+    // 获取当前操作系统
+    const platform = process.platform;
+
+    // 根据操作系统设置不同的 options 对象
+    let options;
+    if (platform === 'win32') {
+        // Windows 系统，使用指定的命令解释器
+        Ec.info(`您正在使用WINDOWS系统，请使用随git附带的bash运行此脚本！`.red.bgYellow);
+        options = { stdio: 'inherit', shell: 'bash.exe' };
+    } else {
+        // 非 Windows 系统，不需要额外的 options
+        options = { stdio: 'inherit' };
+    }
+
     const actual = Ec.executeInput(
         [],
         [
@@ -16,20 +31,20 @@ module.exports = () => {
     const path = actual.path;
     // 2. 创建 .zero 目录
     const cmdDir = `mkdir -p ${path}`;
-    child.execSync(cmdDir, {stdio: 'inherit'});
+    child.execSync(cmdDir, options);
     const pathSource = `${path}/scaffold-ui`
     // 3. 删除 .zero/vertx-ui 目录
     if (Ec.isExist(pathSource)) {
         Ec.info(`发现存在旧代码，正在删除：${pathSource}`);
         const cmdDel = `rm -rf ${pathSource}`;
-        child.execSync(cmdDel, {stdio: 'inherit'});
+        child.execSync(cmdDel, options);
     }
     // 4. 重新拉取代码
     Ec.info(`拉取最新代码：${pathSource}`);
     const cmdGit = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${pathSource}`;
-    child.execSync(cmdGit, {stdio: 'inherit'});
+    child.execSync(cmdGit, options);
     const cmdRm = `rm -rf ${pathSource}/.git`;
-    child.execSync(cmdRm, {stdio: 'inherit'});
+    child.execSync(cmdRm, options);
 
     // 5. 拷贝 Ignore 文件全部指令
     const commands = [
@@ -97,14 +112,14 @@ module.exports = () => {
             // 目录拷贝
             if (!Ec.isExist(command)) {
                 const cmdDir = `mkdir -p ${command}`;
-                child.execSync(cmdDir, {stdio: 'inherit'});
+                child.execSync(cmdDir, options);
             }
             cmd = `cp -rf ${pathSource}/${command}* ./${command}`;
-            child.execSync(cmd, {stdio: 'inherit'});
+            child.execSync(cmd, options);
         } else {
             // 文件拷贝
             cmd = `cp -rf ${pathSource}/${command} ./${command}`;
-            child.execSync(cmd, {stdio: 'inherit'});
+            child.execSync(cmd, options);
         }
     })
     Ec.info(`主框架更新完成：${pathSource}！`.help);
