@@ -36,15 +36,22 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai uk -p <path> -f <field>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-p|--path|String|（无）|「统一格式」待检查的数据文件路径。|
+ * |-f|--field|String|（无）|待检查的字段名，字段可使用`field1,field2,field3`格式检查多个字段。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令检查数据文件中的数据是否包含重复属性`field = value`键值对。
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai uk -p <path> -f <field>
- *
- * # 2.2. 执行测试
  * ai uk -p uk.json -f name
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
@@ -57,13 +64,6 @@ module.exports = () => {
  * [Zero AI] 字段出现重复值：name = Lang2
  * [Zero AI] 系统检查重复值完成！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-p|--path|String|（无）|「统一格式」数据文件路径。|
- * |-f|--field|String|（无）|待检查的字段名，字段可使用`field1,field2,field3`格式检查多个字段。|
  *
  * @memberOf module:ai
  * @method uk

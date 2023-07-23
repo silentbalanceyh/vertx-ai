@@ -160,15 +160,24 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai data -c <config>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-c|--config|String|（无）|配置文件路径。|
+ * |-o|--out|String|`.`|输出目录文件路径，文件名随机UUID。|
+ * |-j|--json|Boolean|false|是否生成Object数据格式，true则生成，否则生成Array格式。|
+ * |-n|--number|Number|23|只有`json = false`时生效，生成Array的数据条数。|
+ *
+ * ### 2. 介绍
+ *
  * 根据规则随机生成数据Object/Array的专用命令。
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai data -c <config>
- *
- * # 2.2. 执行测试
  * ai data -c data.zero -j true
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
@@ -197,15 +206,6 @@ module.exports = () => {
  * }
  * [Zero AI] （Async）成功将数据写入到文件：./4f945df8-9d27-4169-9b18-d6d6385a310c.json！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-c|--config|String|（无）|配置文件路径。|
- * |-o|--out|String|`.`|输出目录文件路径，文件名随机UUID。|
- * |-j|--json|Boolean|false|是否生成Object数据格式，true则生成，否则生成Array格式。|
- * |-n|--number|Number|23|只有`json = false`时生效，生成Array的数据条数。|
  *
  * ### 4. 生成器设置
  *

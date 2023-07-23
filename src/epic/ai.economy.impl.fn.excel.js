@@ -60,6 +60,7 @@ const excelResource = async (config = {}, parameters = {}, pid = [], sheetName =
             const maxRow = worksheetRef['_rows'].length;
             const maxColumn = worksheetRef['_columns'].length;
             __LOG.info(`Zero AI `.cyan + ` 2.2. 分析结果：最大行 - ${maxRow.toString().blue}，最大列 - ${maxColumn.toString().blue}。`);
+
             const pidSet = new Set();
             const generate = 0 === pid.length
             worksheetRef.eachRow((rowRef, rowNumber) => {
@@ -90,7 +91,26 @@ const excelResource = async (config = {}, parameters = {}, pid = [], sheetName =
                     }
                 })
             });
-            __LOG.info(`Zero AI `.cyan + ` 1.3. 创建新数据文件......`.rainbow);
+            __LOG.info(`Zero AI `.cyan + ` 2.3. 正在解析表达式......`);
+            worksheetRef.eachRow((rowRef, rowNumber) => {
+                rowRef.eachCell((cellRef, cellNumber) => {
+                    const original = cellRef.value;
+                    if (original?.sharedFormula || original?.formula) {
+                        let formula;
+                        if (original.sharedFormula) {
+                            formula = original.sharedFormula;
+                        } else if (original.formula) {
+                            formula = original.formula;
+                        }
+                        const cell = worksheetRef.getCell(formula);
+                        if ("string" === typeof cell?.value) {
+                            original.result = cell.value;
+                            cellRef.value = original;
+                        }
+                    }
+                })
+            });
+            __LOG.info(`Zero AI `.cyan + ` 2.4. 创建新数据文件......`.rainbow);
             const targetFile = `./${config.identifier}.xlsx`;
             __LOG.info(`Zero AI `.cyan + ` 执行Worksheet：${targetFile.blue}。`);
             await workbook.xlsx.writeFile(targetFile);

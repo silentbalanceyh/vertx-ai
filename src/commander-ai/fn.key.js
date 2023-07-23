@@ -47,15 +47,22 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai key -p <path>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-p|--path|String|（无）|「统一格式」数据文件路径。|
+ * |-f|--field|String|key|追加的UUID的字段名。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令针对数据中的所有节点追加`field = key`的UUID值。
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai key -p <path>
- *
- * # 2.2. 执行测试
  * ai key -p key
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
@@ -68,13 +75,6 @@ module.exports = () => {
  * [Zero AI] （Async）成功将数据写入到文件：key/key3.json！
  * [Zero AI] （Async）成功将数据写入到文件：key/key1.json！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-p|--path|String|（无）|「统一格式」数据文件路径。|
- * |-f|--field|String|key|追加的UUID的字段名。|
  *
  * @memberOf module:ai
  * @method key

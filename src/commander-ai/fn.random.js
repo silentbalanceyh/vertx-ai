@@ -44,17 +44,24 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai str -n <N> -l <N>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-n|--number|Number|1|指定需要生成随机字符串的数量，默认生成1个随机字符串值，`\n`符号分割。|
+ * |-l|--length|Number|64|指定随机字符串长度，默认长度64。|
+ *
+ * ### 2. 执行
+ *
  * 使用该命令生成指定数量的随机字符串，如果平台支持还会拷贝到剪切板中，目前支持的操作系统：
  *
  * * `darwin`：MacOs苹果操作系统
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai str -n <N> -l <N>
- *
- * # 2.2. 执行测试
  * ai str                                                                                                                                                                                                                                                  lang@LangYus-MacBook-Pro
  * [Zero AI] Zero AI 代码生成工具  : <标准工具>
  * [Zero AI] HomePage   : http://www.vertxai.cn
@@ -71,13 +78,6 @@ module.exports = () => {
  * 5lTe8OsBsi8bw6PbVlS0aftyAfjsmEGjiwXXWpL5IEM3px6ZiM8Vz2nKnnqHFDnv
  * [Zero AI] 生成的随机字符串已经全部成功拷贝到剪切板中！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-n|--number|Number|1|指定需要生成随机字符串的数量，默认生成1个随机字符串值，`\n`符号分割。|
- * |-l|--length|Number|64|指定随机字符串长度，默认长度64。|
  *
  * @memberOf module:ai
  * @method str

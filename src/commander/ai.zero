@@ -8,5 +8,5 @@ key,        executeKey,     为数据模板添加key属性（UUID格式）,     
 str,        executeString,  生成随机字符串，可直接拷贝,                     n=「1」生成的数量, l=「64」长度信息（默认64）
 md5,        executeMD5,     加密字符串，可直接拷贝,                        i=输入字符串
 init,       executeInit,    初始化Zero Ui工程,                           n=项目名称（必须填写，最终写入package.json）
-sync,       executeSync,    同步Zero Ui最新框架,                         p=配置文件路径
+sync,       executeSync,    同步Zero Ui最新框架,                         p=配置文件路径，前端项目根目录
 

@@ -39,17 +39,23 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai md5 -i <Input>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-i|--input|String|无|输入需要MD5加密的原始字符串。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令加密输入字符串，如果平台支持还会拷贝到剪切板中，目前支持的操作系统：
  *
  * * `darwin`：MacOs苹果操作系统
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai md5 -i <Input>
- *
- * # 2.2. 执行测试
  * ai md5 -i smaveapp                                                                                                                                                                                                                                                 lang@LangYus-MacBook-Pro
  * [Zero AI] Zero AI 代码生成工具  : <标准工具>
  * [Zero AI] HomePage   : http://www.vertxai.cn
@@ -64,12 +70,6 @@ module.exports = () => {
  * 443196C59BF602102141607D992702EE
  * [Zero AI] 加密的字符串已经成功拷贝到剪切板中！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-i|--input|String|无|输入需要MD5加密的原始字符串。|
  *
  * @memberOf module:ai
  * @method md5

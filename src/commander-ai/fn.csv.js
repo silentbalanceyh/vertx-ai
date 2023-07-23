@@ -23,15 +23,23 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai csv -p <path>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-p|--path|String|（无）|「统一格式」数据文件路径。|
+ * |-c|--config|String|null|配置文件路径。|
+ * |-s|--separator|String|`,`|Csv文件的分隔符设置。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令将读取的Array数组数据转换成csv的文件格式
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai csv -p <path>
- *
- * # 2.2. 执行测试
  * ai csv -p csv.json
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
@@ -52,14 +60,6 @@ module.exports = () => {
  * Lang1,lang.yu1@hpe.com
  * Lang2,lang.yu2@hpe.com
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-p|--path|String|（无）|「统一格式」数据文件路径。|
- * |-c|--config|String|null|配置文件路径。|
- * |-s|--separator|String|`,`|Csv文件的分隔符设置。|
  *
  * ### 4. 特殊说明
  *

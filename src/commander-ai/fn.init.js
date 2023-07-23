@@ -58,15 +58,21 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * ai init -name <name>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-n|--name|String|（无）|项目名称以及目录名称。|
+ *
+ * ### 2. 介绍
+ *
  * vertx-ui项目脚手架初始化专用命令。
  *
- * ### 2. 执行
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * ai init -name <name>
- *
- * # 2.2. 执行测试
  * ai init -name test-demo
  * [Zero AI] Zero AI 代码生成工具  : <标准工具>
  * [Zero AI] HomePage   : http://www.vertxai.cn
@@ -100,12 +106,6 @@ module.exports = () => {
  * [Zero AI] 资源清理中：rm -rf test-demo/yarn.lock
  * [Zero AI] 工程初始化完成：test-demo，您可以开始您的Zero Ui之行了！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-n|--name|String|（无）|项目名称以及目录名称。|
  *
  * @memberOf module:ai
  * @method init
