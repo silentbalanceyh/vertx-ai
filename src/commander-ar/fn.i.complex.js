@@ -28,22 +28,26 @@ module.exports = () => {
     if (configuration) Ec.reactRun(configuration);
 }
 /**
- * ## `aj icomplex`
+ * ## `art complex`
  *
  * ### 1. 命令
  *
+ * ```shell
+ * art complex
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-c|--config|String|`ui.json`|配置文件路径。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令生成完整的`ExListComplex`完整组件页。
  *
- * ### 2. 执行
- *
- * #### 2.1. 基本介绍
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1.1. 命令语法
- * aj icomplex
- *
- * # 2.1.2. 执行测试
- * aj icomplex
+ * art complex
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
  * [Zero AI] Zero AI 加载输入参数：
@@ -86,7 +90,7 @@ module.exports = () => {
  * * 执行位置可以是当前项目中的任意一个路径，脚本会自己计算当前项目的根目录（Zero UI专用）。
  * * 该命令执行时模板文件位置位于`src/cab/list`目录中，且模板文件以`tpl`结尾。
  *
- * #### 2.2. 生成的文件说明
+ * ### 4. 生成的文件说明
  *
  * |文件名|模板|含义|
  * |:---|:---|:---|
@@ -99,14 +103,6 @@ module.exports = () => {
  * |Op.js|Op.js.tpl|Action/Callback专用Js事件脚本。|
  * |UI.Form.js|UI.Form.js.tpl|三个表单合一的专用Js脚本。|
  *
- * ### 3. 选项
- *
- * #### 3.1. 基本说明
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-c|--config|String|`ui.json`|配置文件路径。|
- *
- * @memberOf module:aj
- * @method icomplex
+ * @memberOf module:art
+ * @method complex
  */

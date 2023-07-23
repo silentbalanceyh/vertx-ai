@@ -30,15 +30,21 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
- * vertx-zero-scaffold项目脚手架初始化专用命令。
+ * ```shell
+ * aj init -name <name>
+ * ```
  *
- * ### 2. 执行
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-n|--name|String|（无）|项目名称以及目录名称。|
+ *
+ * ### 2. 介绍
+ *
+ * zero-scaffold项目脚手架初始化专用命令。
+ *
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1. 命令语法
- * aj init -name <name>
- *
- * # 2.2. 执行测试
  * aj init -name test-demo-api
  * [Zero AI] Zero AI 代码生成工具  : <标准工具>
  * [Zero AI] HomePage   : http://www.vertxai.cn
@@ -60,12 +66,6 @@ module.exports = () => {
  * [Zero AI] 执行工程初始化：test-demo-api
  * [Zero AI] 工程初始化完成：test-demo-api，您可以开始您的Zero Api之行了！
  * ```
- *
- * ### 3. 选项
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-n|--name|String|（无）|项目名称以及目录名称。|
  *
  * @memberOf module:aj
  * @method init

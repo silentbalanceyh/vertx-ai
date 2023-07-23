@@ -22,22 +22,27 @@ module.exports = () => {
     if (configuration) Ec.reactRun(configuration);
 }
 /**
- * ## `aj iform`
+ * ## `art form`
  *
  * ### 1. 命令
  *
+ * ```shell
+ * art form -u <ui>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-u|--ui|String|无|生成的文件名，最终生成`<Name>.json/<Name>.js`|
+ * |-c|--config|String|`ui.json`|配置文件路径。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令生成完整的`ExForm`完整表单组件页。
  *
- * ### 2. 执行
- *
- * #### 2.1. 基本介绍
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1.1. 命令语法
- * ai iform -u <ui>
- *
- * # 2.1.2. 执行测试
- * aj iform -u UI.Basic
+ * art form -u UI.Basic
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
  * [Zero AI] Zero AI 加载输入参数：
@@ -68,24 +73,8 @@ module.exports = () => {
  * * 该命令执行时模板文件位置位于`src/cab/form`目录中，且模板文件以`tpl`结尾。
  * * 生成的`UI.js`的按钮部分直接位于当前文件中，并且默认包含了`ADD, EDIT, DELETE`三个核心按钮。
  *
- * #### 2.2. 生成的文件说明
+ * ### 4. 生成的文件说明
  *
- * |文件名|模板|含义|
- * |:---|:---|:---|
- * |Cab.json|无|名空间关联文件，计算得来。|
- * |`<Name>.json`|UI.json.tpl|当前表单专用资源文件。|
- * |`<Name>.js`|UI.js.tpl|当前表单源代码专用文件。|
- *
- *
- * ### 3. 选项
- *
- * #### 3.1. 基本说明
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-u|--ui|String|无|生成的文件名，最终生成`<Name>.json/<Name>.js`|
- * |-c|--config|String|`ui.json`|配置文件路径。|
- *
- * @memberOf module:aj
- * @method iform
+ * @memberOf module:art
+ * @method form
  */

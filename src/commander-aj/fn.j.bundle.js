@@ -54,17 +54,21 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * aj bundle -p <path>
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-p|--path|String|无|生成目录规范的主目录。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令生成一个 OSGI Bundle 专用的目录结构
  *
- * ### 2. 执行
- *
- * #### 2.1. 基本介绍
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1.1. 命令语法
- * aj bundle -p <path>
- *
- * # 2.1.2. 执行测试
  * ai bundle -p <path>
  *
  * [Zero AI] Zero Ecotope AI工具项  : <专用工具>
@@ -80,14 +84,6 @@ module.exports = () => {
  * [Zero AI] 即将拷贝说明文件：
  * [Zero AI] （Async）成功将数据写入到文件：./specification.txt！
  * ```
- *
- * ### 3. 选项
- *
- * #### 3.1. 基本说明
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-p|--path|String|无|生成目录规范的主目录。|
  *
  * @memberOf module:aj
  * @method bundle

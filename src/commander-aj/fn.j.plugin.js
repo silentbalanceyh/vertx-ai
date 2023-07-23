@@ -31,17 +31,23 @@ module.exports = () => {
  *
  * ### 1. 命令
  *
+ * ```shell
+ * aj plugin -m pbc
+ * ```
+ *
+ * |短参|全参|类型|默认|含义|
+ * |---|---|---|---|:---|
+ * |-p|--path|String|无|根据传入路径设置，如果是`.`则是当前目录，如果不传则从`workspace.json`中读取。|
+ * |-m|--module|String|无|模块名称，通常是`infix-xxx`中的`xxx`名称。|
+ * |-c|--config|String|`workspace.json`|配置文件路径。|
+ *
+ * ### 2. 介绍
+ *
  * 使用该命令执行插件项目初始化，设置第三方集成项目模板专用。
  *
- * ### 2. 执行
- *
- * #### 2.1. 基本介绍
+ * ### 3. 执行
  *
  * ```shell
- * # 2.1.1. 命令语法
- * aj plugin -m pbc
- *
- * # 2.1.2. 执行测试
  * aj plugin -m pbc
  * # ...省略部分...
  * [Zero AI] Zero AI 系统启动......
@@ -104,16 +110,6 @@ module.exports = () => {
  * [Zero AI] （Sync）成功将数据写入到文件：<工作目录>/src/main/java/cn/originx/pbc/output/PbIoDelete.java！
  * [Zero AI] Zero AI  3. 执行完成......
  * ```
- *
- * ### 3. 选项
- *
- * #### 3.1. 基本说明
- *
- * |短参|全参|类型|默认|含义|
- * |---|---|---|---|:---|
- * |-p|--path|String|无|根据传入路径设置，如果是`.`则是当前目录，如果不传则从`workspace.json`中读取。|
- * |-m|--module|String|无|模块名称，通常是`infix-xxx`中的`xxx`名称。|
- * |-c|--config|String|`workspace.json`|配置文件路径。|
  *
  * @memberOf module:aj
  * @method plugin

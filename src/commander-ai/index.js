@@ -43,8 +43,8 @@ module.exports = exported;
  * |ai key|为输入数据中的Array或Object追加`UUID`格式的字段，字段可配置，默认为`field = key`属性。|
  * |ai str|(M) 生成随机字符串。
  * |ai md5|(M) 针对输入字符串进行符合 Zero 规范的 MD5 加密处理。|
- * |ai init|Zero前端工程初始化专用命令。|
- * |ai sync|Zero前端工程框架同步专用命令（更新Zero Ui框架专用）。|
+ * |ai init|「工程命令」Zero前端工程初始化专用命令。|
+ * |ai sync|「工程命令」Zero前端工程框架同步专用命令（更新Zero Ui框架专用）。|
  *
  * ### 3. 数据通用格式
  *
