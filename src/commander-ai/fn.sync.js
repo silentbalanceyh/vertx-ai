@@ -78,7 +78,7 @@ module.exports = () => {
         "src/skin/aroma-library/index.js",
         "src/skin/aroma-library/__.theme.shared/",
         // SCSS 风格专用代码
-        "src/style/@old/",
+        // "src/style/@old/",
         "src/style/connect/",
         "src/style/macrocosm/index.scss",
         "src/style/macrocosm/mod.screen.scss",

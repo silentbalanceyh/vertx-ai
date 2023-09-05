@@ -28,7 +28,7 @@ module.exports = () => {
             console.info(generated);
             content.push(generated);
         }
-        Ec.outMacOs(content.join('\n'))
+        Ec.outCopy(content.join('\n'))
             .then(sign => Ec.info(`生成的随机字符串已经全部成功拷贝到剪切板中！`))
     } else {
         /*
