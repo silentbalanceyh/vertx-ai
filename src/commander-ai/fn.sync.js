@@ -1,6 +1,93 @@
 const Ec = require("../epic");
 const child = require('child_process');
 
+const COMMANDS = [
+    "run-default.sh",
+    "run-doc.sh",
+    "run-zero.sh",
+    "run-zero.bat",
+    "run-update.sh",
+    // 核心配置
+    "document/",
+    "scripts/",
+    "config/",
+    // 资源文件：暂时只考虑中文
+    "src/cab/cn/cerebration/",
+    "src/cab/cn/extension/",
+    "src/cab/cn/economy/",
+    "src/cab/cn/shared.json",
+    // 层代码
+    "src/economy/",
+    "src/entity@em/",
+    "src/extension/",
+    "src/environment/",
+    // Skin 风格专用代码
+    "src/skin/index.d.ts",
+    "src/skin/index.entry.js",
+    "src/skin/index.js",
+    "src/skin/plot.fn.mix.attr.js",
+    "src/skin/plot.fn.of.document.js",
+    "src/skin/wait._.v.locale.definition.js",
+    "src/skin/wait.fn.skin.initialize.js",
+    "src/skin/aroma-library/index.js",
+    "src/skin/aroma-library/__.theme.shared/",
+    // SCSS 风格专用代码
+    // "src/style/@old/",
+    "src/style/connect/",
+    "src/style/macrocosm/index.scss",
+    "src/style/macrocosm/mod.screen.scss",
+    "src/style/microcosm/",
+    "src/style/uca/",
+    "src/style/unstable/",
+    "src/style/ux@legacy/",
+    // Ui
+    "src/ui/",
+    // Ex
+    "src/unfold/",
+    "src/upper/",
+    "src/utter/",
+    // Ux
+    "src/ux/",
+    "src/zero/",
+    "src/zest@web/",
+    "src/zion/",
+    "src/zither@em/",
+    "src/zodiac/",
+    "src/zoe@em/",
+    "src/zone/",
+    "src/index.js"
+]
+
+const executeRemote = (actual = {}, options = {}) => {
+    const path = actual.path;
+    // 2. 创建 .zero 目录
+    const cmdDir = `mkdir -p ${path}`;
+    child.execSync(cmdDir, options);
+    const pathSource = `${path}/scaffold-ui`
+    // 3. 删除 .zero/scaffold-ui 目录
+    if (Ec.isExist(pathSource)) {
+        Ec.info(`发现存在旧代码，正在删除：${pathSource}`);
+        const cmdDel = `rm -rf ${pathSource}`;
+        child.execSync(cmdDel, options);
+    }
+    // 4. 重新拉取代码
+    Ec.info(`拉取最新代码：${pathSource}`);
+    const cmdGit = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${pathSource}`;
+    child.execSync(cmdGit, options);
+    const cmdRm = `rm -rf ${pathSource}/.git`;
+    child.execSync(cmdRm, options);
+    return pathSource;
+}
+
+const executeLocal = (actual = {}, options = {}) => {
+    const pathEnv = process.env.Z_AI_SYNC;
+    if (!pathEnv) {
+        Ec.error("本地模式下，需要设置环境变量：Z_AI_SYNC");
+        return false;
+    }
+    return pathEnv;
+}
+
 module.exports = () => {
 
     // 获取当前操作系统
@@ -20,7 +107,8 @@ module.exports = () => {
     const actual = Ec.executeInput(
         [],
         [
-            ['-p', '--path', '.zero']
+            ['-p', '--path', '.zero'],
+            ['-m', '--module', false]       // 是否本地模式
         ]
     );
     // 1. 环境检查
@@ -28,101 +116,37 @@ module.exports = () => {
         Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
         return;
     }
-    const path = actual.path;
-    // 2. 创建 .zero 目录
-    const cmdDir = `mkdir -p ${path}`;
-    child.execSync(cmdDir, options);
-    const pathSource = `${path}/scaffold-ui`
-    // 3. 删除 .zero/vertx-ui 目录
-    if (Ec.isExist(pathSource)) {
-        Ec.info(`发现存在旧代码，正在删除：${pathSource}`);
-        const cmdDel = `rm -rf ${pathSource}`;
-        child.execSync(cmdDel, options);
+
+    let pathSource;
+    if (actual.module) {
+        // 本地模式
+        pathSource = executeLocal(actual, options);
+    } else {
+        // 远程模式
+        pathSource = executeRemote(actual, options);
     }
-    // 4. 重新拉取代码
-    Ec.info(`拉取最新代码：${pathSource}`);
-    const cmdGit = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${pathSource}`;
-    child.execSync(cmdGit, options);
-    const cmdRm = `rm -rf ${pathSource}/.git`;
-    child.execSync(cmdRm, options);
-
-    // 5. 拷贝 Ignore 文件全部指令
-    const commands = [
-        "run-default.sh",
-        "run-doc.sh",
-        "run-zero.sh",
-        "run-zero.bat",
-        "run-update.sh",
-        // 核心配置
-        "document/",
-        "scripts/",
-        "config/",
-        // 资源文件：暂时只考虑中文
-        "src/cab/cn/cerebration/",
-        "src/cab/cn/extension/",
-        "src/cab/cn/economy/",
-        "src/cab/cn/shared.json",
-        // 层代码
-        "src/economy/",
-        "src/entity@em/",
-        "src/extension/",
-        "src/environment/",
-        // Skin 风格专用代码
-        "src/skin/index.d.ts",
-        "src/skin/index.entry.js",
-        "src/skin/index.js",
-        "src/skin/plot.fn.mix.attr.js",
-        "src/skin/plot.fn.of.document.js",
-        "src/skin/wait._.v.locale.definition.js",
-        "src/skin/wait.fn.skin.initialize.js",
-        "src/skin/aroma-library/index.js",
-        "src/skin/aroma-library/__.theme.shared/",
-        // SCSS 风格专用代码
-        // "src/style/@old/",
-        "src/style/connect/",
-        "src/style/macrocosm/index.scss",
-        "src/style/macrocosm/mod.screen.scss",
-        "src/style/microcosm/",
-        "src/style/uca/",
-        "src/style/unstable/",
-        "src/style/ux@legacy/",
-        // Ui
-        "src/ui/",
-        // Ex
-        "src/unfold/",
-        "src/upper/",
-        "src/utter/",
-        // Ux
-        "src/ux/",
-        "src/zero/",
-        "src/zest@web/",
-        "src/zion/",
-        "src/zither@em/",
-        "src/zodiac/",
-        "src/zoe@em/",
-        "src/zone/",
-        "src/index.js"
-    ]
-
-    Ec.info(`开始更新主框架：......`.yellow);
-    commands.forEach(command => {
-        Ec.info(`处理目录：${command.green}`);
-        let cmd;
-        if (command.endsWith("/")) {
-            // 目录拷贝
-            if (!Ec.isExist(command)) {
-                const cmdDir = `mkdir -p ${command}`;
-                child.execSync(cmdDir, options);
+    if (pathSource) {
+        // 5. 拷贝 Ignore 文件全部指令
+        Ec.info(`开始更新主框架：......`.yellow);
+        COMMANDS.forEach(command => {
+            Ec.info(`处理目录：${command.green}`);
+            let cmd;
+            if (command.endsWith("/")) {
+                // 目录拷贝
+                if (!Ec.isExist(command)) {
+                    const cmdDir = `mkdir -p ${command}`;
+                    child.execSync(cmdDir, options);
+                }
+                cmd = `cp -rf ${pathSource}/${command}* ./${command}`;
+                child.execSync(cmd, options);
+            } else {
+                // 文件拷贝
+                cmd = `cp -rf ${pathSource}/${command} ./${command}`;
+                child.execSync(cmd, options);
             }
-            cmd = `cp -rf ${pathSource}/${command}* ./${command}`;
-            child.execSync(cmd, options);
-        } else {
-            // 文件拷贝
-            cmd = `cp -rf ${pathSource}/${command} ./${command}`;
-            child.execSync(cmd, options);
-        }
-    })
-    Ec.info(`主框架更新完成：${pathSource}！`.help);
+        })
+        Ec.info(`主框架更新完成：${pathSource}！`.help);
+    }
 }
 /**
  * ## `ai sync`
