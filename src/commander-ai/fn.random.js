@@ -1,6 +1,8 @@
 const Ec = require('../epic');
 const os = require('os');
 
+const os_compatible = ['darwin', 'win32'];
+
 module.exports = () => {
     /*
      * 参数解析
@@ -21,7 +23,7 @@ module.exports = () => {
     Ec.info(`随机字符串，生成数量：${number}，长度：${length}`);
     Ec.info(`当前操作系统：${platform}`);
 
-    if ("darwin" === platform) {
+    if (os_compatible.indexOf(platform) > -1) {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
             const generated = Ec.strRandom(length);
