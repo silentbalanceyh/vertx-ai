@@ -23,8 +23,15 @@ const strShapeCount = (literal = "") => {
     return counter;
 }
 const strUuid = () => v4();
-const strRandom = (length = 64) =>
-    Mock.Random.string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length)
+// 去掉混淆子母
+const strRandom = (length = 64, full = false) => {
+    if (full) {
+        return Mock.Random.string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length);
+    } else {
+        return Mock.Random.string("ABCDEFGHJKLMNPQRSTUVWXYZ123456789", length);
+    }
+}
+
 const strWidth = (input = "") => {
     let content = "";
     const space = 16 - input.length;

@@ -11,7 +11,8 @@ module.exports = () => {
         [],
         [
             ['-n', '--number', 1],
-            ['-l', '--length', 64]
+            ['-l', '--length', 64],
+            ['-f', '--full', false]
         ]
     );
     /*
@@ -26,7 +27,7 @@ module.exports = () => {
     if (os_compatible.indexOf(platform) > -1) {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
-            const generated = Ec.strRandom(length);
+            const generated = Ec.strRandom(length, actual.full);
             console.info(generated);
             content.push(generated);
         }
