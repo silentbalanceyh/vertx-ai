@@ -64,7 +64,7 @@ const executeHeader = (app) => {
     __LOG.info(`Zero Ecotope AI工具项  : `.rainbow + app.yellow);
     __LOG.info('HomePage   : '.bold + appInfo.homepage.blue);
     __LOG.info('Github     : '.bold + appInfo.github.blue);
-    __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 18.x ) 支持ES6, ES7.」`.yellow);
+    __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 22.x ) 支持ES6, ES7.」`.yellow);
     __LOG.info("AI 系统启动......".cyan);
     if (3 > process.argv.length) {
         __LOG.error("命令缺失，请输入正确的命令！");
@@ -151,6 +151,7 @@ const executeEnd = () => {
 const executeInput = (required = [], optional = []) => {
     const elementArray = required.filter(item => U.isArray(item));
     const isMatrix = 1 <= elementArray.length;
+    console.log(isMatrix);
     const args = isMatrix ? __PR.parseInput(required) : __PR.parseInput([required]);
     return __PR.parseFormat(args, optional)
 };

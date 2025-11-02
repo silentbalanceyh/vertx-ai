@@ -1,22 +1,16 @@
-const executeUuid = require('./fn.uuid');
-const executeCsv = require('./fn.csv');
-const executeUk = require('./fn.uk');
-const executeKey = require('./fn.key');
-const executeData = require('./fn.data');
-const executeInit = require('./fn.init');
-const executeString = require('./fn.random');
-const executeMD5 = require('./fn.md5');
-const executeSync = require('./fn.sync');
+const executeUuid = require('./fn.random.uuid');
+const executeString = require('./fn.random.str');
+const executeMD5 = require('./fn.random.md5');
+const executeFrontendSync = require('./fn.source.sync');
+const executeApp = require('./fn.source.app');
+const executeMod = require('./fn.source.mod');
 const exported = {
-    executeUuid,        // ai uuid
-    executeCsv,         // ai csv
-    executeUk,          // ai uk
-    executeKey,         // ai key
-    executeData,        // ai data
-    executeInit,        // ai init
-    executeString,      // ai str
-    executeMD5,         // ai md5
-    executeSync,        // ai sync
+    executeUuid,                // ai uuid
+    executeString,              // ai str
+    executeMD5,                 // ai md5
+    executeFrontendSync,        // ai sync
+    executeApp,                 // ai app
+    executeMod,                 // ai mod
 };
 module.exports = exported;
 /**
@@ -37,14 +31,11 @@ module.exports = exported;
  * |命令执行|含义|
  * |---|:---|
  * |ai uuid|(M) 随机生成一定数量的UUID字符串|
- * |ai csv|读取数据文件中的Array数组数据，然后转换成csv的文件格式输出。|
- * |ai uk|检查数据文件中的 Data 数据是否符合唯一性约束，可直接针对批量数据执行唯一性检查。|
- * |ai data|专用数据生成器，可根据您的输入生成两个格式的Json数据：`Object/Array`。|
- * |ai key|为输入数据中的Array或Object追加`UUID`格式的字段，字段可配置，默认为`field = key`属性。|
  * |ai str|(M) 生成随机字符串。
  * |ai md5|(M) 针对输入字符串进行符合 Zero 规范的 MD5 加密处理。|
- * |ai init|「工程命令」Zero前端工程初始化专用命令。|
  * |ai sync|「工程命令」Zero前端工程框架同步专用命令（更新Zero Ui框架专用）。|
+ * |ai app| 应用工程初始化。|
+ * |ai mod| 扩展模块初始化（Domain/Provider/Api）。|
  *
  * ### 3. 数据通用格式
  *

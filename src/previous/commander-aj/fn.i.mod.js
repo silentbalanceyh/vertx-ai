@@ -1,4 +1,4 @@
-const Ec = require('../epic');
+const Ec = require('../../epic');
 module.exports = () => {
     const actual = Ec.executeInput(
         [],

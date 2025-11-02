@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const Ec = require('./epic');
+const Ec = require('../epic');
 const Executor = require('./commander-aj');
 Ec.executeHeader("<专用工具>");
 // 读取配置文件

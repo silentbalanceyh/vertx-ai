@@ -4,9 +4,7 @@
     "description": "Zero Ecotope AI",
     "main": "src/ai.js",
     "bin": {
-        "ai": "./src/ai.js",
-        "aj": "./src/aj.js",
-        "art": "./src/art.js"
+        "ai": "./src/ai.js"
     },
     "scripts": {
         "test": "src/index.test.js"

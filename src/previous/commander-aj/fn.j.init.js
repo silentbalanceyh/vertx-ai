@@ -1,4 +1,4 @@
-const Ec = require("../epic");
+const Ec = require("../../epic");
 const child = require('child_process');
 module.exports = () => {
     const actual = Ec.executeInput(
@@ -53,7 +53,7 @@ module.exports = () => {
  * [Zero AI] Zero AI 系统启动......
  * [Zero AI] Zero AI 加载输入参数：
  * {
-        "name": "test-demo-api"
+ "name": "test-demo-api"
  * }
  * [Zero AI] 工程构建目录：test-demo-api
  * Cloning into 'test-demo-api'...
