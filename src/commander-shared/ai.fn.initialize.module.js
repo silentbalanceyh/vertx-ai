@@ -1,33 +1,16 @@
 const Ec = require('../epic');
 const fs = require("fs");
-const Io = require("./ai.fn.initialize.zero.directory");
+const Io = require("./ai.fn.initialize.__.zero.directory");
+const IoUt = require("./ai.fn.initialize.__.io.util");
 
-const initConfiguration = (parsed = {}) => {
+const initModuleConfiguration = (parsed = {}) => {
     const module = parsed.module;
-    const configMap = {};
-    configMap.groupId = "io.zerows";
-    configMap.artifactId = `zero-extension-${module}`;
-    configMap.version = "1.0.0";
-    configMap.srcPackage = `io.zerows.extension.${module}`;
-
-    let output = parsed.output;
-    if ('.' === output) {
-        output = process.cwd();
-    }
-    configMap.srcId = module;
-    configMap.srcOut = output;
-    configMap.srcType = Symbol("SERVICE");
-    configMap.srcConfig = parsed.config;
-    configMap.dbType = "MYSQL";
-
-    const configInput = process.cwd() + `/${parsed.config}`;
-    if (!fs.existsSync(configInput)) {
-        Ec.warn(`配置文件不存在，使用默认配置！路径 = ` + configInput.blue);
-    }
-    return configMap;
+    const configuration = IoUt.ioConfiguration(parsed, module);
+    configuration.artifactId = `zero-extension-${module}`;
+    configuration.srcType = Symbol("MODULE");
+    return configuration;
 }
 const initMod = async (configuration = {}) => {
-    const type = configuration.srcType;
 
 
     // 1. 先创建基本目录
@@ -40,6 +23,7 @@ const initMod = async (configuration = {}) => {
 
     Ec.execute("----------- 文件生成 -----------");
     // 2. 每个项目的 pom.xml 文件初始化
+    const type = configuration.srcType;
     const sourceTpl = Ec.ioRoot() + "/_template/" + type.description;
     const genPom = await Io.ioDPAPom(sourceTpl, configuration);
     if (!genPom) {
@@ -69,5 +53,5 @@ const initMod = async (configuration = {}) => {
 
 module.exports = {
     initMod,
-    initConfiguration,
+    initModuleConfiguration,
 }

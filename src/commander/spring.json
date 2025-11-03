@@ -1,7 +1,7 @@
 {
-    "executor": "executeApp",
-    "description": "（后端）创建一个新的 Zero App 脚手架！",
-    "command": "app",
+    "executor": "executeSpring",
+    "description": "（后端）创建一个新的 Spring 脚手架！",
+    "command": "spring",
     "options": [
         {
             "name": "name",

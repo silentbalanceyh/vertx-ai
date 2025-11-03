@@ -1,7 +1,7 @@
 const fs = require("fs").promises;
 const Ec = require("../epic");
 const ejs = require("ejs");
-const IoUt = require("./ai.fn.initialize.io.__.util");
+const IoUt = require("./ai.fn.initialize.__.io.util");
 const ioModuleDatabase = async (source, configuration = {}) => {
     let fileSrc = `${source}/database/database-reinit.sh`;
     let fileDest = IoUt.withDomain(configuration, `database/database-reinit.sh`);

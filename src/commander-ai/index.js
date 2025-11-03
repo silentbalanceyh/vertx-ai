@@ -6,6 +6,7 @@ const executeApp = require('./fn.source.app');
 const executeMod = require('./fn.source.mod');
 const executeHelp = require('./fn.help.metadata');
 const executeWeb = require('./fn.source.front');
+const executeSpring = require('./fn.source.spring');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -15,6 +16,7 @@ const exported = {
     executeMod,                 // ai mod
     executeHelp,                // ai help
     executeWeb,                 // ai web
+    executeSpring,              // ai spring
 };
 module.exports = exported;
 /**

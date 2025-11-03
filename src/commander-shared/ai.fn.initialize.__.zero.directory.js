@@ -1,8 +1,8 @@
 const fs = require("fs").promises;
 const ejs = require('ejs');
 const Ec = require('../epic');
-const IoZero = require('./ai.fn.initialize.zero.file');
-const IoUt = require('./ai.fn.initialize.io.__.util');
+const IoZero = require('./ai.fn.initialize.__.zero.file');
+const IoUt = require('./ai.fn.initialize.__.io.util');
 const ioDPAStructure = async (baseDir, configuration) => {
     const name = configuration.artifactId;
     const folders = [
@@ -25,13 +25,10 @@ const ioDPAStructure = async (baseDir, configuration) => {
     const results = [];
     folders.map(async (folder) => {
         Ec.execute("创建目录：" + folder);
-        await fs.mkdir(folder, { recursive: true });
+        await fs.mkdir(folder, {recursive: true});
         results.push(true);
     })
     return results;
-}
-const ioStructureOne = (baseDir, name) => {
-
 }
 
 const ioDPAPom = async (source, configuration = {}) => {
@@ -63,6 +60,5 @@ const ioDPAPom = async (source, configuration = {}) => {
 module.exports = {
     ioDPAStructure,
     ioDPAPom,
-    ioStructureOne,
     ...IoZero,
 }

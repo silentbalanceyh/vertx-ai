@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.zerows</groupId>
+        <artifactId>r2mo-rapid</artifactId>
+        <version>1.0-M26</version>
+    </parent>
+    <groupId><%= group %></groupId>
+    <artifactId><%= id %></artifactId>
+    <version>1.0</version>
+    <name>App::<%= name %> / MOMO ${momo.version} | R2MO ${r2mo.version}</name>
+    <modules>
+        <module><%= id %>-domain</module>
+        <module><%= id %>-provider</module>
+        <module><%= id %>-api</module>
+    </modules>
+    <properties>
+        <momo.version>1.0.11</momo.version>
+        <r2mo.version>1.0-M26</r2mo.version>
+        <!-- 项目基本信息 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--
+            版本管理专用 Stack
+            -->
+            <dependency>
+                <groupId>io.zerows</groupId>
+                <artifactId>rachel-momo-stack</artifactId>
+                <version>${momo.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <packaging>pom</packaging>
+</project>
