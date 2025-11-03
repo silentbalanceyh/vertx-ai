@@ -1,12 +1,16 @@
 const fs = require('fs');
 const ejs = require('ejs');
 const Ec = require('../epic');
-const {config} = require("exceljs");
-const ioDPAStructure = async (baseDir, name) => {
+const IoZero = require('./ai.fn.initialize.zero.file');
+const IoUt = require('./ai.fn.initialize.io.__.util');
+const ioDPAStructure = async (baseDir, configuration) => {
+    const name = configuration.artifactId;
     const folders = [
         `${baseDir}/${name}`,
+        `${baseDir}/${name}/${name}-domain/database`,
         `${baseDir}/${name}/${name}-domain/src/main/java`,
-        `${baseDir}/${name}/${name}-domain/src/main/resources`,
+        `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}`,
+        `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/database/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-domain/src/test/java`,
         `${baseDir}/${name}/${name}-domain/src/test/resources`,
         `${baseDir}/${name}/${name}-api/src/main/java`,
@@ -34,47 +38,32 @@ const ioDPAStructure = async (baseDir, name) => {
     }));
     return Promise.all(batched);
 }
-const ioDPAPomItem = async (source, configuration = {}) => new Promise((resolve, reject) => {
-    const params = {};
-    params.id = configuration?.artifactId;
-    params.name = configuration?.srcId.toUpperCase();
-
-    Ec.execute(`读取 EJS 模版：${source.blue}`)
-    fs.readFile(source, "utf8", (err, data) => {
-        if (err) {
-            reject(err);
-        }
-        // 渲染模板
-        const renderContent = ejs.render(data, params);
-        resolve(renderContent);
-    });
-})
 const ioStructureOne = (baseDir, name) => {
 
 }
 
 const ioDPAPom = async (source, configuration = {}) => {
     let fileSrc = `${source}/pom.xml.ejs`;
-    let fileContent = await ioDPAPomItem(fileSrc, configuration);
-    let fileDest = `${configuration.srcOut}/${configuration.artifactId}/pom.xml`;
+    let fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    let fileDest = IoUt.withDPA(configuration, `pom.xml`);
     await fs.writeFile(fileDest, fileContent.toString(), null, (err) => err ? Ec.error(err) : null);
     Ec.execute("生成文件：" + fileDest.green);
 
     fileSrc = `${source}/source-api/pom.xml.ejs`;
-    fileContent = await ioDPAPomItem(fileSrc, configuration);
-    fileDest = `${configuration.srcOut}/${configuration.artifactId}/${configuration.artifactId}-api/pom.xml`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withApi(configuration, `pom.xml`);
     await fs.writeFile(fileDest, fileContent.toString(), null, (err) => err ? Ec.error(err) : null);
     Ec.execute("生成文件：" + fileDest.green);
 
     fileSrc = `${source}/source-provider/pom.xml.ejs`;
-    fileContent = await ioDPAPomItem(fileSrc, configuration);
-    fileDest = `${configuration.srcOut}/${configuration.artifactId}/${configuration.artifactId}-provider/pom.xml`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withProvider(configuration, `pom.xml`);
     await fs.writeFile(fileDest, fileContent.toString(), null, (err) => err ? Ec.error(err) : null);
     Ec.execute("生成文件：" + fileDest.green);
 
     fileSrc = `${source}/source-domain/pom.xml.ejs`;
-    fileContent = await ioDPAPomItem(fileSrc, configuration);
-    fileDest = `${configuration.srcOut}/${configuration.artifactId}/${configuration.artifactId}-domain/pom.xml`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withDomain(configuration, `pom.xml`);
     await fs.writeFile(fileDest, fileContent.toString(), null, (err) => err ? Ec.error(err) : null);
     Ec.execute("生成文件：" + fileDest.green);
     return true;
@@ -83,4 +72,5 @@ module.exports = {
     ioDPAStructure,
     ioDPAPom,
     ioStructureOne,
+    ...IoZero,
 }
