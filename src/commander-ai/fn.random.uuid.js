@@ -1,22 +1,18 @@
 const Ec = require('../epic');
+const Ut = require("../commander-shared");
 const os = require('os');
 
 const os_compatible = ['darwin', 'win32'];
 
-module.exports = () => {
+module.exports = (options) => {
     /*
      * 参数解析
      */
-    const actual = Ec.executeInput(
-        [],
-        [
-            ['-n', '--number', 20]
-        ]
-    );
+    const parsed = Ut.parseArgument(options);
     /*
      * 基本信息
      */
-    const number = actual.number;
+    const number = parsed.number;
     const platform = os.platform();
     Ec.info(`UUID生成器，生成数量：${number}`);
     Ec.info(`当前操作系统：${platform}`);
@@ -24,7 +20,7 @@ module.exports = () => {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
             const generated = Ec.strUuid();
-            console.info(generated);
+            Ec.execute(generated);
             content.push(generated);
         }
         Ec.outCopy(content.join('\n'))

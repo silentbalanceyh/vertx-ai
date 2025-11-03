@@ -1,25 +1,19 @@
 const Ec = require('../epic');
 const os = require('os');
+const Ut = require("../commander-shared");
 
 const os_compatible = ['darwin', 'win32'];
 
-module.exports = () => {
+module.exports = (options) => {
     /*
      * 参数解析
      */
-    const actual = Ec.executeInput(
-        [],
-        [
-            ['-n', '--number', 1],
-            ['-l', '--length', 64],
-            ['-f', '--full', false]
-        ]
-    );
+    const parsed = Ut.parseArgument(options);
     /*
      * 基本信息
      */
-    const number = actual.number;
-    const length = actual.length;
+    const number = parsed.number;
+    const length = parsed.length;
     const platform = os.platform();
     Ec.info(`随机字符串，生成数量：${number}，长度：${length}`);
     Ec.info(`当前操作系统：${platform}`);
@@ -27,8 +21,8 @@ module.exports = () => {
     if (os_compatible.indexOf(platform) > -1) {
         const content = [];
         for (let idx = 0; idx < number; idx++) {
-            const generated = Ec.strRandom(length, actual.full);
-            console.info(generated);
+            const generated = Ec.strRandom(length, parsed.full);
+            Ec.execute(generated);
             content.push(generated);
         }
         Ec.outCopy(content.join('\n'))

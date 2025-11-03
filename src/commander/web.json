@@ -1,0 +1,12 @@
+{
+    "executor": "executeWeb",
+    "description": "（前端）创建一个新的 Zero Ui 的脚手架！",
+    "command": "web",
+    "options": [
+        {
+            "name": "name",
+            "alias": "n",
+            "description": "创建 Web 应用的名称！"
+        }
+    ]
+}

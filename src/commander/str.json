@@ -1,0 +1,25 @@
+{
+    "executor": "executeString",
+    "description": "生成随机字符串",
+    "command": "str",
+    "options": [
+        {
+            "name": "number",
+            "alias": "n",
+            "description": "生成随机数的数量，默认 1 个",
+            "default": 1
+        },
+        {
+            "name": "length",
+            "alias": "l",
+            "description": "生成随机字符串的长度，默认 10 个字符",
+            "default": 10
+        },
+        {
+            "name": "full",
+            "alias": "f",
+            "description": "是否使用全字符集，默认 false，只使用字母和数字",
+            "default": false
+        }
+    ]
+}

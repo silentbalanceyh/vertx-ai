@@ -1,0 +1,18 @@
+{
+    "executor": "executeApp",
+    "description": "（后端）创建一个新的 Zero App 脚手架！",
+    "command": "app",
+    "options": [
+        {
+            "name": "name",
+            "alias": "n",
+            "description": "创建应用的名称！"
+        },
+        {
+            "name": "path",
+            "alias": "p",
+            "description": "默认应用的输出路径，若不制定为当前路径！",
+            "default": "."
+        }
+    ]
+}

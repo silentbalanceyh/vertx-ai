@@ -1,0 +1,19 @@
+{
+    "executor": "executeFrontendSync",
+    "description": "同步 Zero Ui 的最新框架",
+    "command": "sync",
+    "options": [
+        {
+            "name": "path",
+            "alias": "p",
+            "description": "本地配置文件路径，默认 .zero",
+            "default": ".zero"
+        },
+        {
+            "name": "mode",
+            "alias": "m",
+            "description": "指定同步模块的模式，是否本地同步",
+            "default": false
+        }
+    ]
+}

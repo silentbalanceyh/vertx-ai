@@ -31,6 +31,7 @@
         "commander": "^11.0.0",
         "crypto-js": "^4.1.1",
         "dox": "^1.0.0",
+        "ejs": "^3.1.10",
         "exceljs": "^4.3.0",
         "extend": "^3.0.2",
         "handlebars": "^4.7.7",

@@ -1,5 +1,6 @@
 const Ec = require("../epic");
 const child = require('child_process');
+const Ut = require("../commander-shared");
 
 const COMMANDS = [
     "run-default.sh",
@@ -88,29 +89,23 @@ const executeLocal = (actual = {}, options = {}) => {
     return pathEnv;
 }
 
-module.exports = () => {
+module.exports = (options) => {
 
     // 获取当前操作系统
     const platform = process.platform;
 
     // 根据操作系统设置不同的 options 对象
-    let options;
+    let optionsWait;
     if (platform === 'win32') {
         // Windows 系统，使用指定的命令解释器
         Ec.info(`您正在使用WINDOWS系统，请使用随git附带的bash运行此脚本！`.red.bgYellow);
-        options = {stdio: 'inherit', shell: 'bash.exe'};
+        optionsWait = {stdio: 'inherit', shell: 'bash.exe'};
     } else {
         // 非 Windows 系统，不需要额外的 options
-        options = {stdio: 'inherit'};
+        optionsWait = {stdio: 'inherit'};
     }
 
-    const actual = Ec.executeInput(
-        [],
-        [
-            ['-p', '--path', '.zero'],
-            ['-m', '--module', false]       // 是否本地模式
-        ]
-    );
+    const parsed = Ut.parseArgument(options);
     // 1. 环境检查
     if (!Ec.isExist(".git")) {
         Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
@@ -118,12 +113,12 @@ module.exports = () => {
     }
 
     let pathSource;
-    if (actual.module) {
+    if (parsed.mode) {
         // 本地模式
-        pathSource = executeLocal(actual, options);
+        pathSource = executeLocal(parsed, optionsWait);
     } else {
         // 远程模式
-        pathSource = executeRemote(actual, options);
+        pathSource = executeRemote(parsed, optionsWait);
     }
     if (pathSource) {
         // 5. 拷贝 Ignore 文件全部指令
@@ -135,14 +130,14 @@ module.exports = () => {
                 // 目录拷贝
                 if (!Ec.isExist(command)) {
                     const cmdDir = `mkdir -p ${command}`;
-                    child.execSync(cmdDir, options);
+                    child.execSync(cmdDir, optionsWait);
                 }
                 cmd = `cp -rf ${pathSource}/${command}* ./${command}`;
-                child.execSync(cmd, options);
+                child.execSync(cmd, optionsWait);
             } else {
                 // 文件拷贝
                 cmd = `cp -rf ${pathSource}/${command} ./${command}`;
-                child.execSync(cmd, options);
+                child.execSync(cmd, optionsWait);
             }
         })
         Ec.info(`主框架更新完成：${pathSource}！`.help);

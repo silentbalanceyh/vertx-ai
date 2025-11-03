@@ -1,0 +1,13 @@
+{
+    "executor": "executeUuid",
+    "description": "生成 UUID 的值，可直接拷贝",
+    "command": "uuid",
+    "options": [
+        {
+            "name": "number",
+            "alias": "n",
+            "description": "生成 UUID 的数量，默认 1 个",
+            "default": 1
+        }
+    ]
+}

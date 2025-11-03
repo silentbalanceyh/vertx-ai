@@ -2,7 +2,7 @@ const func_interface_io = require('./ai.export.interface.io');
 const func_interface_util = require("./ai.export.interface.util");
 const func_interface_string = require('./ai.export.interface.fn.string');
 
-const func_impl_parse = require('./ai.export.impl.fn.parse');
+// const func_impl_parse = require('./ai.export.impl.fn.parse');
 const func_impl_seek = require("./ai.export.impl.fn.seek");
 
 const func_impl_excel = require('./ai.economy.impl.fn.excel');
@@ -17,7 +17,7 @@ const exported = {
     ...func_interface_util,
     ...func_interface_string,
 
-    ...func_impl_parse,
+    // ...func_impl_parse,
     ...func_impl_seek,
 
     ...func_impl_execute,

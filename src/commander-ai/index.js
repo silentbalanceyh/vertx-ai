@@ -1,9 +1,11 @@
 const executeUuid = require('./fn.random.uuid');
-const executeString = require('./fn.random.str');
+const executeString = require('./fn.random.string');
 const executeMD5 = require('./fn.random.md5');
 const executeFrontendSync = require('./fn.source.sync');
 const executeApp = require('./fn.source.app');
 const executeMod = require('./fn.source.mod');
+const executeHelp = require('./fn.help.metadata');
+const executeWeb = require('./fn.source.front');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -11,6 +13,8 @@ const exported = {
     executeFrontendSync,        // ai sync
     executeApp,                 // ai app
     executeMod,                 // ai mod
+    executeHelp,                // ai help
+    executeWeb,                 // ai web
 };
 module.exports = exported;
 /**

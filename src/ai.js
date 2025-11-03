@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 const Ec = require('./epic');
+const Ut = require('./commander-shared');
 const Executor = require('./commander-ai');
-Ec.executeHeader("<标准工具>");
+
+
+// 输出头部
+Ec.executeHeader("Rachel Momo Command");
+
+
 // 读取配置文件
-let configArr = Ec.parseZero(__dirname + '/commander/ai.zero');
-configArr = Ec.itArray(configArr, (config) => Ec.itCompress(config, "option"));
-// Commander的执行
+const configArr = Ut.parseMetadata();
 Ec.executeBody(configArr, Executor);
-// 解析参数专用
+
+
+// 输出尾部
 Ec.executeEnd();

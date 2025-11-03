@@ -1,0 +1,7 @@
+{
+    "executor": "executeHelp",
+    "description": "显示帮助的详细信息！",
+    "command": "help",
+    "options": [
+    ]
+}

@@ -61,11 +61,12 @@ const executeHeader = (app) => {
     const appInfo = require('../../package.json');
     program.allowUnknownOption();
     program.version(appInfo.version);
-    __LOG.info(`Zero Ecotope AI工具项  : `.rainbow + app.yellow);
-    __LOG.info('HomePage   : '.bold + appInfo.homepage.blue);
-    __LOG.info('Github     : '.bold + appInfo.github.blue);
-    __LOG.info(`Version    : ` + `${appInfo.version}`.red + '  ' + `「确认您的Node版本 ( >= 22.x ) 支持ES6, ES7.」`.yellow);
-    __LOG.info("AI 系统启动......".cyan);
+    __LOG.info(`----------------- Rachel Momo / AI工具项  ------------------`.rainbow);
+    __LOG.info('应用名称: '.bold + app);
+    __LOG.info('工具主页: '.bold + appInfo.homepage.blue);
+    __LOG.info(`工具版本: ` + `${appInfo.version}`.red + '  ' + `( Node >= 22.x )`.yellow);
+    __LOG.info();
+    __LOG.info("----------------- AI 系统启动…… ----------------------------".rainbow);
     if (3 > process.argv.length) {
         __LOG.error("命令缺失，请输入正确的命令！");
     }
@@ -90,14 +91,13 @@ const executeBody = (commanders = [], Executor = {}) => {
                 .description(commander.description)
                 .usage(`[options] [${option.usage}]`);
             __FX.fxContinue(0 < commander.options.length, () => {
-                __IT.itArray(commander.options, (item, index) => {
-                    const optionItem = option.item[index];
-                    if (optionItem) {
-                        cmd.option(optionItem.key, optionItem.desc);
-                    }
+                // 设置选项
+                commander.options.forEach(option => {
+                    cmd.option(`-${option.alias}`, option.description);
+                    cmd.option(`--${option.name}`, option.description);
                 })
             });
-            cmd.action(() => co(executor));
+            cmd.action(() => co(() => executor(commander.options)));
         });
     }
 };
@@ -110,54 +110,8 @@ const executeBody = (commanders = [], Executor = {}) => {
 const executeEnd = () => {
     program.parse(process.argv);
 };
-/**
- * ## `Ec.executeInput`
- *
- * ### 1. 基本介绍
- *
- * ```js
- *     const actual = Ec.executeInput(
- *          [],
- *          [
- *              ['-n', '--number', 20]
- *          ]
- *     );
- * ```
- *
- * ### 2. 参数列表
- *
- * #### 2.1. required 参数格式：
- *
- * ```js
- * // 索引1：短参数
- * // 索引2：长参数
- * ["-h", "--help"]
- * ```
- *
- * #### 2.2. optional 参数格式：
- *
- * ```js
- * // 索引1：短参数
- * // 索引2：长参数
- * // 索引3：参数的默认值
- * ['-n', '--number', 20]
- * ```
- *
- * @memberOf module:_epic
- * @param {Array} required 必须参数设置
- * @param {Array} optional 可选参数设置
- * @returns {Object} 生成最终的参数集
- */
-const executeInput = (required = [], optional = []) => {
-    const elementArray = required.filter(item => U.isArray(item));
-    const isMatrix = 1 <= elementArray.length;
-    console.log(isMatrix);
-    const args = isMatrix ? __PR.parseInput(required) : __PR.parseInput([required]);
-    return __PR.parseFormat(args, optional)
-};
 module.exports = {
     executeHeader,
     executeBody,
     executeEnd,
-    executeInput,
 };

@@ -1,28 +1,22 @@
 const Ec = require('../epic');
 const os = require('os');
+const Ut = require("../commander-shared");
 
 const os_compatible = ['darwin', 'win32'];
 
-module.exports = () => {
-    /*
-     * 参数解析
-     */
-    const actual = Ec.executeInput(
-        ['-i', '--input'],
-        [
-            ["-i", "--input"]
-        ]
-    );
+module.exports = (options) => {
+    const parsed = Ut.parseArgument(options);
     /*
      * 基本信息
      */
-    const input = actual.input;
+    const input = parsed.input;
     const platform = os.platform();
     Ec.info(`当前操作系统：${platform}`);
 
     if (os_compatible.indexOf(platform) > -1) {
         const content = Ec.strMD5(input);
-        console.info(content);
+        Ec.execute(`明文值：${input}`)
+        Ec.execute(`加密值：${content}`);
         Ec.outCopy(content)
             .then(sign => Ec.info(`加密的字符串已经成功拷贝到剪切板中！`))
     } else {

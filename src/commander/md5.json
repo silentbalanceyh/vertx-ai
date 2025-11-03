@@ -1,0 +1,12 @@
+{
+    "executor": "executeMD5",
+    "description": "直接针对输入内容生成 MD5 加密值",
+    "command": "md5",
+    "options": [
+        {
+            "name": "input",
+            "alias": "i",
+            "description": "加密输入的字符串的值"
+        }
+    ]
+}

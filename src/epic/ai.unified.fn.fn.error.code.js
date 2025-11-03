@@ -66,7 +66,7 @@ module.exports = {
 
     // 命令
     fn10003: (fileType) => `[AI-10003] The fileType='${fileType}' is unknown and could not found parser`,
-    fn10004: (command) => `[AI-10004] The executor of command '${command}' could not be found`,
+    fn10004: (command) => `[AI-10004] The executor of command '${command}' could not be found（执行器丢失）`,
     fn10005: (command = "未输入", expected) => `[AI-10005] The command '${command}' could not be found, expected '${expected}'`,
     fn10006: (arg) => `[AI-10006] The command missed required arguments: '${arg}'`,
 
