@@ -5,11 +5,21 @@ const {config} = require("exceljs");
 const ioDPAStructure = async (baseDir, name) => {
     const folders = [
         `${baseDir}/${name}`,
-        `${baseDir}/${name}/${name}-domain`,
-        `${baseDir}/${name}/${name}-api`,
-        `${baseDir}/${name}/${name}-provider`
+        `${baseDir}/${name}/${name}-domain/src/main/java`,
+        `${baseDir}/${name}/${name}-domain/src/main/resources`,
+        `${baseDir}/${name}/${name}-domain/src/test/java`,
+        `${baseDir}/${name}/${name}-domain/src/test/resources`,
+        `${baseDir}/${name}/${name}-api/src/main/java`,
+        `${baseDir}/${name}/${name}-api/src/main/resources`,
+        `${baseDir}/${name}/${name}-api/src/test/java`,
+        `${baseDir}/${name}/${name}-api/src/test/resources`,
+        `${baseDir}/${name}/${name}-provider/src/main/java`,
+        `${baseDir}/${name}/${name}-provider/src/main/resources`,
+        `${baseDir}/${name}/${name}-provider/src/test/java`,
+        `${baseDir}/${name}/${name}-provider/src/test/resources`,
     ];
-    const batched = folders.map(folder => new Promise((resolve, reject) =>
+    const batched = folders.map(folder => new Promise((resolve, reject) => {
+        Ec.execute("创建目录：" + folder);
         fs.mkdir(
             folder,
             {recursive: true},
@@ -20,8 +30,8 @@ const ioDPAStructure = async (baseDir, name) => {
                     resolve(true);
                 }
             }
-        ))
-    );
+        );
+    }));
     return Promise.all(batched);
 }
 const ioDPAPomItem = async (source, configuration = {}) => new Promise((resolve, reject) => {
