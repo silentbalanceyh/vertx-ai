@@ -6,6 +6,8 @@ Zero工具箱为一个工具类型的项目，主要为后端项目和前端项�
 
 * 详细文档：[Zero Ai命令](http://www.vertxai.cn/document/doc-web/index.html)
 
+![npm version](https://img.shields.io/npm/v/zero-ai.svg)
+
 ## 0. 引导
 
 - （后端）Zero Ecotope：<https://www.zerows.io>
@@ -33,7 +35,18 @@ added 77 packages from 119 contributors in 8.417s
 
 ## 2. 常用命令说明
 
-核心命令处理：`ai <command> [options]`
+```bash
+# 常用命令可直接查看帮助信息
+ai help
+
+# Rapid Spring 工程初始化
+ai spring -name app-fly
+
+# Zero Extension 模块初始化
+ai mod -name psi          
+```
+
+
 
 
 
