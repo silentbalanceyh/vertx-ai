@@ -1,0 +1,17 @@
+package <%= packageName %>.base;
+
+import io.r2mo.io.common.HFS;
+import io.r2mo.spring.mybatisplus.program.ActOperationMybatisPlus;
+
+public abstract class ActOperationCommon<T> extends ActOperationMybatisPlus<T> {
+    private final HFS hfs;
+
+    public ActOperationCommon() {
+        super();
+        this.hfs = HFS.of();
+    }
+
+    protected HFS fs() {
+        return this.hfs;
+    }
+}

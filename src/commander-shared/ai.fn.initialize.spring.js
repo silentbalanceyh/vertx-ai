@@ -14,6 +14,8 @@ const initSpringConfiguration = (parsed = {}) => {
     configuration.dbName = "DB_SPRING_" + appName.toUpperCase();
     configuration.dbUser = appName;
     configuration.dbPassword = appName;
+    configuration.dbHost = "ox.engine.cn";
+    configuration.dbPort = 3306;
     return configuration;
 }
 const initSpring = async (configuration = {}) => {
@@ -25,12 +27,40 @@ const initSpring = async (configuration = {}) => {
         Ec.error(`目录初始化异常：${configuration.srcOut}`)
     }
 
+
     Ec.execute("----------- 文件生成 -----------");
     // 2. 每个项目的 pom.xml 文件初始化
     const type = configuration.srcType;
     const sourceTpl = Ec.ioRoot() + "/_template/" + type.description;
     const genPom = await Io.ioDPASpringPom(sourceTpl, configuration);
-    return null;
+    if (!genPom) {
+        Ec.error(`pom.xml 文件生成异常：${configuration.srcOut}`)
+    }
+
+
+    // 3. 数据库文件初始化
+    Ec.execute("----------- 数据库初始化 -----------");
+    const genDatabase = await Io.ioSpringDatabase(sourceTpl, configuration);
+    if (!genDatabase) {
+        Ec.error(`数据库文件生成异常：${configuration.srcOut}`)
+    }
+
+
+    // 4. 代码生成文件初始化
+    Ec.execute("----------- 代码生成 -----------");
+    const genModule = await Io.ioSpringConfiguration(sourceTpl, configuration);
+    if (!genModule) {
+        Ec.error(`配置文件生成异常：${configuration.srcOut}`)
+    }
+    const genSource = await Io.ioSpringSource(sourceTpl, configuration);
+    if (!genSource) {
+        Ec.error(`源代码文件生成异常：${configuration.srcOut}`)
+    }
+    // 5. 权限变更
+    const genChmod = await IoUt.ioChmod(configuration.srcOut);
+    if (!genChmod) {
+        Ec.error(`权限变更异常：${configuration.srcOut}`)
+    }
 }
 module.exports = {
     initSpringConfiguration,

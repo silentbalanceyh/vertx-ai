@@ -1,0 +1,12 @@
+package <%= packageName %>;
+
+
+import io.r2mo.boot.spring.generator.SourceGenerator;
+
+public class GenApp<%= name %>Module {
+
+    public static void main(final String[] args) {
+        final SourceGenerator generator = new SourceGenerator(GenConfigApp<%= name %>.class);
+        generator.generate();
+    }
+}

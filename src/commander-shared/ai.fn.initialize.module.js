@@ -29,10 +29,10 @@ const initMod = async (configuration = {}) => {
     if (!genPom) {
         Ec.error(`pom.xml 文件生成异常：${configuration.srcOut}`)
     }
-    Ec.execute("----------- 数据库初始化 -----------");
 
 
     // 3. 数据库文件初始化
+    Ec.execute("----------- 数据库初始化 -----------");
     const genDatabase = await Io.ioModuleDatabase(sourceTpl, configuration);
     if (!genDatabase) {
         Ec.error(`数据库文件生成异常：${configuration.srcOut}`)
@@ -43,11 +43,17 @@ const initMod = async (configuration = {}) => {
     Ec.execute("----------- 代码生成 -----------");
     const genModule = await Io.ioModuleConfiguration(sourceTpl, configuration);
     if (!genModule) {
-        Ec.error(`代码文件生成异常：${configuration.srcOut}`)
+        Ec.error(`配置文件生成异常：${configuration.srcOut}`)
     }
     const genSource = await Io.ioModuleSource(sourceTpl, configuration);
     if (!genSource) {
         Ec.error(`源代码文件生成异常：${configuration.srcOut}`)
+    }
+
+    // 5. 权限变更
+    const genChmod = await IoUt.ioChmod(configuration.srcOut);
+    if (!genChmod) {
+        Ec.error(`权限变更异常：${configuration.srcOut}`)
     }
 }
 

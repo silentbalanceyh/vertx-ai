@@ -1,6 +1,5 @@
 const fs = require("fs").promises;
 const Ec = require("../epic");
-const ejs = require("ejs");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 const ioModuleDatabase = async (source, configuration = {}) => {
     let fileSrc = `${source}/database/database-reinit.sh`;
@@ -66,7 +65,7 @@ const ioModuleSource = async (source, configuration = {}) => {
     await fs.mkdir(dirPackage, {recursive: true});
     // 确保目录确实存在
     await fs.access(dirPackage, fs.constants.F_OK);
-    
+
     fileSrc = `${source}/source-provider/ExtensionSource.ejs`;
     fileContent = await IoUt.ioEJS(fileSrc, configuration);
     fileDest = IoUt.withProvider(configuration, `src/main/java/${pathPackage}/Extension${configuration.srcId.toUpperCase()}Source.java`);

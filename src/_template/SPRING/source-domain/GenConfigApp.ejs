@@ -1,0 +1,22 @@
+package <%= packageName %>;
+
+import <%= packageName %>.base.ActOperationCommon;
+import io.r2mo.base.generator.GenMeta;
+import io.r2mo.base.generator.SourceStructure;
+import io.r2mo.dbe.mybatisplus.generator.config.GenConfigMybatisPlus;
+import io.r2mo.typed.enums.DatabaseType;
+
+public class GenConfigApp<%= name %> extends GenConfigMybatisPlus {
+
+    @Override
+    public GenMeta getMetadata() {
+        return GenMeta.builder()
+            .schema("V1__init_schema.sql")
+            .spi("GenMybatisPlus")
+            .database(DatabaseType.MYSQL_8)
+            .structure(SourceStructure.DPA)
+            .version("v1")
+            .baseAct(ActOperationCommon.class)
+            .build();
+    }
+}

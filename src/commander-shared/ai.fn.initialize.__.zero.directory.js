@@ -1,5 +1,4 @@
 const fs = require("fs").promises;
-const ejs = require('ejs');
 const Ec = require('../epic');
 const IoZero = require('./ai.fn.initialize.__.zero.file');
 const IoUt = require('./ai.fn.initialize.__.io.util');

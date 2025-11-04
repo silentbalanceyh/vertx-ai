@@ -1,0 +1,64 @@
+server:
+  port: 9002
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: <%= id %>
+  # 数据源配置
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: ${spring.datasource.url}
+          username: ${spring.datasource.username}
+          password: ${spring.datasource.password}
+          driver-class-name: ${spring.datasource.driver-class-name}
+    url: jdbc:mysql://${R2MO_MYSQL_HOST}:${R2MO_MYSQL_PORT:3306}/${R2MO_MYSQL_DATABASE}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${R2MO_MYSQL_USER}
+    password: ${R2MO_MYSQL_PASS}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  # Flyway
+  flyway:
+    enabled: true
+    locations:
+      - classpath:${spring.application.name}/database/schema/
+    encoding: UTF-8
+    sql-migration-prefix: V
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql
+    validate-on-migrate: false
+    baseline-on-migrate: true
+    baseline-version: 1
+    clean-disabled: true # 生产环境禁用
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations:
+    - classpath:${spring.application.name}/mapper/**/*.xml
+  mapperPackage: <%= packageName %>.mapper
+  type-handlers-package: io.r2mo.dbe.mybatisplus.core.typehandler
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation: TRACE

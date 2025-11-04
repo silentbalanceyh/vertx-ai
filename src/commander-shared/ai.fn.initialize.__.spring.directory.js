@@ -1,14 +1,15 @@
 const fs = require("fs").promises;
-const ejs = require('ejs');
 const Ec = require('../epic');
-const IoZero = require('./ai.fn.initialize.__.zero.file');
+const IoSpring = require('./ai.fn.initialize.__.spring.file');
 const IoUt = require('./ai.fn.initialize.__.io.util');
 const ioDPASpringStructure = async (baseDir, configuration) => {
     const name = configuration.artifactId;
     const folders = [
         `${baseDir}/${name}`,
-        `${baseDir}/${name}/${name}-domain/database`,
+        `${baseDir}/${name}/generated`,
+        `${baseDir}/${name}/database`,
         `${baseDir}/${name}/${name}-domain/src/main/java`,
+        `${baseDir}/${name}/${name}-domain/src/main/resources/${configuration.artifactId}/database/schema/`,
         `${baseDir}/${name}/${name}-domain/src/test/java`,
         `${baseDir}/${name}/${name}-domain/src/test/resources`,
         `${baseDir}/${name}/${name}-api/src/main/java`,
@@ -40,9 +41,33 @@ const ioDPASpringPom = async (source, configuration = {}) => {
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件：" + fileDest.green);
 
+    fileSrc = `${source}/source-api/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withApi(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-provider/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withProvider(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-domain/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withDomain(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-test/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withTest(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
     return true;
 }
 module.exports = {
     ioDPASpringStructure,
     ioDPASpringPom,
+    ...IoSpring,
 }
