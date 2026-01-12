@@ -2,8 +2,9 @@ const fs = require("fs");
 const Ec = require("../epic");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 const Io = require("./ai.fn.initialize.__.zero.directory");
+const {config} = require("exceljs");
 const initZeroConfiguration = async (parsed = {}) => {
-    Ec.execute(`初始化 Spring 项目，${`r2mo-rapid`.green} 版本：${parsed.versionR2mo.red}`);
+    Ec.execute(`初始化 Zero 项目，${`zero-ecotope`.green} 版本：${parsed.versionZero.red}`);
     const name = parsed.name;
     const configuration = IoUt.ioConfiguration(parsed, name);
     configuration.groupId = "io.zerows.apps";
@@ -18,9 +19,9 @@ const initZeroConfiguration = async (parsed = {}) => {
     configuration.dbHost = "localhost";
     configuration.dbPort = 3306;
 
-    // Spring 的基础是 r2mo-rapid 核心框架
-    configuration.framework = parsed.versionR2mo || "1.0.0";
+    configuration.framework = parsed.versionZero || "1.0.0";
     await IoUt.ioApp(configuration);
+    // 三个库的相关设置
     return configuration;
 }
 const initZero = async (configuration = {}) => {
@@ -30,6 +31,30 @@ const initZero = async (configuration = {}) => {
     const created = await Io.ioDPAZeroStructure(baseDir, configuration);
     if (!(created.every(item => true === item))) {
         Ec.error(`目录初始化异常：${configuration.srcOut}`)
+    }
+
+    Ec.execute("----------- 文件生成 -----------");
+    // 2. 每个项目 pom.xml 文件初始化
+    const type = configuration.srcType;
+    const sourceTpl = Ec.ioRoot() + "/_template/" + type.description;
+    const genPom = await Io.ioDPAZeroPom(sourceTpl, configuration);
+    if (!genPom) {
+        Ec.error(`pom.xml 文件生成异常：${configuration.srcOut}`)
+    }
+
+    // 3. 数据库文件初始化
+    Ec.execute("----------- 数据库初始化 -----------");
+    const genDatabase = await Io.ioZeroDatabase(sourceTpl, configuration);
+    if (!genDatabase) {
+        Ec.error(`数据库文件生成异常：${configuration.srcOut}`)
+    }
+
+    // 4. 代码生成文件初始化
+    Ec.execute("----------- 代码生成 -----------");
+    console.log(configuration);
+    const genModule = await Io.ioZeroConfiguration(sourceTpl, configuration);
+    if (!genModule) {
+        Ec.error(`配置文件生成异常：${configuration.srcOut}`)
     }
 }
 module.exports = {

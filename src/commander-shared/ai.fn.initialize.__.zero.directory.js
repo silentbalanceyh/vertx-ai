@@ -1,6 +1,8 @@
-import {promises as fs} from "fs";
+const fs = require("fs").promises;
 
 const Ec = require("../epic");
+const IoUt = require('./ai.fn.initialize.__.io.util');
+const IoZero = require("./ai.fn.initialize.__.zero.file");
 
 const ioDPAZeroStructure = async (baseDir, configuration) => {
     const name = configuration.artifactId;
@@ -35,6 +37,40 @@ const ioDPAZeroStructure = async (baseDir, configuration) => {
     })
     return results;
 }
+const ioDPAZeroPom = async (source, configuration = {}) => {
+    let fileSrc = `${source}/pom.xml.ejs`;
+    let fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    let fileDest = IoUt.withDPA(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-api/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withApi(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-provider/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withProvider(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-domain/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withDomain(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
+    fileSrc = `${source}/source-test/pom.xml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withTest(configuration, `pom.xml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+    return true;
+}
 module.exports = {
     ioDPAZeroStructure,
+    ioDPAZeroPom,
+    ...IoZero
 }

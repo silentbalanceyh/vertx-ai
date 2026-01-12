@@ -68,7 +68,6 @@ const parseArgument = (options = []) => {
             }
         }
     });
-    console.log(result);
     return result;
 }
 const parseMetadata = () => {
