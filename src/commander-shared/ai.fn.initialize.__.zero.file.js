@@ -47,7 +47,7 @@ const ioZeroConfiguration = async (source, configuration = {}) => {
 
     fileSrc = `${source}/app.env.ejs`;
     let fileContent = await IoUt.ioEJS(fileSrc, configuration);
-    fileDest = IoUt.withDPA(configuration, `.r2mo/app.env`);
+    fileDest = IoUt.withApi(configuration, `.r2mo/app.env`);
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件：" + fileDest.green);
 
