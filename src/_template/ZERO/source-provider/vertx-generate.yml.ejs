@@ -1,0 +1,8 @@
+database:
+  url: "jdbc:mysql://<%= dbHost %>:<%= dbPort %>/<%= dbName %>_APP"
+  instance: "<%= dbName %>_APP"
+  username: <%= dbUser %>
+  password: <%= dbPassword %>
+source:
+  includes: (^.*)
+  excludes: flyway_.*

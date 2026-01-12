@@ -100,6 +100,12 @@ const ioZeroSource = async (source, configuration = {}) => {
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件：" + fileDest.green);
 
+    fileSrc = `${source}/source-provider/vertx-generate.yml.ejs`;
+    fileContent = await IoUt.ioEJS(fileSrc, configuration);
+    fileDest = IoUt.withProvider(configuration, `src/main/resources/vertx-generate.yml`);
+    await fs.writeFile(fileDest, fileContent.toString(), null);
+    Ec.execute("生成文件：" + fileDest.green);
+
     // AppDev
     pathPackage = await IoUt.ioPackage(null, configuration, IoUt.withApi);
     fileSrc = `${source}/source-api/AppDev.java.ejs`;
