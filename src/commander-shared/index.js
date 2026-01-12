@@ -2,11 +2,13 @@ const _ARGS = require("./ai.fn.parse.argument");
 const _MODS = require("./ai.fn.initialize.module");
 const _APPS = require("./ai.fn.initialize.app");
 const _SPRING = require("./ai.fn.initialize.spring");
+const _ZERO = require("./ai.fn.initialize.zero");
 module.exports = {
     ..._ARGS,
     ..._MODS,
     ..._APPS,
     ..._SPRING,
+    ..._ZERO,
     nameValid: (str) => {
         if (typeof str !== 'string' || str.length === 0) {
             return false;

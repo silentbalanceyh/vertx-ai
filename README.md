@@ -39,11 +39,13 @@ added 77 packages from 119 contributors in 8.417s
 # 常用命令可直接查看帮助信息
 ai help
 
-# Rapid Spring 工程初始化
+# 初始化 R2MO Spring 工程脚手架
 ai spring -name app-fly
+ai spring -n app-fly
 
-# Zero Extension 模块初始化
-ai mod -name psi          
+# 初始化 ZERO Vertx 工程脚手架
+ai zero -name app-wait
+ai zero -n app-wait
 ```
 
 

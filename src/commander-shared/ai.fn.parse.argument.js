@@ -68,7 +68,7 @@ const parseArgument = (options = []) => {
             }
         }
     });
-
+    console.log(result);
     return result;
 }
 const parseMetadata = () => {
@@ -86,7 +86,16 @@ const parseMetadata = () => {
     });
     return commandList;
 }
+const parseVersion = async (result) => {
+    const versionPath = Ec.ioRoot() + "/_template/version";
+    const versionJ = Ec.ioJObject(versionPath);
+    result.versionMomo = versionJ?.momo;
+    result.versionR2mo = versionJ?.r2mo;
+    result.versionZero = versionJ?.zero;
+    return result;
+}
 module.exports = {
+    parseVersion,
     parseArgument,
     parseMetadata
 }

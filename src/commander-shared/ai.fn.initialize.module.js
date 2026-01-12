@@ -1,6 +1,6 @@
 const Ec = require('../epic');
 const fs = require("fs");
-const Io = require("./ai.fn.initialize.__.zero.directory");
+const Io = require("./ai.fn.initialize.__.module.directory");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 
 const initModuleConfiguration = (parsed = {}) => {

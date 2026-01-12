@@ -3,7 +3,6 @@ const Ec = require("../epic");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 
 const ioSpringDatabase = async (source, configuration = {}) => {
-
     let fileSrc = `${source}/database/database-reinit.sql.ejs`;
     let fileContent = await IoUt.ioEJS(fileSrc, configuration);
     let fileDest = IoUt.withDPA(configuration, `database/database-reinit.sql`);

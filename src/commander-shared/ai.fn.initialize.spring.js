@@ -2,7 +2,8 @@ const fs = require("fs");
 const Ec = require("../epic");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 const Io = require("./ai.fn.initialize.__.spring.directory");
-const initSpringConfiguration = (parsed = {}) => {
+const initSpringConfiguration = async (parsed = {}) => {
+    Ec.execute(`初始化 Spring 项目，${`r2mo-rapid`.green} 版本：${parsed.versionR2mo.red}`);
     const name = parsed.name;
     const configuration = IoUt.ioConfiguration(parsed, name);
     configuration.groupId = "io.zerows.apps";
@@ -14,8 +15,12 @@ const initSpringConfiguration = (parsed = {}) => {
     configuration.dbName = "DB_SPRING_" + appName.toUpperCase();
     configuration.dbUser = appName;
     configuration.dbPassword = appName;
-    configuration.dbHost = "ox.engine.cn";
+    configuration.dbHost = "localhost";
     configuration.dbPort = 3306;
+
+    // Spring 的基础是 r2mo-rapid 核心框架
+    configuration.framework = parsed.versionR2mo || "1.0.0";
+    await IoUt.ioApp(configuration);
     return configuration;
 }
 const initSpring = async (configuration = {}) => {

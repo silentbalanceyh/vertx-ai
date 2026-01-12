@@ -2,21 +2,22 @@ const executeUuid = require('./fn.random.uuid');
 const executeString = require('./fn.random.string');
 const executeMD5 = require('./fn.random.md5');
 const executeFrontendSync = require('./fn.source.sync');
-const executeApp = require('./fn.source.app');
-const executeMod = require('./fn.source.mod');
 const executeHelp = require('./fn.help.metadata');
 const executeWeb = require('./fn.source.front');
+
 const executeSpring = require('./fn.source.spring');
+const executeZero = require('./fn.source.zero');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
     executeMD5,                 // ai md5
     executeFrontendSync,        // ai sync
-    executeApp,                 // ai app
-    executeMod,                 // ai mod
     executeHelp,                // ai help
     executeWeb,                 // ai web
+    // Spring 脚手架
     executeSpring,              // ai spring
+    // Zero 基础脚手架
+    executeZero,                // ai zero
 };
 module.exports = exported;
 /**

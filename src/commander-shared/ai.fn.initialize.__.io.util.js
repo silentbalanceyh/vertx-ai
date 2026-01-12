@@ -16,6 +16,7 @@ const ioEJS = async (source, configuration = {}) => new Promise((resolve, reject
     params.name = configuration?.srcId.toUpperCase();
     params.packageName = configuration?.srcPackage;
     params.group = configuration?.groupId;
+    params.framework = configuration?.framework;
 
     /*
      * 数据库部分
@@ -72,17 +73,38 @@ const ioConfiguration = (parsed = {}, name) => {
     configMap.srcConfig = parsed.config;
     configMap.dbType = "MYSQL";
 
-    const configInput = process.cwd() + `/${parsed.config}`;
-    if (!fs.existsSync(configInput)) {
-        Ec.warn(`配置文件不存在，使用默认配置！路径 = ` + configInput.blue);
+    return configMap;
+}
+const ioApp = async (configuration = {}) => {
+    let configFile = process.cwd() + `\`/${configuration.srcConfig}`;
+    const configDefault = process.cwd() + `/app.json`;
+    if (!fs.existsSync(configFile)) {
+        Ec.warn(`配置文件不存在，使用默认配置！路径 = ` + configDefault.blue);
+        configFile = configDefault;
     }
 
-    if (fs.existsSync(configInput)) {
-        // 有配置的情况要合并配置
-        const data = Ec.ioJObject(configInput);
-        Object.assign(configMap, data);
+    // 加载配置文件
+    if (fs.existsSync(configFile)) {
+        // 配置加载
+        const configData = Ec.ioJObject(configFile);
+        [
+            "framework",        // 框架版本
+            "dbHost",           // 数据库主机
+            "dbPort",           // 数据库端口
+            "dbUser",           // 数据库用户
+            "dbPassword",       // 数据库密码
+            "dbName",           // 数据库名称
+            "groupId",          // Maven Group ID
+            "artifactId",       // Maven Artifact ID
+            "srcPackage"        // Java 包名称
+        ].forEach(field => {
+            if (configData.hasOwnProperty(field)) {
+                configuration[field] = configData[field];
+                Ec.execute("\t配置项覆盖：" + field + " = " + configData[field]);
+            }
+        })
     }
-    return configMap;
+    return configuration;
 }
 const ioAppName = (name) => {
     let appName;
@@ -140,7 +162,7 @@ const ioChmod = async (directory) => {
     }
 }
 const ioPackage = async (suffix, configuration, baseFn) => {
-    const packageName = !!suffix ? configuration.srcPackage + `.${suffix}`: configuration.srcPackage;
+    const packageName = !!suffix ? configuration.srcPackage + `.${suffix}` : configuration.srcPackage;
     const pathPackage = packageName.replace(/\./g, "/");
     let dirPackage = baseFn(configuration, `src/main/java/${pathPackage}`);
     await fsAsync.mkdir(dirPackage, {recursive: true});
@@ -153,6 +175,7 @@ module.exports = {
     ioConfiguration,
     ioEJS,
     ioAppName,
+    ioApp,
     withTest,
     withDomain,
     withProvider,
