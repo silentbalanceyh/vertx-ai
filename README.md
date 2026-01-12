@@ -29,9 +29,11 @@ npm install -g zero-ai
 
 ```
 /usr/local/bin/ai -> /usr/local/lib/node_modules/vertx-ai/src/ai.js
-+ zero-ai@0.3.25
++ zero-ai@x.x.xx
 added 77 packages from 119 contributors in 8.417s
 ```
+
+版本跟随 `R2MO / MOMO` 版本同步更新，所以最新版是 `1.0.48`
 
 ## 2. 常用命令说明
 
