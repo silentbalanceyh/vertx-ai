@@ -1,0 +1,73 @@
+server:
+  port: ${Z_API_PORT:7185}
+  address: ${Z_API_HOST:0.0.0.0}
+  session:
+    options:
+      httpOnly: true
+vertx:
+  application:
+    name: ${Z_APP:r2mo-app-momo}              # ---> 💻️ 微服务名称
+  config:
+    instance:
+      - name: <%= appName %>-001
+        options:
+          maxEventLoopExecuteTime: 1200_000_000_000
+          maxWorkerExecuteTime: 1200_000_000_000
+
+          # 🚀【核心优化 1】EventLoop 线程池
+          # 公式：CPU核数(12) * 2 = 24
+          # 原来的 128 太大，导致 CPU 频繁切换上下文，降低性能
+          eventLoopPoolSize: 24
+
+          # 🚀【核心优化 2】Worker 线程池 (阻塞任务池)
+          # 如果你的业务主要是查数据库，这个值可以大一点 (64 - 128 之间)
+          # 如果太小，高并发查库时会由排队现象；太大则浪费内存。
+          # 建议先降到 64 或 128，原 256 略显激进
+          workerPoolSize: 128
+
+          # 内部阻塞池，通常不需要太大，32-64 即可
+          internalBlockingPoolSize: 32
+    delivery:
+      timeout: 180_000
+    deployment:
+      worker:
+        # 🚀【核心优化 3】Worker Verticle 实例数
+        # 不需要太多，Vert.x 会复用 Worker 线程池
+        # 设置为 CPU 核数 x 2 或 x 4 即可
+        instances: 32
+        # 这里的 workerPoolSize 是覆盖上面全局配置的，保持一致或按需调整
+        workerPoolSize: 128
+      agent:
+        # 🚀【核心优化 4】Agent (Http Server) 实例数
+        # 必须严格等于 eventLoopPoolSize，实现 1:1 绑定
+        # 这样每个 CPU 核心只负责 2 个 Server 实例，效率最高
+        instances: 24
+  mvc:
+    cors:
+      allow-credentials: true
+      allowed-origins:
+        - "*"
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        # master 库同 datasource，其他两库可分离，不开启动态的模式下直接使用 datasource 配置
+        master:
+          url: ${Z_DBS_URL:jdbc:mysql://ox.engine.cn:3306/DB_HOTEL_004?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+          instance: ${Z_DBS_INSTANCE:DB_HOTEL_004}
+          hostname: ${vertx.datasource.hostname}
+          port: ${vertx.datasource.port}
+          username: ${vertx.datasource.username}
+          password: ${vertx.datasource.password}
+    hostname: ${Z_DB_HOST:ox.engine.cn}
+    port: ${Z_DB_PORT:3306}
+    username: ${Z_DB_APP_USER:r2mo}
+    password: ${Z_DB_APP_PASS:r2mo}
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+# ------------------- 业务环境综述
+# 📌 应用管理
+app:
+  id: "<%= appId %>"
+  ns: "<%= appNs %>"
+  tenant: "<%= appTenant %>"

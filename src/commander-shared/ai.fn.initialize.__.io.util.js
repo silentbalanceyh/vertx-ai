@@ -5,41 +5,13 @@ const ejs = require("ejs");
 const path = require("path");
 
 const ioEJS = async (source, configuration = {}) => new Promise((resolve, reject) => {
-    const params = {};
-    /*
-     * - group / Maven 对应的 groupId
-     * - id / Maven 对应的 artifactId
-     * - name / 模块名称，大写形式
-     * - packageName / Java 包名称
-     */
-    params.id = configuration?.artifactId;
-    params.name = configuration?.srcId.toUpperCase();
-    params.packageName = configuration?.srcPackage;
-    params.group = configuration?.groupId;
-    params.framework = configuration?.framework;
-
-    /*
-     * 数据库部分
-     * - dbName / 数据库实例名
-     * - dbUser / 数据库用户名
-     * - dbHost / 数据库域名
-     * - dbPort / 数据库端口
-     * - dbPassword / 数据库密码
-     */
-    params.dbType = configuration?.dbType;
-    params.dbName = configuration?.dbName;
-    params.dbUser = configuration?.dbUser;
-    params.dbHost = configuration?.dbHost;
-    params.dbPort = configuration?.dbPort;
-    params.dbPassword = configuration?.dbPassword;
-
     Ec.execute(`读取 EJS 模版：${source.blue}`)
     fs.readFile(source, "utf8", (err, data) => {
         if (err) {
             reject(err);
         }
         // 渲染模板
-        const renderContent = ejs.render(data, params);
+        const renderContent = ejs.render(data, configuration);
         resolve(renderContent);
     });
 })
@@ -104,6 +76,16 @@ const ioApp = async (configuration = {}) => {
             }
         })
     }
+    /*
+     * - group / Maven 对应的 groupId
+     * - id / Maven 对应的 artifactId
+     * - name / 模块名称，大写形式
+     * - packageName / Java 包名称
+     */
+    configuration.id = configuration?.artifactId;
+    configuration.name = configuration?.srcId.toUpperCase();
+    configuration.packageName = configuration?.srcPackage;
+    configuration.group = configuration?.groupId;
     return configuration;
 }
 const ioAppName = (name) => {

@@ -10,9 +10,12 @@
     </parent>
     <groupId><%= group %></groupId>
     <artifactId><%= id %></artifactId>
-    <version>1.0</version>
+    <version>${revision}</version>
     <name>App::<%= name %></name>
     <packaging>pom</packaging>
+    <properties>
+        <revision>1.0</revision>
+    </properties>
     <modules>
         <module><%= id %>-domain</module>
         <module><%= id %>-provider</module>

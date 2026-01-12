@@ -62,7 +62,7 @@ const initSpring = async (configuration = {}) => {
         Ec.error(`源代码文件生成异常：${configuration.srcOut}`)
     }
     // 5. 权限变更
-    const genChmod = await IoUt.ioChmod(configuration.srcOut);
+    const genChmod = await IoUt.ioChmod(configuration.srcOut + `/` + configuration.artifactId);
     if (!genChmod) {
         Ec.error(`权限变更异常：${configuration.srcOut}`)
     }

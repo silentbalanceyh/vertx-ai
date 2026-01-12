@@ -1,0 +1,13 @@
+package <%= packageName %>;
+
+import io.zerows.boot.VertxApplication;
+import io.zerows.epoch.annotations.Up;
+import io.zerows.platform.annotations.PropertySource;
+
+@Up
+@PropertySource("env.properties")
+public class <%= name %>Dev {
+    public static void main(final String[] args) {
+        VertxApplication.run(<%= name %>Dev.class);
+    }
+}

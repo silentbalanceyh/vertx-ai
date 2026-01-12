@@ -1,0 +1,14 @@
+package <%= packageName %>;
+
+import io.zerows.extension.skeleton.boot.ExtensionLauncher;
+import io.zerows.platform.ENV;
+
+public class Module<%= name %>Source {
+
+    public static void main(final String[] args) {
+        final ExtensionLauncher launcher = ExtensionLauncher.create(Module<%= name %>Source.class, args);
+        final Module<%= name %>Generation configuration = new Module<%= name %>Generation();
+        configuration.resolver(ENV::parseVariable);
+        launcher.startGenerate(configuration);
+    }
+}

@@ -2,7 +2,6 @@ const fs = require("fs");
 const Ec = require("../epic");
 const IoUt = require("./ai.fn.initialize.__.io.util");
 const Io = require("./ai.fn.initialize.__.zero.directory");
-const {config} = require("exceljs");
 const initZeroConfiguration = async (parsed = {}) => {
     Ec.execute(`初始化 Zero 项目，${`zero-ecotope`.green} 版本：${parsed.versionZero.red}`);
     const name = parsed.name;
@@ -21,7 +20,21 @@ const initZeroConfiguration = async (parsed = {}) => {
 
     configuration.framework = parsed.versionZero || "1.0.0";
     await IoUt.ioApp(configuration);
+    configuration.appName = configuration.id;
+    // tenant, sigma, appId
     // 三个库的相关设置
+    if(!configuration.appNs){
+        configuration.appNs = configuration.group;
+    }
+    if(!configuration.appTenant){
+        configuration.appTenant = Ec.strUuid();
+    }
+    if(!configuration.appSigma){
+        configuration.appSigma = Ec.strRandom(32);
+    }
+    if(!configuration.appId){
+        configuration.appId = Ec.strUuid();
+    }
     return configuration;
 }
 const initZero = async (configuration = {}) => {
@@ -51,10 +64,18 @@ const initZero = async (configuration = {}) => {
 
     // 4. 代码生成文件初始化
     Ec.execute("----------- 代码生成 -----------");
-    console.log(configuration);
     const genModule = await Io.ioZeroConfiguration(sourceTpl, configuration);
     if (!genModule) {
         Ec.error(`配置文件生成异常：${configuration.srcOut}`)
+    }
+    const genSource = await Io.ioZeroSource(sourceTpl, configuration);
+    if (!genSource) {
+        Ec.error(`源代码文件生成异常：${configuration.srcOut}`)
+    }
+    // 5. 权限变更
+    const genChmod = await IoUt.ioChmod(configuration.srcOut + "/" + configuration.artifactId);
+    if (!genChmod) {
+        Ec.error(`权限变更异常：${configuration.srcOut}`)
     }
 }
 module.exports = {

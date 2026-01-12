@@ -10,7 +10,6 @@ const ioDPAZeroStructure = async (baseDir, configuration) => {
         `${baseDir}/${name}`,
         `${baseDir}/${name}/.r2mo/database/${configuration.dbType}/`,
         `${baseDir}/${name}/.r2mo/monitor/`,
-        `${baseDir}/${name}/${name}-domain/database`,
         `${baseDir}/${name}/${name}-domain/src/main/java`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/database/${configuration.dbType}/`,

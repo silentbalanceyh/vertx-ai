@@ -19,7 +19,6 @@ module.exports = async (options) => {
     }
     const configuration = await Ut.initZeroConfiguration(parsed);
     Ec.execute(`准备生成 Zero App 应用：${configuration.artifactId}`);
-    console.log(configuration);
     await Ut.initZero(configuration);
     Ec.info(`应用生成完成！`);
 }
