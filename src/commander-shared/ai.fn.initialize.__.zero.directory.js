@@ -13,6 +13,7 @@ const ioDPAZeroStructure = async (baseDir, configuration) => {
         `${baseDir}/${name}/${name}-domain/src/main/java`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/database/${configuration.dbType}/`,
+        `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/flyway/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-domain/src/test/java`,
         `${baseDir}/${name}/${name}-domain/src/test/resources`,
         `${baseDir}/${name}/${name}-api/src/main/java`,

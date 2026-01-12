@@ -32,6 +32,11 @@ const ioZeroDatabase = async (source, configuration = {}) => {
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
 
+    fileSrc = `${source}/source-domain/mvn-db.sh`;
+    fileDest = IoUt.withDomain(configuration, "mvn-db.sh");
+    await fs.copyFile(fileSrc, fileDest);
+    Ec.execute("拷贝文件：" + fileDest.green);
+
     return true;
 }
 const ioZeroConfiguration = async (source, configuration = {}) => {
@@ -59,7 +64,7 @@ const ioZeroConfiguration = async (source, configuration = {}) => {
     Ec.execute("生成文件：" + fileDest.green);
 
     fileSrc = `${source}/source-api/flyway.conf`;
-    fileDest = IoUt.withApi(configuration, "src/main/resources/flyway.conf");
+    fileDest = IoUt.withDomain(configuration, "src/main/resources/flyway.conf");
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
     return true;
@@ -73,11 +78,13 @@ const ioZeroSource = async (source, configuration = {}) => {
     Ec.execute("拷贝文件：" + fileDest.green);
 
     // 数据库脚本文件占位符
-    fileDest = IoUt.withDomain(configuration,
-        `src/main/resources/plugins/${configuration.artifactId}/database/.placeholder`);
+    fileDest = IoUt.withDomain(configuration, `src/main/resources/plugins/${configuration.artifactId}/database/${configuration.dbType}/.placeholder`);
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
 
+    fileDest = IoUt.withDomain(configuration, `src/main/resources/plugins/${configuration.artifactId}/flyway/${configuration.dbType}/.placeholder`);
+    await fs.copyFile(fileSrc, fileDest);
+    Ec.execute("拷贝文件：" + fileDest.green);
 
     pathPackage = await IoUt.ioPackage(null, configuration, IoUt.withDomain);
     fileSrc = `${source}/source-domain/ModuleGeneration.java.ejs`;
