@@ -8,13 +8,13 @@ const ioDPAZeroStructure = async (baseDir, configuration) => {
     const name = configuration.artifactId;
     const folders = [
         `${baseDir}/${name}`,
-        `${baseDir}/${name}/.r2mo/database/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-domain/src/main/java`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/database/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-domain/src/main/resources/plugins/${name}/flyway/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-domain/src/test/java`,
         `${baseDir}/${name}/${name}-domain/src/test/resources`,
+        `${baseDir}/${name}/${name}-api/.r2mo/database/${configuration.dbType}/`,
         `${baseDir}/${name}/${name}-api/.r2mo/monitor/`,
         `${baseDir}/${name}/${name}-api/src/main/java`,
         `${baseDir}/${name}/${name}-api/src/main/resources`,

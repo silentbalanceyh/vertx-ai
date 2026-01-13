@@ -5,30 +5,30 @@ const Ec = require("../epic");
 const ioZeroDatabase = async (source, configuration = {}) => {
     let fileSrc = `${source}/database/database-account.sql.ejs`;
     let fileContent = await IoUt.ioEJS(fileSrc, configuration);
-    let fileDest = IoUt.withDPA(configuration, `.r2mo/database/${configuration.dbType}/database-account.sql`);
+    let fileDest = IoUt.withApi(configuration, `.r2mo/database/${configuration.dbType}/database-account.sql`);
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件：" + fileDest.green);
 
     fileSrc = `${source}/database/database-reinit.sql.ejs`;
     fileContent = await IoUt.ioEJS(fileSrc, configuration);
-    fileDest = IoUt.withDPA(configuration, `.r2mo/database/${configuration.dbType}/database-reinit.sql`);
+    fileDest = IoUt.withApi(configuration, `.r2mo/database/${configuration.dbType}/database-reinit.sql`);
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件/DB：" + fileDest.green);
 
     fileSrc = `${source}/database/database-reinit-workflow.sql.ejs`;
     fileContent = await IoUt.ioEJS(fileSrc, configuration);
-    fileDest = IoUt.withDPA(configuration, `.r2mo/database/${configuration.dbType}/database-reinit-workflow.sql`);
+    fileDest = IoUt.withApi(configuration, `.r2mo/database/${configuration.dbType}/database-reinit-workflow.sql`);
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件/WF：" + fileDest.green);
 
     fileSrc = `${source}/database/database-reinit-history.sql.ejs`;
     fileContent = await IoUt.ioEJS(fileSrc, configuration);
-    fileDest = IoUt.withDPA(configuration, `.r2mo/database/${configuration.dbType}/database-reinit-history.sql`);
+    fileDest = IoUt.withApi(configuration, `.r2mo/database/${configuration.dbType}/database-reinit-history.sql`);
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件/HIS：" + fileDest.green);
 
     fileSrc = `${source}/database/init-db.sh`;
-    fileDest = IoUt.withDPA(configuration, "init-db.sh");
+    fileDest = IoUt.withApi(configuration, "init-db.sh");
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
 
