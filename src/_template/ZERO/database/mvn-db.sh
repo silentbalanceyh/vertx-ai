@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 加载环境变量
-source "$PWD/.r2mo/app.env"
+source "${PWD}/.r2mo/app.env"
 
 # 初始化标志变量
 RUN_WORKFLOW=false

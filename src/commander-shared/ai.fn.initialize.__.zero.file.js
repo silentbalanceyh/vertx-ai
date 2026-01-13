@@ -27,13 +27,13 @@ const ioZeroDatabase = async (source, configuration = {}) => {
     await fs.writeFile(fileDest, fileContent.toString(), null);
     Ec.execute("生成文件/HIS：" + fileDest.green);
 
-    fileSrc = `${source}/database/init-db.sh`;
-    fileDest = IoUt.withApi(configuration, "init-db.sh");
+    fileSrc = `${source}/database/mvn-db.sh`;
+    fileDest = IoUt.withApi(configuration, "mvn-db.sh");
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
 
-    fileSrc = `${source}/source-domain/mvn-db.sh`;
-    fileDest = IoUt.withDomain(configuration, "mvn-db.sh");
+    fileSrc = `${source}/database/mvn-schema.sh`;
+    fileDest = IoUt.withDomain(configuration, "mvn-schema.sh");
     await fs.copyFile(fileSrc, fileDest);
     Ec.execute("拷贝文件：" + fileDest.green);
 
