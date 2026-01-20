@@ -1,12 +1,10 @@
 # Zero工具箱
 
-Zero工具箱为一个工具类型的项目，主要为后端项目和前端项目打造的辅助开发人员进行快速开发的命令行工具，该工具可以帮助开发人员执行
-`Zero/Zero Ui`
-的智能化开发，版本会持续发布到npm社区。
-
-* 详细文档：[Zero Ai命令](http://www.vertxai.cn/document/doc-web/index.html)
-
 ![npm version](https://img.shields.io/npm/v/zero-ai.svg)
+
+> For [Rachel Momo](https://www.weibo.com/maoxiaotong0216)
+
+![ZERO](docs/images/logo.jpeg)
 
 ## 0. 引导
 
