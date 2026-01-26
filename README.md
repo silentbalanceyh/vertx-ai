@@ -8,10 +8,13 @@
 
 ## 0. 引导
 
-- （后端）Zero Ecotope：<https://www.zerows.io>
-- （前端）Zero UI：<https://www.vertxui.cn>
-- （工具）Zero AI：<https://www.vertxai.cn>
-- （标准）Zero Schema：<https://www.vertx-cloud.cn>
+- 教程：<https://www.yuque.com/jiezizhu/r2mo>
+- 教程地图：<https://kumu.io/LangYu1017/zero>
+- 示例：<https://gitee.com/zero-ws/zero-rachel-momo>
+
+![Zero-Ai](docs/images/zero-ai.png)
+
+---
 
 ## 1. 安装流程
 
