@@ -59,8 +59,11 @@ module.exports = async (options) => {
         }
 
         if (!fs.existsSync(cursorRulesSource)) {
-            Ec.error(`仓库中不存在 .cursor/rules 目录！`);
-            process.exit(1);
+            Ec.info(`仓库中不存在 .cursor/rules 目录，正在创建...`);
+            fs.mkdirSync(cursorRulesSource, { recursive: true });
+            Ec.info(`已创建 ${cursorRulesSource} 目录`);
+            Ec.info(`目录为空，请手动添加 .mdc 规则文件到远程仓库后重新运行`);
+            process.exit(0);
         }
 
         // 过滤出所有 .mdc 文件
@@ -70,8 +73,10 @@ module.exports = async (options) => {
         });
 
         if (ruleFiles.length === 0) {
-            Ec.error(`.cursor/rules 目录中没有找到任何 .mdc 规则文件！`);
-            process.exit(1);
+            Ec.info(`.cursor/rules 目录中没有找到任何 .mdc 规则文件`);
+            Ec.info(`目录路径：${cursorRulesSource}`);
+            Ec.info(`请手动添加 .mdc 规则文件到远程仓库后重新运行`);
+            process.exit(0);
         }
 
         Ec.execute(`找到 ${ruleFiles.length} 个 Cursor 规则文件 (.mdc)`);
