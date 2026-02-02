@@ -116,6 +116,215 @@ module.exports = async (options) => {
         Ec.info(`安装位置：${cursorRulesTarget}`);
         Ec.info(`已安装 ${selectedFiles.length} 个规则文件`);
 
+        // 添加 AI 工具目录到 .git/info/exclude
+        const excludeEntries = [".cursor/", ".claude/", ".gemini/"];
+        const gitPath = path.resolve(outputPath, ".git");
+
+        Ec.execute(`正在配置 Git 排除规则...`);
+
+        // 检查 .git 是否存在以及其类型
+        let isSubmodule = false;
+        let parentRepoPath = outputPath;
+
+        if (fs.existsSync(gitPath)) {
+            const stats = fs.statSync(gitPath);
+            if (stats.isFile()) {
+                // 当前是 submodule，需要找到父仓库
+                isSubmodule = true;
+                Ec.info(`检测到当前仓库是 Git submodule`);
+
+                // 向上查找父仓库（包含 .git 目录的仓库）
+                let currentPath = path.resolve(outputPath, "..");
+                let foundParent = false;
+
+                // 最多向上查找10层
+                for (let i = 0; i < 10; i++) {
+                    const parentGitPath = path.join(currentPath, ".git");
+
+                    if (fs.existsSync(parentGitPath)) {
+                        const parentStats = fs.statSync(parentGitPath);
+                        if (parentStats.isDirectory()) {
+                            parentRepoPath = currentPath;
+                            foundParent = true;
+                            Ec.info(`找到父仓库：${parentRepoPath}`);
+                            break;
+                        }
+                    }
+
+                    // 到达根目录，停止查找
+                    const nextPath = path.resolve(currentPath, "..");
+                    if (nextPath === currentPath) {
+                        break;
+                    }
+                    currentPath = nextPath;
+                }
+
+                if (!foundParent) {
+                    Ec.info(`未找到父仓库，将跳过 Git 排除规则配置`);
+                    parentRepoPath = null;
+                }
+            }
+        }
+
+        if (isSubmodule) {
+            // 当前是 submodule，需要在父仓库中操作
+            if (!parentRepoPath || parentRepoPath === outputPath) {
+                Ec.info(`未找到父仓库，跳过 Git 排除规则配置`);
+            } else {
+                Ec.execute(`正在为父仓库和所有 submodules 配置忽略规则...`);
+
+                // 先从 Git 跟踪中移除这些目录（在父仓库中执行）
+                excludeEntries.forEach(entry => {
+                    const dirPath = entry.replace(/\/$/, "");
+                    try {
+                        const checkResult = execSync(`git ls-files ${dirPath}`, {
+                            cwd: parentRepoPath,
+                            encoding: 'utf-8',
+                            stdio: ['pipe', 'pipe', 'ignore']
+                        }).trim();
+
+                        if (checkResult) {
+                            execSync(`git rm -r --cached ${dirPath}`, {
+                                cwd: parentRepoPath,
+                                stdio: 'ignore'
+                            });
+                            Ec.info(`  ✓ 已从父仓库 Git 跟踪中移除 ${entry}`);
+                        }
+                    } catch (error) {
+                        // 忽略错误
+                    }
+                });
+
+                // 1. 给父仓库添加忽略规则
+                Ec.execute(`正在为父仓库添加忽略规则...`);
+                const parentGitInfoDir = path.join(parentRepoPath, ".git/info");
+
+                try {
+                    if (!fs.existsSync(parentGitInfoDir)) {
+                        fs.mkdirSync(parentGitInfoDir, { recursive: true });
+                    }
+
+                    excludeEntries.forEach(entry => {
+                        const excludeFilePath = path.join(parentGitInfoDir, "exclude");
+                        let excludeContent = "";
+
+                        if (fs.existsSync(excludeFilePath)) {
+                            excludeContent = fs.readFileSync(excludeFilePath, "utf-8");
+                        }
+
+                        const lines = excludeContent.split('\n').map(line => line.trim());
+                        const hasEntry = lines.some(line => line === entry || line === entry.replace(/\/$/, ""));
+
+                        if (!hasEntry) {
+                            const newContent = excludeContent.endsWith("\n") || excludeContent === ""
+                                ? `${excludeContent}${entry}\n`
+                                : `${excludeContent}\n${entry}\n`;
+                            fs.writeFileSync(excludeFilePath, newContent, "utf-8");
+                            Ec.info(`  ✓ 已添加 ${entry} 到父仓库 .git/info/exclude`);
+                        }
+                    });
+                } catch (error) {
+                    Ec.error(`配置父仓库忽略规则失败：${error.message}`);
+                }
+
+                // 2. 批量给所有 submodules 添加忽略规则
+                Ec.execute(`正在为所有 submodules 添加忽略规则...`);
+
+                excludeEntries.forEach(entry => {
+                    try {
+                        const command = `git submodule foreach --recursive 'mkdir -p $(git rev-parse --git-path info) && echo "${entry}" >> $(git rev-parse --git-path info/exclude)'`;
+                        execSync(command, {
+                            cwd: parentRepoPath,
+                            stdio: 'ignore'
+                        });
+                        Ec.info(`  ✓ 已添加 ${entry} 到所有 submodules`);
+                    } catch (error) {
+                        Ec.error(`配置 submodules 忽略规则失败：${error.message}`);
+                    }
+                });
+
+                Ec.info(`所有仓库的 Git 排除规则配置完成！`);
+            }
+        } else if (fs.existsSync(gitPath) && fs.statSync(gitPath).isDirectory()) {
+            // 当前是普通仓库，只需要处理当前仓库
+            const actualGitDir = gitPath;
+
+            // 先从 Git 跟踪中移除这些目录（如果已被跟踪）
+            if (fs.existsSync(actualGitDir) && fs.statSync(actualGitDir).isDirectory()) {
+                excludeEntries.forEach(entry => {
+                    const dirPath = entry.replace(/\/$/, "");
+                    try {
+                        const checkResult = execSync(`git ls-files ${dirPath}`, {
+                            cwd: outputPath,
+                            encoding: 'utf-8',
+                            stdio: ['pipe', 'pipe', 'ignore']
+                        }).trim();
+
+                        if (checkResult) {
+                            execSync(`git rm -r --cached ${dirPath}`, {
+                                cwd: outputPath,
+                                stdio: 'ignore'
+                            });
+                            Ec.info(`  ✓ 已从 Git 跟踪中移除 ${entry}`);
+                        }
+                    } catch (error) {
+                        // 如果命令失败（比如目录不在 Git 跟踪中），则忽略
+                    }
+                });
+            }
+
+            const gitInfoExcludePath = path.join(actualGitDir, "info/exclude");
+            const gitInfoDir = path.dirname(gitInfoExcludePath);
+
+            // 确保 .git/info 目录存在
+            if (fs.existsSync(gitInfoDir)) {
+                const stats = fs.statSync(gitInfoDir);
+                if (!stats.isDirectory()) {
+                    fs.unlinkSync(gitInfoDir);
+                    fs.mkdirSync(gitInfoDir, { recursive: true });
+                    Ec.info(`已删除同名文件并创建目录：${gitInfoDir}`);
+                }
+            } else {
+                fs.mkdirSync(gitInfoDir, { recursive: true });
+                Ec.info(`创建目录：${gitInfoDir}`);
+            }
+
+            // 读取或创建 exclude 文件
+            let excludeContent = "";
+            if (fs.existsSync(gitInfoExcludePath)) {
+                excludeContent = fs.readFileSync(gitInfoExcludePath, "utf-8");
+            }
+
+            // 检查并添加每个条目
+            const existingLines = excludeContent.split('\n').map(line => line.trim());
+            let newEntries = [];
+
+            excludeEntries.forEach(entry => {
+                const hasEntry = existingLines.some(line =>
+                    line === entry || line === entry.replace(/\/$/, "")
+                );
+
+                if (!hasEntry) {
+                    newEntries.push(entry);
+                }
+            });
+
+            if (newEntries.length > 0) {
+                const finalContent = excludeContent.endsWith("\n") || excludeContent === ""
+                    ? excludeContent
+                    : excludeContent + "\n";
+
+                const updatedContent = finalContent + newEntries.join("\n") + "\n";
+                fs.writeFileSync(gitInfoExcludePath, updatedContent, "utf-8");
+
+                newEntries.forEach(entry => {
+                    Ec.info(`  ✓ 已添加 ${entry} 到 .git/info/exclude`);
+                });
+            } else {
+                Ec.info(`所有 AI 工具目录已在 .git/info/exclude 中`);
+            }
+        }
+
     } catch (error) {
         Ec.error(`操作失败：${error.message}`);
         process.exit(1);
