@@ -7,6 +7,7 @@ const executeWeb = require('./fn.source.front');
 
 const executeSpring = require('./fn.source.spring');
 const executeZero = require('./fn.source.zero');
+const executeApply = require('./fn.source.apply');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -18,6 +19,8 @@ const exported = {
     executeSpring,              // ai spring
     // Zero 基础脚手架
     executeZero,                // ai zero
+    // Cursor 规则安装
+    executeApply,               // ai apply
 };
 module.exports = exported;
 /**

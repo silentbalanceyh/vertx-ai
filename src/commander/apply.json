@@ -1,0 +1,13 @@
+{
+    "executor": "executeApply",
+    "description": "从远程仓库下载并安装 Cursor 规则配置！",
+    "command": "apply",
+    "options": [
+        {
+            "name": "output",
+            "alias": "o",
+            "description": "安装 Cursor 规则的目标路径，默认为当前路径！",
+            "default": "."
+        }
+    ]
+}
