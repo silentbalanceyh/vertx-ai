@@ -132,35 +132,46 @@ module.exports = async (options) => {
                 // 当前是 submodule，需要找到父仓库
                 isSubmodule = true;
                 Ec.info(`检测到当前仓库是 Git submodule`);
+                Ec.info(`当前目录：${outputPath}`);
 
                 // 向上查找父仓库（包含 .git 目录的仓库）
                 let currentPath = path.resolve(outputPath, "..");
                 let foundParent = false;
 
+                Ec.info(`开始向上查找父仓库，起始路径：${currentPath}`);
+
                 // 最多向上查找10层
                 for (let i = 0; i < 10; i++) {
                     const parentGitPath = path.join(currentPath, ".git");
+                    Ec.info(`[${i}] 检查路径：${currentPath}`);
+                    Ec.info(`[${i}] .git 路径：${parentGitPath}`);
 
                     if (fs.existsSync(parentGitPath)) {
                         const parentStats = fs.statSync(parentGitPath);
+                        Ec.info(`[${i}] .git 存在，是目录：${parentStats.isDirectory()}，是文件：${parentStats.isFile()}`);
+
                         if (parentStats.isDirectory()) {
                             parentRepoPath = currentPath;
                             foundParent = true;
-                            Ec.info(`找到父仓库：${parentRepoPath}`);
+                            Ec.info(`✓ 找到父仓库：${parentRepoPath}`);
                             break;
                         }
+                    } else {
+                        Ec.info(`[${i}] .git 不存在`);
                     }
 
                     // 到达根目录，停止查找
                     const nextPath = path.resolve(currentPath, "..");
                     if (nextPath === currentPath) {
+                        Ec.info(`已到达根目录，停止查找`);
                         break;
                     }
                     currentPath = nextPath;
                 }
 
                 if (!foundParent) {
-                    Ec.info(`未找到父仓库，将跳过 Git 排除规则配置`);
+                    Ec.info(`✗ 未找到父仓库，将跳过 Git 排除规则配置`);
+                    Ec.info(`parentRepoPath = ${parentRepoPath}`);
                     parentRepoPath = null;
                 }
             }
