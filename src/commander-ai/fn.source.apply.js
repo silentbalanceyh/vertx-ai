@@ -14,6 +14,7 @@ module.exports = async (options) => {
         const cursorRulesTarget = path.resolve(outputPath, ".cursor/rules");
 
         Ec.execute(`准备从远程仓库下载 Cursor 规则配置...`);
+        Ec.info(`远程仓库地址：${repoUrl}`);
 
         if (!fs.existsSync(path.dirname(repoCache))) {
             fs.mkdirSync(path.dirname(repoCache), { recursive: true });
