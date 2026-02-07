@@ -1,6 +1,6 @@
 {
     "name": "zero-ai",
-    "version": "1.0.66",
+    "version": "1.0.67",
     "description": "Zero Ecotope AI",
     "main": "src/ai.js",
     "bin": {
