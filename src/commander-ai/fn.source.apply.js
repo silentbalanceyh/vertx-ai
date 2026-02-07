@@ -12,6 +12,7 @@ module.exports = async (options) => {
         const repoCache = path.resolve(outputPath, ".r2mo/repo", repoName);
         const cursorRulesSource = path.join(repoCache, ".cursor/rules");
         const cursorRulesTarget = path.resolve(outputPath, ".cursor/rules");
+        const traeRulesTarget = path.resolve(outputPath, ".trae/rules");
 
         Ec.execute(`准备从远程仓库下载 Cursor 规则配置...`);
         Ec.info(`远程仓库地址：${repoUrl}`);
@@ -115,15 +116,28 @@ module.exports = async (options) => {
             const sourcePath = path.join(cursorRulesSource, file);
             const targetPath = path.join(cursorRulesTarget, file);
             fs.copyFileSync(sourcePath, targetPath);
-            Ec.info(`  ✓ ${file} 已安装`);
+            Ec.info(`  ✓ ${file} 已安装到 .cursor/rules`);
+        });
+
+        // 同步拷贝 mdc 到 .trae/rules/
+        if (!fs.existsSync(traeRulesTarget)) {
+            fs.mkdirSync(traeRulesTarget, { recursive: true });
+            Ec.info(`创建目标目录：${traeRulesTarget}`);
+        }
+        Ec.execute(`正在拷贝规则文件到 .trae/rules/...`);
+        selectedFiles.forEach(file => {
+            const sourcePath = path.join(cursorRulesSource, file);
+            const targetPath = path.join(traeRulesTarget, file);
+            fs.copyFileSync(sourcePath, targetPath);
+            Ec.info(`  ✓ ${file} 已安装到 .trae/rules`);
         });
 
         Ec.info(`所有规则文件安装完成！`);
-        Ec.info(`安装位置：${cursorRulesTarget}`);
+        Ec.info(`安装位置：${cursorRulesTarget}、${traeRulesTarget}`);
         Ec.info(`已安装 ${selectedFiles.length} 个规则文件`);
 
         // 添加 AI 工具目录到 .git/info/exclude
-        const excludeEntries = [".cursor/", ".claude/", ".gemini/"];
+        const excludeEntries = [".cursor/", ".claude/", ".gemini/", ".trae/"];
         const gitPath = path.resolve(outputPath, ".git");
 
         Ec.execute(`正在配置 Git 排除规则...`);
