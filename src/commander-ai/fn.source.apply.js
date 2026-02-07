@@ -13,6 +13,7 @@ module.exports = async (options) => {
         const cursorRulesSource = path.join(repoCache, ".cursor/rules");
         const cursorRulesTarget = path.resolve(outputPath, ".cursor/rules");
         const traeRulesTarget = path.resolve(outputPath, ".trae/rules");
+        const lingmaRulesTarget = path.resolve(outputPath, ".lingma/rules");
 
         Ec.execute(`准备从远程仓库下载 Cursor 规则配置...`);
         Ec.info(`远程仓库地址：${repoUrl}`);
@@ -92,7 +93,7 @@ module.exports = async (options) => {
             {
                 type: "checkbox",
                 name: "selectedFiles",
-                message: "请选择要安装的 Cursor 规则文件：",
+                message: "请选择要安装的规则文件：",
                 choices: ruleFiles.map(file => ({
                     name: file,
                     value: file,
@@ -106,39 +107,82 @@ module.exports = async (options) => {
             process.exit(0);
         }
 
-        if (!fs.existsSync(cursorRulesTarget)) {
-            fs.mkdirSync(cursorRulesTarget, { recursive: true });
-            Ec.info(`创建目标目录：${cursorRulesTarget}`);
+        const { selectedTargets } = await inquirer.prompt([
+            {
+                type: "checkbox",
+                name: "selectedTargets",
+                message: "请选择输出目标（选几个就输出几个）：",
+                choices: [
+                    { name: "Cursor：.cursor/rules（.mdc）", value: "cursor", checked: true },
+                    { name: "Trae：.trae/rules（.md）", value: "trae", checked: true },
+                    { name: "Lingma：.lingma/rules（.mdc）", value: "lingma", checked: true }
+                ]
+            }
+        ]);
+
+        if (selectedTargets.length === 0) {
+            Ec.info(`未选择任何输出目标，操作取消。`);
+            process.exit(0);
         }
 
-        Ec.execute(`正在安装选中的 ${selectedFiles.length} 个规则文件...`);
-        selectedFiles.forEach(file => {
-            const sourcePath = path.join(cursorRulesSource, file);
-            const targetPath = path.join(cursorRulesTarget, file);
-            fs.copyFileSync(sourcePath, targetPath);
-            Ec.info(`  ✓ ${file} 已安装到 .cursor/rules`);
-        });
+        Ec.execute(`正在安装选中的 ${selectedFiles.length} 个规则文件到 ${selectedTargets.length} 个目标...`);
 
-        // 同步拷贝 mdc 到 .trae/rules/
-        if (!fs.existsSync(traeRulesTarget)) {
-            fs.mkdirSync(traeRulesTarget, { recursive: true });
-            Ec.info(`创建目标目录：${traeRulesTarget}`);
+        // Cursor：.cursor/rules，mdc 格式
+        if (selectedTargets.includes("cursor")) {
+            if (!fs.existsSync(cursorRulesTarget)) {
+                fs.mkdirSync(cursorRulesTarget, { recursive: true });
+                Ec.info(`创建目标目录：${cursorRulesTarget}`);
+            }
+            Ec.execute(`输出到 Cursor (.cursor/rules, .mdc)...`);
+            selectedFiles.forEach(file => {
+                const sourcePath = path.join(cursorRulesSource, file);
+                const targetPath = path.join(cursorRulesTarget, file);
+                fs.copyFileSync(sourcePath, targetPath);
+                Ec.info(`  ✓ ${file} → .cursor/rules`);
+            });
         }
-        Ec.execute(`正在拷贝规则文件到 .trae/rules/（.mdc → .md）...`);
-        selectedFiles.forEach(file => {
-            const sourcePath = path.join(cursorRulesSource, file);
-            const targetFileName = file.endsWith(".mdc") ? file.slice(0, -4) + ".md" : file;
-            const targetPath = path.join(traeRulesTarget, targetFileName);
-            fs.copyFileSync(sourcePath, targetPath);
-            Ec.info(`  ✓ ${file} → ${targetFileName} 已安装到 .trae/rules`);
-        });
 
+        // Trae：.trae/rules，md 格式
+        if (selectedTargets.includes("trae")) {
+            if (!fs.existsSync(traeRulesTarget)) {
+                fs.mkdirSync(traeRulesTarget, { recursive: true });
+                Ec.info(`创建目标目录：${traeRulesTarget}`);
+            }
+            Ec.execute(`输出到 Trae (.trae/rules, .md)...`);
+            selectedFiles.forEach(file => {
+                const sourcePath = path.join(cursorRulesSource, file);
+                const targetFileName = file.endsWith(".mdc") ? file.slice(0, -4) + ".md" : file;
+                const targetPath = path.join(traeRulesTarget, targetFileName);
+                fs.copyFileSync(sourcePath, targetPath);
+                Ec.info(`  ✓ ${file} → ${targetFileName} → .trae/rules`);
+            });
+        }
+
+        // Lingma：.lingma/rules，mdc 格式
+        if (selectedTargets.includes("lingma")) {
+            if (!fs.existsSync(lingmaRulesTarget)) {
+                fs.mkdirSync(lingmaRulesTarget, { recursive: true });
+                Ec.info(`创建目标目录：${lingmaRulesTarget}`);
+            }
+            Ec.execute(`输出到 Lingma (.lingma/rules, .mdc)...`);
+            selectedFiles.forEach(file => {
+                const sourcePath = path.join(cursorRulesSource, file);
+                const targetPath = path.join(lingmaRulesTarget, file);
+                fs.copyFileSync(sourcePath, targetPath);
+                Ec.info(`  ✓ ${file} → .lingma/rules`);
+            });
+        }
+
+        const targetLabels = [];
+        if (selectedTargets.includes("cursor")) targetLabels.push(".cursor/rules");
+        if (selectedTargets.includes("trae")) targetLabels.push(".trae/rules");
+        if (selectedTargets.includes("lingma")) targetLabels.push(".lingma/rules");
         Ec.info(`所有规则文件安装完成！`);
-        Ec.info(`安装位置：${cursorRulesTarget}、${traeRulesTarget}`);
+        Ec.info(`安装位置：${targetLabels.join("、")}`);
         Ec.info(`已安装 ${selectedFiles.length} 个规则文件`);
 
         // 添加 AI 工具目录到 .git/info/exclude
-        const excludeEntries = [".cursor/", ".claude/", ".gemini/", ".trae/"];
+        const excludeEntries = [".cursor/", ".claude/", ".gemini/", ".trae/", ".lingma/"];
         const gitPath = path.resolve(outputPath, ".git");
 
         Ec.execute(`正在配置 Git 排除规则...`);
