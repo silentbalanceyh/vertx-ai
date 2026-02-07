@@ -124,12 +124,13 @@ module.exports = async (options) => {
             fs.mkdirSync(traeRulesTarget, { recursive: true });
             Ec.info(`创建目标目录：${traeRulesTarget}`);
         }
-        Ec.execute(`正在拷贝规则文件到 .trae/rules/...`);
+        Ec.execute(`正在拷贝规则文件到 .trae/rules/（.mdc → .md）...`);
         selectedFiles.forEach(file => {
             const sourcePath = path.join(cursorRulesSource, file);
-            const targetPath = path.join(traeRulesTarget, file);
+            const targetFileName = file.endsWith(".mdc") ? file.slice(0, -4) + ".md" : file;
+            const targetPath = path.join(traeRulesTarget, targetFileName);
             fs.copyFileSync(sourcePath, targetPath);
-            Ec.info(`  ✓ ${file} 已安装到 .trae/rules`);
+            Ec.info(`  ✓ ${file} → ${targetFileName} 已安装到 .trae/rules`);
         });
 
         Ec.info(`所有规则文件安装完成！`);
