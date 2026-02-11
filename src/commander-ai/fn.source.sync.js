@@ -91,6 +91,35 @@ const executeLocal = (actual = {}, options = {}) => {
     return pathEnv;
 }
 
+/**
+ * 逆向拷贝：从当前项目将 COMMANDS 所列内容拷贝到 Z_ZERO_UI 指定目录
+ */
+const executeReverse = (targetBase, options = {}) => {
+    Ec.info(`逆向拷贝目标：${targetBase}`);
+    Ec.info(`开始逆向拷贝主框架（与正向 sync 相同内容）：......`.yellow);
+    COMMANDS.forEach((command) => {
+        Ec.info(`处理：${command.green}`);
+        const src = `./${command}`;
+        const dest = path.resolve(targetBase, command);
+        if (command.endsWith("/")) {
+            if (!Ec.isExist(src)) return;
+            const destDir = path.resolve(targetBase, command);
+            if (!fs.existsSync(destDir)) {
+                fs.mkdirSync(destDir, { recursive: true });
+            }
+            child.execSync(`cp -rf ${src}* "${destDir}"`, options);
+        } else {
+            if (!Ec.isExist(src)) return;
+            const destDir = path.dirname(dest);
+            if (!fs.existsSync(destDir)) {
+                fs.mkdirSync(destDir, { recursive: true });
+            }
+            child.execSync(`cp -rf ${src} "${dest}"`, options);
+        }
+    });
+    Ec.info(`逆向拷贝完成：${targetBase}！`.help);
+};
+
 module.exports = (options) => {
 
     // 获取当前操作系统
@@ -107,10 +136,30 @@ module.exports = (options) => {
         optionsWait = {stdio: 'inherit'};
     }
 
+    // -r / --reverse 无值时补 "true"，否则 parseArgument 会报缺值
+    const argvRest = process.argv.slice(3);
+    const rIdx = argvRest.indexOf("-r");
+    const revIdx = argvRest.indexOf("--reverse");
+    const flagIdx = rIdx >= 0 ? rIdx : revIdx;
+    if (flagIdx >= 0 && (flagIdx + 1 >= argvRest.length || (argvRest[flagIdx + 1] && argvRest[flagIdx + 1].startsWith("-")))) {
+        process.argv.splice(3 + flagIdx + 1, 0, "true");
+    }
     const parsed = Ut.parseArgument(options);
     // 1. 环境检查
     if (!Ec.isExist(".git")) {
         Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
+        return;
+    }
+
+    // 逆向拷贝：-r 时从当前项目拷贝到 Z_ZERO_UI
+    if (parsed.reverse) {
+        const targetBase = process.env.Z_ZERO_UI;
+        if (!targetBase || !targetBase.trim()) {
+            Ec.error("逆向拷贝需要设置环境变量 Z_ZERO_UI（拷贝目标地址），未设置则退出。");
+            process.exit(1);
+        }
+        const resolved = path.resolve(targetBase.trim());
+        executeReverse(resolved, optionsWait);
         return;
     }
 

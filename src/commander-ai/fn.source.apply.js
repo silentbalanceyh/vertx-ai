@@ -181,6 +181,51 @@ module.exports = async (options) => {
         Ec.info(`安装位置：${targetLabels.join("、")}`);
         Ec.info(`已安装 ${selectedFiles.length} 个规则文件`);
 
+        // work-claude/：提取标题形成菜单，用户选择后拷贝 CLAUDE-*.md 为项目根目录 CLAUDE.md
+        const workClaudeDir = path.join(repoCache, "work-claude");
+        if (fs.existsSync(workClaudeDir)) {
+            const workClaudeFiles = fs.readdirSync(workClaudeDir).filter((file) => {
+                const p = path.join(workClaudeDir, file);
+                return fs.statSync(p).isFile() && file.startsWith("CLAUDE-") && file.endsWith(".md");
+            });
+            if (workClaudeFiles.length > 0) {
+                const choicesWithTitle = workClaudeFiles.map((file) => {
+                    const fullPath = path.join(workClaudeDir, file);
+                    const content = fs.readFileSync(fullPath, "utf-8");
+                    const match = content.match(/^#\s+(.+)$/m);
+                    const title = match ? match[1].trim() : path.basename(file, ".md");
+                    return { name: title, value: file };
+                });
+                const { selectedClaude } = await inquirer.prompt([
+                    {
+                        type: "list",
+                        name: "selectedClaude",
+                        message: "请选择要安装的 Claude 工作说明（将拷贝为项目根目录 CLAUDE.md）：",
+                        choices: choicesWithTitle
+                    }
+                ]);
+                const sourceClaude = path.join(workClaudeDir, selectedClaude);
+                const targetClaude = path.resolve(outputPath, "CLAUDE.md");
+                fs.copyFileSync(sourceClaude, targetClaude);
+                Ec.info(`已安装：${selectedClaude} → CLAUDE.md`);
+                // 将 CLAUDE.md 追加到 .gitignore
+                const gitignorePathClaude = path.resolve(outputPath, ".gitignore");
+                const claudeIgnoreEntry = "CLAUDE.md";
+                if (fs.existsSync(gitignorePathClaude)) {
+                    const content = fs.readFileSync(gitignorePathClaude, "utf-8");
+                    const hasClaude = content.split("\n").some((line) => line.trim() === claudeIgnoreEntry);
+                    if (!hasClaude) {
+                        const newContent = content.endsWith("\n") ? `${content}${claudeIgnoreEntry}\n` : `${content}\n${claudeIgnoreEntry}\n`;
+                        fs.writeFileSync(gitignorePathClaude, newContent, "utf-8");
+                        Ec.info(`已将 ${claudeIgnoreEntry} 添加到 .gitignore`);
+                    }
+                } else {
+                    fs.writeFileSync(gitignorePathClaude, `${claudeIgnoreEntry}\n`, "utf-8");
+                    Ec.info(`已创建 .gitignore 并添加 ${claudeIgnoreEntry}`);
+                }
+            }
+        }
+
         // 添加 AI 工具目录到 .git/info/exclude
         const excludeEntries = [".cursor/", ".claude/", ".gemini/", ".trae/", ".lingma/"];
         const gitPath = path.resolve(outputPath, ".git");
