@@ -1,6 +1,11 @@
 const Ec = require("../epic");
+const fs = require("fs");
+const path = require("path");
 const child = require('child_process');
 const Ut = require("../commander-shared");
+
+const REPO_URL = "https://gitee.com/silentbalanceyh/scaffold-ui.git";
+const REPO_NAME = "scaffold-ui";
 
 const COMMANDS = [
     "run-default.sh",
@@ -60,24 +65,21 @@ const COMMANDS = [
 ]
 
 const executeRemote = (actual = {}, options = {}) => {
-    const path = actual.path;
-    // 2. 创建 .zero 目录
-    const cmdDir = `mkdir -p ${path}`;
-    child.execSync(cmdDir, options);
-    const pathSource = `${path}/scaffold-ui`
-    // 3. 删除 .zero/scaffold-ui 目录
-    if (Ec.isExist(pathSource)) {
-        Ec.info(`发现存在旧代码，正在删除：${pathSource}`);
-        const cmdDel = `rm -rf ${pathSource}`;
-        child.execSync(cmdDel, options);
+    const outputBase = "."; // 仓库与 .gitignore 使用项目根目录
+    const repoCache = path.resolve(outputBase, ".r2mo", "repo", REPO_NAME);
+    const repoCacheDir = path.dirname(repoCache);
+    // 确保 .r2mo/repo 目录存在
+    if (!fs.existsSync(repoCacheDir)) {
+        fs.mkdirSync(repoCacheDir, { recursive: true });
     }
-    // 4. 重新拉取代码
-    Ec.info(`拉取最新代码：${pathSource}`);
-    const cmdGit = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${pathSource}`;
-    child.execSync(cmdGit, options);
-    const cmdRm = `rm -rf ${pathSource}/.git`;
-    child.execSync(cmdRm, options);
-    return pathSource;
+    // 若已有克隆则先删除，再拉取
+    if (Ec.isExist(repoCache)) {
+        Ec.info(`发现存在旧仓库，正在删除：${repoCache}`);
+        child.execSync(`rm -rf ${repoCache}`, options);
+    }
+    Ec.info(`拉取最新代码到：${repoCache}`);
+    child.execSync(`git clone ${REPO_URL} ${repoCache}`, options);
+    return repoCache;
 }
 
 const executeLocal = (actual = {}, options = {}) => {
@@ -121,26 +123,45 @@ module.exports = (options) => {
         pathSource = executeRemote(parsed, optionsWait);
     }
     if (pathSource) {
-        // 5. 拷贝 Ignore 文件全部指令
+        const outputBase = ".";
+        // 确保 .r2mo/repo 在 .gitignore 中
+        const gitignorePath = path.resolve(outputBase, ".gitignore");
+        const ignoreEntry = ".r2mo/repo/";
+        if (fs.existsSync(gitignorePath)) {
+            const gitignoreContent = fs.readFileSync(gitignorePath, "utf-8");
+            const hasIgnoreEntry = gitignoreContent.split("\n").some((line) => {
+                const t = line.trim();
+                return t === ".r2mo/repo" || t === ".r2mo/repo/";
+            });
+            if (!hasIgnoreEntry) {
+                const newContent = gitignoreContent.endsWith("\n")
+                    ? `${gitignoreContent}${ignoreEntry}\n`
+                    : `${gitignoreContent}\n${ignoreEntry}\n`;
+                fs.writeFileSync(gitignorePath, newContent, "utf-8");
+                Ec.info(`已将 ${ignoreEntry} 添加到 .gitignore`);
+            }
+        } else {
+            fs.writeFileSync(gitignorePath, `${ignoreEntry}\n`, "utf-8");
+            Ec.info(`已创建 .gitignore 并添加 ${ignoreEntry}`);
+        }
+        // 拷贝框架文件
         Ec.info(`开始更新主框架：......`.yellow);
         COMMANDS.forEach(command => {
             Ec.info(`处理目录：${command.green}`);
-            let cmd;
             if (command.endsWith("/")) {
-                // 目录拷贝
                 if (!Ec.isExist(command)) {
-                    const cmdDir = `mkdir -p ${command}`;
-                    child.execSync(cmdDir, optionsWait);
+                    child.execSync(`mkdir -p ${command}`, optionsWait);
                 }
-                cmd = `cp -rf ${pathSource}/${command}* ./${command}`;
-                child.execSync(cmd, optionsWait);
+                child.execSync(`cp -rf ${pathSource}/${command}* ./${command}`, optionsWait);
             } else {
-                // 文件拷贝
-                cmd = `cp -rf ${pathSource}/${command} ./${command}`;
-                child.execSync(cmd, optionsWait);
+                child.execSync(`cp -rf ${pathSource}/${command} ./${command}`, optionsWait);
             }
-        })
+        });
         Ec.info(`主框架更新完成：${pathSource}！`.help);
+        // 拷贝完成后移除临时仓库
+        Ec.info(`正在移除临时仓库：${pathSource}`);
+        child.execSync(`rm -rf ${pathSource}`, optionsWait);
+        Ec.info(`临时仓库已移除。`);
     }
 }
 /**
