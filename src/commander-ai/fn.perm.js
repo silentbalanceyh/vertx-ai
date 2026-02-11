@@ -7,12 +7,13 @@ const REF_ROLE_ID = "e501b47a-c08b-4c83-b12b-95ad82873e96";
 const REQUIRED_ENV_KEYS = ["Z_DB_TYPE", "Z_DBS_INSTANCE", "Z_DB_APP_USER", "Z_DB_APP_PASS"];
 
 /**
- * 从 pom.xml 读取根 artifactId（第一个 <artifactId>）
+ * 从 pom.xml 读取当前项目的 artifactId（排除 <parent> 内的）
  */
 function getArtifactIdFromPom(cwd) {
     const pomPath = path.resolve(cwd, "pom.xml");
     if (!fs.existsSync(pomPath)) return null;
-    const content = fs.readFileSync(pomPath, "utf-8");
+    let content = fs.readFileSync(pomPath, "utf-8");
+    content = content.replace(/<parent>[\s\S]*?<\/parent>/i, "");
     const m = content.match(/<artifactId>([^<]+)<\/artifactId>/);
     return m ? m[1].trim() : null;
 }
@@ -34,15 +35,26 @@ function loadAppEnv(filePath) {
 }
 
 /**
- * 解析 .r2mo/app.env 路径：ONE 用当前目录，DPA 备选为 {artifactId}-api/.r2mo/app.env
+ * 解析 .r2mo/app.env 路径：
+ * ONE：当前目录 .r2mo/app.env
+ * DPA：{id}-api/.r2mo/app.env，id 来自 pom.xml 或当前目录名
+ * 支持两种布局：api 在项目内 (cwd/{id}-api) 或 与项目并列 (cwd/../{id}-api)
  */
 function resolveAppEnvPath(cwd) {
     const primary = path.resolve(cwd, ".r2mo", "app.env");
     if (fs.existsSync(primary)) return primary;
-    const artifactId = getArtifactIdFromPom(cwd);
+
+    let artifactId = getArtifactIdFromPom(cwd);
+    if (!artifactId) {
+        const base = path.basename(cwd);
+        if (base && base !== ".") artifactId = base;
+    }
     if (artifactId) {
-        const dpaPath = path.resolve(cwd, `${artifactId}-api`, ".r2mo", "app.env");
-        if (fs.existsSync(dpaPath)) return dpaPath;
+        const apiDir = `${artifactId}-api`;
+        const nested = path.resolve(cwd, apiDir, ".r2mo", "app.env");
+        if (fs.existsSync(nested)) return nested;
+        const sibling = path.resolve(cwd, "..", apiDir, ".r2mo", "app.env");
+        if (fs.existsSync(sibling)) return sibling;
     }
     return null;
 }
@@ -62,8 +74,16 @@ module.exports = async (options) => {
         const cwd = process.cwd();
         const appEnvPath = resolveAppEnvPath(cwd);
         if (!appEnvPath) {
-            Ec.error(".r2mo/app.env 不存在；DPA 架构下也未找到 {id}-api/.r2mo/app.env（id 来自当前 pom.xml）");
-            Ec.info("请确认：1) 当前目录为项目根  2) DPA 项目下存在 pom.xml 且存在 {artifactId}-api/.r2mo/app.env");
+            const tried = [path.resolve(cwd, ".r2mo", "app.env")];
+            const id = getArtifactIdFromPom(cwd) || path.basename(cwd);
+            if (id) {
+                tried.push(path.resolve(cwd, `${id}-api`, ".r2mo", "app.env"));
+                tried.push(path.resolve(cwd, "..", `${id}-api`, ".r2mo", "app.env"));
+            }
+            Ec.error(".r2mo/app.env 不存在；DPA 下也未找到 {id}-api/.r2mo/app.env");
+            Ec.info("已尝试路径（id=" + (id || "未解析") + "）：");
+            tried.forEach((p) => Ec.info(`  - ${p}`));
+            Ec.info("请确认：1) 在项目根执行  2) 存在 .r2mo/app.env 或 {id}-api/.r2mo/app.env（嵌套或与项目并列）");
             process.exit(1);
         }
         loadAppEnv(appEnvPath);
