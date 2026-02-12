@@ -10,6 +10,15 @@ module.exports = (options) => {
     }
     // 第二步：检查 vertx-ui
     const target = parsed.name;
+    if (!target || !String(target).trim()) {
+        Ec.error("缺少必需参数：前端项目名称");
+        Ec.info("参数格式：");
+        Ec.info("  -n <名称>    或  --name <名称>");
+        Ec.info("示例：");
+        Ec.info("  ai web -n my-web");
+        Ec.info("  ai web --name my-web");
+        process.exit(1);
+    }
     Ec.info(`工程构建目录：${target}`);
     const cmd = `git clone https://gitee.com/silentbalanceyh/scaffold-ui.git ${target}`;
     child.execSync(cmd, {stdio: 'inherit'});

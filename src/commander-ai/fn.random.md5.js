@@ -10,6 +10,15 @@ module.exports = (options) => {
      * 基本信息
      */
     const input = parsed.input;
+    if (!input || !String(input).trim()) {
+        Ec.error("缺少必需参数：加密输入字符串");
+        Ec.info("参数格式：");
+        Ec.info("  -i <字符串>  或  --input <字符串>");
+        Ec.info("示例：");
+        Ec.info("  ai md5 -i smaveapp");
+        Ec.info("  ai md5 --input smaveapp");
+        process.exit(1);
+    }
     const platform = os.platform();
     Ec.info(`当前操作系统：${platform}`);
 

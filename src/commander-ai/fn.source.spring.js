@@ -13,6 +13,15 @@ module.exports = async (options) => {
     /*
      * 基本信息验证
      */
+    if (!parsed.name || !String(parsed.name).trim()) {
+        Ec.error("缺少必需参数：应用名称");
+        Ec.info("参数格式：");
+        Ec.info("  -n <名称>    或  --name <名称>");
+        Ec.info("示例：");
+        Ec.info("  ai spring -n my-app");
+        Ec.info("  ai spring --name my-app");
+        process.exit(1);
+    }
     if (!Ut.nameValid(parsed.name)) {
         Ec.error("应用名称只能包含字母、数字、点（.）和短横线（-），且不能以数字、点（.）或短横线（-）开头！");
         process.exit(1);

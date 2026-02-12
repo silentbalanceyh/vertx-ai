@@ -1,8 +1,0 @@
-{
-    "executor": "executePerm",
-    "description": "按参考角色复制权限到指定角色（-r 为角色 NAME 或 CODE）",
-    "command": "perm",
-    "options": [
-        {"name": "role", "alias": "r", "description": "角色名或角色 code，对应 S_ROLE.NAME 或 S_ROLE.CODE", "required": true}
-    ]
-}

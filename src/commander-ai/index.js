@@ -8,7 +8,7 @@ const executeWeb = require('./fn.source.front');
 const executeSpring = require('./fn.source.spring');
 const executeZero = require('./fn.source.zero');
 const executeApply = require('./fn.source.apply');
-const executePerm = require('./fn.perm');
+const executeExPerm = require('./fn.ex.perm');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -22,7 +22,7 @@ const exported = {
     executeZero,                // ai zero
     // Cursor 规则安装
     executeApply,               // ai apply
-    executePerm,                // ai perm
+    executeExPerm,              // ai ex-perm
 };
 module.exports = exported;
 /**
