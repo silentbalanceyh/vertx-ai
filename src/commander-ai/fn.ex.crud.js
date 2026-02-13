@@ -116,8 +116,8 @@ function getArtifactIdFromPom(cwd) {
 }
 
 function resolveExcelRoot(cwd, target) {
-    if (target && target.root && target.module) {
-        const zeroModule = process.env.ZERO_MODULE;
+    if (target && target.module) {
+        const zeroModule = process.env.ZERO_MODULE || "";
         return path.resolve(zeroModule, `zero-exmodule-${target.module}`);
     }
     const artifactId = getArtifactIdFromPom(cwd);
@@ -162,6 +162,16 @@ function checkEnv(keys, label) {
     }
 }
 
+function isDpaRoot(dir) {
+    const pom = path.join(dir, "pom.xml");
+    if (!fs.existsSync(pom)) return false;
+    const id = getArtifactIdFromPom(dir);
+    if (!id) return false;
+    const apiDir = path.join(dir, `${id}-api`);
+    const domainDir = path.join(dir, `${id}-domain`);
+    return fs.existsSync(apiDir) && fs.existsSync(domainDir);
+}
+
 /** 对路径片段做替换（先长后短），用于目录/文件名 */
 function replacePathSegment(seg, meta) {
     let s = seg;
@@ -199,11 +209,12 @@ function replaceAllUuids(str) {
     return str.replace(UUID_REGEX, () => uuidv4());
 }
 
-/** 对单个单元格 value 做占位符与 UUID 替换 */
+/** 对单个单元格 value 做占位符与 UUID 替换；仅当含占位符或 UUID 时才替换，避免破坏格式 */
 function replaceCellValue(val, meta) {
     if (val == null) return val;
-    if (typeof val === "string") return replaceContent(val, meta, false);
-    return val;
+    if (typeof val !== "string") return val;
+    const next = replaceContent(val, meta, false);
+    return next !== val ? next : val;
 }
 
 /** 递归复制模板目录到目标，跳过 ex-crud.yaml、README.md；路径片段与文本内容按 meta 替换，内容中 UUID 重新生成；.xlsx 用 ExcelJS 按单元格替换后写回 */
@@ -217,7 +228,7 @@ async function copyTemplateWithReplace(templateDir, destDir, meta, skipNames) {
         const srcPath = path.join(templateDir, ent.name);
         const segReplaced = replacePathSegment(ent.name, meta);
         const destPath = path.join(destDir, segReplaced);
-        if (skipSet.has(ent.name)) continue;
+        if (skipSet.has(ent.name) || ent.name === ".DS_Store") continue;
         if (ent.isDirectory()) {
             await copyTemplateWithReplace(srcPath, destPath, meta, []);
         } else {
@@ -250,9 +261,20 @@ async function copyTemplateWithReplace(templateDir, destDir, meta, skipNames) {
     }
 }
 
+/** 解析 ex-crud.yaml 路径：先 cwd，再上级目录（与 ex-api 一致，便于在 -api 子目录执行时找到带 target 的配置） */
+function resolveExCrudConfigPath(cwd) {
+    const primary = path.resolve(cwd, CONFIG_PATH);
+    if (fs.existsSync(primary)) return primary;
+    const parent = path.resolve(cwd, "..", CONFIG_PATH);
+    if (fs.existsSync(parent)) return parent;
+    const grand = path.resolve(cwd, "..", "..", CONFIG_PATH);
+    if (fs.existsSync(grand)) return grand;
+    return primary;
+}
+
 module.exports = async (options) => {
     const cwd = process.cwd();
-    const configFullPath = path.resolve(cwd, CONFIG_PATH);
+    const configFullPath = resolveExCrudConfigPath(cwd);
     if (!fs.existsSync(configFullPath)) {
         const configDir = path.dirname(configFullPath);
         if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
@@ -287,7 +309,17 @@ metadata:
     }
 
     const metadata = config.metadata;
-    const target = config.target;
+    // target 与 ex-api 一致：root + module 存在时分流到 zero-exmodule-{module}
+    let target = config.target;
+    if (target && typeof target === "object") {
+        const root = target.root != null ? String(target.root).trim() : "";
+        const moduleName = target.module != null ? String(target.module).trim() : "";
+        if (root && moduleName) target = { root, module: moduleName };
+        else target = null;
+    } else {
+        target = null;
+    }
+    Ec.info("[ex-crud] 配置：" + configFullPath + (target ? "，target=" + target.module : "，无 target"));
     const meta = {
         keyword: metadata.keyword != null ? String(metadata.keyword).trim() : "",
         identifier: metadata.identifier != null ? String(metadata.identifier).trim() : "",
@@ -296,10 +328,16 @@ metadata:
         type: metadata.type != null ? String(metadata.type).trim() : ""
     };
 
-    if (target && target.root && target.module) {
+    if (target) {
         const zeroModule = process.env.ZERO_MODULE;
-        if (!zeroModule || !zeroModule.trim()) {
+        if (!zeroModule || !String(zeroModule).trim()) {
             Ec.error("存在 target 配置时，环境变量 ZERO_MODULE 必须已设置");
+            process.exit(1);
+        }
+        const dpaRoot = path.resolve(zeroModule || "", `zero-exmodule-${target.module}`);
+        if (!fs.existsSync(dpaRoot) || !isDpaRoot(dpaRoot)) {
+            Ec.error(`ZERO_MODULE 下 DPA 目录不是标准架构：${dpaRoot}`);
+            Ec.info("需存在 pom.xml 且包含 xxx-api、xxx-domain 子目录");
             process.exit(1);
         }
     }
@@ -320,7 +358,7 @@ metadata:
 
     Ec.execute("ai ex-crud：配置已加载。");
 
-    // 1. 模板目录（R2MO-INIT 包内）与输出目录（目标项目 RBAC_CRUD）
+    // 1. 模板目录（R2MO-INIT 包内）与输出目录（与 ex-api 一致：有 target 时分流到 zero-exmodule-{module}，无 target 时为 zero-launcher-configuration）
     const templateDir = path.resolve(__dirname, "..", "_template", "EXCEL", "ex-crud");
     const excelRoot = resolveExcelRoot(cwd, target);
     const domainName = target && target.module ? `zero-exmodule-${target.module}-domain` : null;
@@ -334,9 +372,11 @@ metadata:
     if (!fs.existsSync(rbacCrudDir)) fs.mkdirSync(rbacCrudDir, { recursive: true });
 
     Ec.info("[ex-crud] 模板目录：" + templateDir);
-    Ec.info("[ex-crud] 输出目录：" + rbacCrudDir);
+    Ec.info("[ex-crud] excelRoot=" + excelRoot + "，pluginId=" + pluginId + (domainName ? "（target 分流）" : ""));
+    Ec.info("[ex-crud] RBAC_CRUD：" + rbacCrudDir);
+    Ec.info("[ex-crud] RBAC_ROLE ：" + rbacRoleDir);
 
-    await copyTemplateWithReplace(templateDir, rbacCrudDir, meta, ["ex-crud.yaml", "README.md"]);
+    await copyTemplateWithReplace(templateDir, rbacCrudDir, meta, ["ex-crud.yaml", "README.md", "template-RBAC_ROLE.xlsx", ".DS_Store"]);
 
     Ec.info("[ex-crud] 已生成 CRUD 文件到 RBAC_CRUD");
 
@@ -372,8 +412,8 @@ metadata:
                         choices: roleRows.map((r) => ({ name: `${r.NAME || r.CODE} (${r.ID})`, value: String(r.ID) }))
                     }
                 ]);
-                const raw = answer.selectedRoles;
-                if (Array.isArray(raw)) roleIds = raw.map((id) => String(id));
+                const raw = answer && answer.selectedRoles;
+                if (Array.isArray(raw) && raw.length > 0) roleIds = raw.map((id) => (id != null ? String(id) : "")).filter((id) => id !== "");
                 else if (raw != null && raw !== "") roleIds = [String(raw)];
 
                 if (roleIds.length === 0) {
