@@ -38,16 +38,17 @@
     "i": "^0.3.7",
     "immutable": "^4.3.0",
     "inquirer": "^8.2.5",
+    "js-yaml": "^4.1.1",
     "linebyline": "^1.3.0",
     "lodash": "^4.17.21",
     "mkdirp": "^3.0.1",
     "mockjs": "^1.1.0",
+    "mysql2": "^3.11.0",
     "random-js": "^2.1.0",
     "superagent": "^8.0.9",
     "taffydb": "^2.7.3",
     "underscore": "^1.13.6",
-    "uuid": "^9.0.0",
-    "mysql2": "^3.11.0"
+    "uuid": "^9.0.0"
   },
   "homepage": "http://www.vertxai.cn",
   "github": "https://github.com/silentbalanceyh/vertx-ai.git"

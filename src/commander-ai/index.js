@@ -9,6 +9,8 @@ const executeSpring = require('./fn.source.spring');
 const executeZero = require('./fn.source.zero');
 const executeApply = require('./fn.source.apply');
 const executeExPerm = require('./fn.ex.perm');
+const executeExApi = require('./fn.ex.api');
+const executeExCrud = require('./fn.ex.crud');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -23,6 +25,8 @@ const exported = {
     // Cursor 规则安装
     executeApply,               // ai apply
     executeExPerm,              // ai ex-perm
+    executeExApi,               // ai ex-api
+    executeExCrud,              // ai ex-crud
 };
 module.exports = exported;
 /**

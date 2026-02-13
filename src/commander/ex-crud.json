@@ -1,0 +1,1 @@
+{"executor":"executeExCrud","description":"按 ex-crud.yaml 从模板生成 CRUD Excel 及 RBAC 授权（RBAC_CRUD + falcon），需 .r2mo/task/command/ex-crud.yaml","command":"ex-crud","options":[{"name":"skip","alias":"s","type":"boolean","description":"仅生成 CRUD 文件，跳过数据库与角色选择","default":false}]}

@@ -1,0 +1,6 @@
+metadata:
+  keyword: "log"
+  identifier: "x.log"
+  actor: "x-log"
+  name: "日志"
+  type: "resource.ambient"

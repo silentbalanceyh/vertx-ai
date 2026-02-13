@@ -1,0 +1,9 @@
+{
+    "executor": "executeExApi",
+    "description": "对已开发 API 进行授权（数据库 + Excel），需 .r2mo/task/command/ex-api.yaml",
+    "command": "ex-api",
+    "options": [
+        {"name": "request", "alias": "r", "description": "请求方法与 URI，格式：\"<METHOD> <uri>\"，如 \"GET /api/ambient\""},
+        {"name": "skip", "alias": "s", "type": "boolean", "description": "仅生成 Excel，跳过去重等检查", "default": false}
+    ]
+}

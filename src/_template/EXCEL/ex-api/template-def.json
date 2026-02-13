@@ -1,0 +1,21 @@
+{
+  "RBAC_RESOURCE": {
+    "sheetName": "DATA-RES",
+    "columns": [
+      "ID",
+      "CODE",
+      "NAME",
+      "IDENTIFIER",
+      "TYPE",
+      "LEVEL",
+      "MODE_ROLE"
+    ]
+  },
+  "RBAC_ROLE": {
+    "sheetName": "DATA-PERM",
+    "columns": [
+      "ROLE_ID",
+      "PERM_ID"
+    ]
+  }
+}
