@@ -4,7 +4,14 @@ const path = require("path");
 const Ut = require("../commander-shared");
 
 const REF_ROLE_ID = "e501b47a-c08b-4c83-b12b-95ad82873e96";
-const REQUIRED_ENV_KEYS = ["Z_DB_TYPE", "Z_DBS_INSTANCE", "Z_DB_APP_USER", "Z_DB_APP_PASS"];
+const REQUIRED_ENV_KEYS = [
+    "Z_DB_TYPE",        // 数据库类型: MYSQL / SQLSERVER / ORACLE / POSTGRESQL
+    "Z_DB_HOST",       // 数据库主机
+    "Z_DB_PORT",       // 数据库端口
+    "Z_DBS_INSTANCE",  // 业务数据库实例名
+    "Z_DB_APP_USER",   // 数据库用户
+    "Z_DB_APP_PASS"    // 数据库密码
+];
 
 /**
  * 从 pom.xml 读取当前项目的 artifactId（排除 <parent> 内的）
@@ -93,10 +100,18 @@ module.exports = async (options) => {
         loadAppEnv(appEnvPath);
         Ec.info(`已加载环境变量：${appEnvPath}`);
 
+        // 直接检查环境变量（不依赖文件内容；可来自 .r2mo/app.env 或当前 shell 已 export）
         const missing = REQUIRED_ENV_KEYS.filter((k) => !process.env[k] || !String(process.env[k]).trim());
         if (missing.length > 0) {
-            Ec.error(`环境变量不齐，缺少：${missing.join(", ")}，已跳过并给出警告。`);
-            Ec.info("请在 .r2mo/app.env 中配置：Z_DB_TYPE、Z_DBS_INSTANCE、Z_DB_APP_USER、Z_DB_APP_PASS");
+            Ec.error("环境变量不齐，以下前置条件必须全部已设置，否则不执行。");
+            Ec.info("当前缺失的环境变量：" + missing.join(", "));
+            Ec.info("请确保以下环境变量已设置（可在 .r2mo/app.env 中 export，或在当前 shell 中 export）：");
+            Ec.info("  Z_DB_TYPE         # 数据库类型: MYSQL / SQLSERVER / ORACLE / POSTGRESQL");
+            Ec.info("  Z_DB_HOST         # 数据库主机，如 127.0.0.1");
+            Ec.info("  Z_DB_PORT         # 数据库端口，如 3306");
+            Ec.info("  Z_DBS_INSTANCE    # 业务数据库实例名");
+            Ec.info("  Z_DB_APP_USER     # 数据库用户");
+            Ec.info("  Z_DB_APP_PASS     # 数据库密码");
             process.exit(1);
         }
 
