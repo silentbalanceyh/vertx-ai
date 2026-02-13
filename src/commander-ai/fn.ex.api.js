@@ -8,7 +8,7 @@ const yaml = require("js-yaml");
 const inquirer = require("inquirer");
 const { v4: uuidv4 } = require("uuid");
 
-const CONFIG_PATH = ".r2mo/task/command/ex-api.yaml";
+const CONFIG_DIR = ".r2mo/task/command/ex-api";
 const REQUIRED_ENV_DB = ["Z_DB_TYPE", "Z_DB_HOST", "Z_DB_PORT", "Z_DBS_INSTANCE", "Z_DB_APP_USER", "Z_DB_APP_PASS"];
 const REQUIRED_ENV_APP = ["Z_APP_ID", "Z_TENANT", "Z_SIGMA"];
 const R2_BY_UUID = "9a0d5018-33ad-4c64-80bf-8ae7947c482f";
@@ -175,124 +175,73 @@ function isDpaRoot(dir) {
     return fs.existsSync(apiDir) && fs.existsSync(domainDir);
 }
 
-module.exports = async (options) => {
-    const cwd = process.cwd();
+/** 校验 metadata.r：须为 "<METHOD> <uri>"，METHOD 常见动词，uri 以 /api 开头 */
+function validateExApiR(r) {
+    if (!r || typeof r !== "string") return { valid: false, error: "r 为空" };
+    const s = String(r).trim();
+    if (!s) return { valid: false, error: "r 为空" };
+    const parts = s.split(/\s+/);
+    if (parts.length < 2) return { valid: false, error: "r 须为 \"<METHOD> <uri>\" 两段" };
+    const method = (parts[0] || "").toUpperCase();
+    const uri = parts.slice(1).join(" ").trim();
+    const allowed = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
+    if (!allowed.includes(method)) return { valid: false, error: "METHOD 须为 " + allowed.join("/") };
+    if (!uri.startsWith("/api")) return { valid: false, error: "uri 须以 /api 为前缀" };
+    return { valid: true };
+}
 
-    // 1. 前置：配置文件必须存在；缺失时在配置路径中写入模板
-    const configFullPath = path.resolve(cwd, CONFIG_PATH);
-    if (!fs.existsSync(configFullPath)) {
-        const configDir = path.dirname(configFullPath);
-        if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
-        const template = `# ai ex-api 使用此配置，请按项目修改
-# 参数格式：-r "<METHOD> <uri>"  uri 必须以 /api 为前缀
-metadata:
-  identifier: "核心标识符"
-  brief: "接口描述"
-  resource: "resource.ambient"
-  level: 1
-  ptype: "权限集 S_PERM_SET 类型"
-  pname: "权限集 S_PERM_SET 名称"
-  # keyword 可选；若存在则编码为 res.\${keyword} / act.\${keyword} / perm.\${keyword}，否则按规则计算
-  # keyword: "app.test.data"
-# target 可选；存在时需配置 ZERO_MODULE 且 DPA 目录 zero-exmodule-{module} 存在
-# target:
-#   root: "ZERO_MODULE"
-#   module: "ambient"
-`;
-        fs.writeFileSync(configFullPath, template, "utf-8");
-        Ec.info("配置文件缺失，已在下列路径写入模板：" + configFullPath);
-        Ec.info("请编辑后重新执行。参数格式：  -r \"<METHOD> <uri>\"  （uri 必须以 /api 为前缀）");
-        Ec.info("示例：  ai ex-api -r \"GET /api/ambient\"");
-        process.exit(1);
-    }
+/** 解析 ex-api 配置目录：cwd / 上级 / 上上级 */
+function resolveExApiConfigDir(cwd) {
+    const primary = path.resolve(cwd, CONFIG_DIR);
+    if (fs.existsSync(primary) && fs.statSync(primary).isDirectory()) return primary;
+    const parent = path.resolve(cwd, "..", CONFIG_DIR);
+    if (fs.existsSync(parent) && fs.statSync(parent).isDirectory()) return parent;
+    const grand = path.resolve(cwd, "..", "..", CONFIG_DIR);
+    if (fs.existsSync(grand) && fs.statSync(grand).isDirectory()) return grand;
+    return primary;
+}
 
-    // 2. 环境变量：先加载 app.env 再检查
-    const appEnvPath = resolveAppEnvPath(cwd);
-    if (!appEnvPath) {
-        Ec.error(".r2mo/app.env 不存在；DPA 下也未找到 {id}-api/.r2mo/app.env");
-        process.exit(1);
-    }
-    loadAppEnv(appEnvPath);
-    Ec.info("已加载环境变量：" + appEnvPath);
-    checkEnv(REQUIRED_ENV_DB, "数据库环境变量");
-    checkEnv(REQUIRED_ENV_APP, "应用环境变量（Z_APP_ID / Z_TENANT / Z_SIGMA）");
+/** 表格化打印 ex-api 汇总 */
+function printExApiTable(results) {
+    const rows = results.map((r) => ({
+        identifier: r.identifier || "—",
+        request: r.request || "—",
+        ok: r.ok ? "✓" : "✗",
+        error: r.error || "—"
+    }));
+    const col = (arr, key) => arr.map((x) => String(x[key] != null ? x[key] : ""));
+    const max = (arr) => Math.max(2, ...arr.map((s) => (s && s.length) || 0));
+    const wId = max(col(rows, "identifier"));
+    const wReq = Math.min(max(col(rows, "request")), 48);
+    const wErr = Math.min(max(col(rows, "error")), 32);
+    const sep = " | ";
+    Ec.info("[ex-api] 汇总：");
+    Ec.info("  " + "identifier".padEnd(wId) + sep + "request".padEnd(wReq) + sep + "ok" + sep + "error".padEnd(wErr));
+    rows.forEach((r) => Ec.info("  " + (r.identifier + "").padEnd(wId) + sep + (r.request + "").slice(0, wReq).padEnd(wReq) + sep + r.ok + sep + (r.error + "").slice(0, wErr)));
+}
 
-    // 3. 解析 ex-api.yaml（不校验格式）
-    let config;
-    try {
-        config = yaml.load(fs.readFileSync(configFullPath, "utf-8"));
-    } catch (e) {
-        Ec.error("ex-api.yaml 解析失败：" + e.message);
-        process.exit(1);
-    }
-    if (!config || !config.metadata) {
-        Ec.error("ex-api.yaml 需包含 metadata 节点");
-        process.exit(1);
-    }
-
+/** 单条 API 执行：使用 config.metadata.r 作为 request，执行 DB + Excel，返回汇总 */
+async function runOneExApi(cwd, conn, config, requestRaw, skip) {
     const metadata = config.metadata;
     const target = config.target;
-    if (target && target.root && target.module) {
-        const zeroModule = process.env.ZERO_MODULE;
-        if (!zeroModule || !zeroModule.trim()) {
-            Ec.error("存在 target 配置时，环境变量 ZERO_MODULE 必须已设置");
-            process.exit(1);
-        }
-        const dpaRoot = path.resolve(zeroModule, `zero-exmodule-${target.module}`);
-        if (!fs.existsSync(dpaRoot) || !isDpaRoot(dpaRoot)) {
-            Ec.error(`ZERO_MODULE 下 DPA 目录不是标准架构：${dpaRoot}`);
-            Ec.info("需存在 pom.xml 且包含 xxx-api、xxx-domain 子目录");
-            process.exit(1);
-        }
-    }
-
-    // 4. 参数：-r "<METHOD> <uri>" ，-s 可选
-    const parsed = Ut.parseArgument(options);
-    const skip = parsed.skip === true || process.argv.includes("-s") || process.argv.includes("--skip");
     let method = "";
     let uri = "";
-    const requestRaw = parsed.request;
     if (requestRaw && String(requestRaw).trim()) {
         const parts = String(requestRaw).trim().split(/\s+/);
         if (parts.length >= 2) {
             method = parts[0].toUpperCase();
             uri = parts.slice(1).join(" ").trim();
-        } else if (parts.length === 1) {
-            Ec.error("参数 -r 格式应为 \"<METHOD> <uri>\"，例如 \"GET /api/ambient\"");
-            process.exit(1);
         }
     }
     if (!skip && (!method || !uri)) {
-        Ec.error("缺少必需参数：请求方法与 URI");
-        Ec.info("参数格式：  -r \"<METHOD> <uri>\"  或  --request \"<METHOD> <uri>\"");
-        Ec.info("示例：  ai ex-api -r \"GET /api/ambient\"（uri 必须以 /api 为前缀）");
-        process.exit(1);
+        return { identifier: metadata.identifier || "—", request: requestRaw || "—", ok: false, error: "缺少 metadata.r 或格式非 \"<METHOD> <uri>\"" };
     }
     if (!skip && uri && !uri.trim().startsWith("/api")) {
-        Ec.error("参数 uri 必须以 /api 为前缀。");
-        Ec.info("当前 uri：" + (uri || ""));
-        Ec.info("示例：  ai ex-api -r \"GET /api/ambient\"");
-        process.exit(1);
+        return { identifier: metadata.identifier || "—", request: requestRaw || "—", ok: false, error: "uri 必须以 /api 为前缀" };
     }
 
-    Ec.execute("ai ex-api：配置已加载，环境与参数检查通过。");
-
-    const dbConfig = {
-        host: process.env.Z_DB_HOST || "localhost",
-        port: parseInt(process.env.Z_DB_PORT || "3306", 10),
-        user: process.env.Z_DB_APP_USER,
-        password: process.env.Z_DB_APP_PASS,
-        database: process.env.Z_DBS_INSTANCE
-    };
-
-    const mysql = require("mysql2/promise");
-    Ec.info("[ex-api] 配置：" + CONFIG_PATH + " | request=" + (requestRaw || "") + " | skip=" + skip);
-    let conn = await mysql.createConnection(dbConfig);
-    Ec.info("[ex-api] 数据库已连接：" + (dbConfig.database || "") + " @" + (dbConfig.host || "") + ":" + (dbConfig.port || ""));
-
-    // 约定：执行时数据表已存在且结构固定，仅执行 DML（SELECT/INSERT/INSERT IGNORE），禁止表扫描、DDL、元数据查询（如 SHOW COLUMNS）。
     try {
-        const appId = process.env.Z_APP_ID;
+    const appId = process.env.Z_APP_ID;
         const tenantId = process.env.Z_TENANT;
         const sigma = process.env.Z_SIGMA;
 
@@ -799,13 +748,153 @@ metadata:
             Ec.info("[ex-api]   📦 R_ROLE_PERM 本次写入（ROLE_ID, PERM_ID）：");
             insertedRolePerms.forEach((r, i) => Ec.info("[ex-api]      [" + (i + 1) + "] " + r.ROLE_ID + ", " + r.PERM_ID));
         }
+        return {
+            identifier: metadata.identifier || "—",
+            request: requestRaw || "—",
+            actionId: actionId || "—",
+            resourceId: resourceId || "—",
+            permissionId: permissionId || "—",
+            roleCount: roleIds ? roleIds.length : 0,
+            outResPath: outResPath || "—",
+            outRolePath: outRolePath || "—",
+            ok: true
+        };
     } catch (err) {
         Ec.error("[ex-api] 执行失败：" + (err && err.message));
-        if (err && err.code) Ec.error("[ex-api] 错误码：" + err.code);
-        if (err && err.sqlMessage) Ec.error("[ex-api] SQL：" + err.sqlMessage);
-        if (err && err.sql) Ec.error("[ex-api] 语句：" + (typeof err.sql === "string" ? err.sql : err.sql.join(" ")));
-        if (err && err.stack) Ec.error("[ex-api] 堆栈：" + err.stack);
+        return {
+            identifier: (metadata && metadata.identifier) || "—",
+            request: requestRaw || "—",
+            actionId: "—",
+            resourceId: "—",
+            permissionId: "—",
+            roleCount: 0,
+            outResPath: "—",
+            outRolePath: "—",
+            ok: false,
+            error: (err && err.message) || String(err)
+        };
+    }
+}
+
+module.exports = async (options) => {
+    const cwd = process.cwd();
+    const configDir = resolveExApiConfigDir(cwd);
+    if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+        const templatePath = path.join(configDir, "ex-api.yaml");
+        const template = `# ai ex-api 使用此配置，请按项目修改
+metadata:
+  r: "GET /api/ambient"
+  identifier: "核心标识符"
+  brief: "接口描述"
+  resource: "resource.ambient"
+  level: 1
+  ptype: "权限集 S_PERM_SET 类型"
+  pname: "权限集 S_PERM_SET 名称"
+  # keyword 可选
+# target 可选；存在时需 ZERO_MODULE 与 zero-exmodule-{module}
+# target:
+#   root: "ZERO_MODULE"
+#   module: "ambient"
+`;
+        fs.writeFileSync(templatePath, template, "utf-8");
+        Ec.info("配置目录缺失，已创建并写入模板：" + templatePath);
+        Ec.info("请编辑后重新执行：  ai ex-api");
         process.exit(1);
+    }
+
+    const backupDir = path.join(configDir, "backup");
+    const allEntries = fs.readdirSync(configDir, { withFileTypes: true });
+    const yamlFiles = allEntries.filter((e) => !e.isDirectory() && e.isFile() && (e.name.endsWith(".yaml") || e.name.endsWith(".yml")));
+    const entries = [];
+    for (const e of yamlFiles) {
+        const f = e.name;
+        const full = path.join(configDir, f);
+        try {
+            const config = yaml.load(fs.readFileSync(full, "utf-8"));
+            if (!config || !config.metadata) continue;
+            const r = config.metadata.r != null ? String(config.metadata.r).trim() : "";
+            if (!r) {
+                Ec.info("[ex-api] 跳过（无 metadata.r）：" + f);
+                continue;
+            }
+            const valid = validateExApiR(r);
+            if (!valid.valid) {
+                Ec.info("[ex-api] 警告（r 不合法，已跳过）：" + f + "，" + (valid.error || ""));
+                continue;
+            }
+            const label = (config.metadata.identifier || f) + " | " + (config.metadata.brief || r);
+            entries.push({ path: full, config, label });
+        } catch (_) {}
+    }
+
+    if (entries.length === 0) {
+        Ec.error("[ex-api] 无有效配置：请在 " + configDir + " 下添加含 metadata.r 的 yaml");
+        process.exit(1);
+    }
+
+    const answer = await inquirer.prompt([
+        { type: "checkbox", name: "selected", message: "选择要执行的 API（多选）", choices: entries.map((e) => ({ name: e.label, value: e.path })) }
+    ]);
+    const selectedPaths = answer && answer.selected && Array.isArray(answer.selected) ? answer.selected : [];
+    if (selectedPaths.length === 0) {
+        Ec.info("未选择任何项，退出");
+        process.exit(0);
+    }
+
+    const appEnvPath = resolveAppEnvPath(cwd);
+    if (!appEnvPath) {
+        Ec.error(".r2mo/app.env 不存在；DPA 下也未找到 {id}-api/.r2mo/app.env");
+        process.exit(1);
+    }
+    loadAppEnv(appEnvPath);
+    checkEnv(REQUIRED_ENV_DB, "数据库环境变量");
+    checkEnv(REQUIRED_ENV_APP, "应用环境变量（Z_APP_ID / Z_TENANT / Z_SIGMA）");
+
+    const dbConfig = {
+        host: process.env.Z_DB_HOST || "localhost",
+        port: parseInt(process.env.Z_DB_PORT || "3306", 10),
+        user: process.env.Z_DB_APP_USER,
+        password: process.env.Z_DB_APP_PASS,
+        database: process.env.Z_DBS_INSTANCE
+    };
+    const parsed = Ut.parseArgument(options);
+    const skip = parsed.skip === true || process.argv.includes("-s") || process.argv.includes("--skip");
+
+    const mysql = require("mysql2/promise");
+    let conn;
+    try {
+        conn = await mysql.createConnection(dbConfig);
+        Ec.info("[ex-api] 数据库已连接，执行 " + selectedPaths.length + " 条 API");
+        const results = [];
+        for (const configPath of selectedPaths) {
+            const config = yaml.load(fs.readFileSync(configPath, "utf-8"));
+            const requestRaw = config.metadata && config.metadata.r != null ? String(config.metadata.r).trim() : "";
+            if (!requestRaw) {
+                results.push({ identifier: config.metadata?.identifier || "—", request: "—", ok: false, error: "无 metadata.r" });
+                continue;
+            }
+            const valid = validateExApiR(requestRaw);
+            if (!valid.valid) {
+                Ec.info("[ex-api] 警告（r 不合法，跳过执行）：" + path.basename(configPath) + "，" + (valid.error || ""));
+                results.push({ identifier: config.metadata?.identifier || "—", request: requestRaw, ok: false, error: valid.error || "r 不合法" });
+                continue;
+            }
+            Ec.info("[ex-api] 处理：" + (config.metadata.identifier || path.basename(configPath)) + " (" + requestRaw + ")");
+            const one = await runOneExApi(cwd, conn, config, requestRaw, skip);
+            results.push(one);
+            if (one.ok) {
+                if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+                const bakPath = path.join(backupDir, path.basename(configPath) + ".bak");
+                try {
+                    fs.renameSync(configPath, bakPath);
+                    Ec.info("[ex-api] 已备份：" + path.basename(configPath) + " -> backup/" + path.basename(configPath) + ".bak");
+                } catch (errBak) {
+                    Ec.info("[ex-api] 备份失败（已忽略）：" + configPath + "，" + (errBak && errBak.message));
+                }
+            }
+        }
+        printExApiTable(results);
     } finally {
         if (conn) await conn.end();
     }

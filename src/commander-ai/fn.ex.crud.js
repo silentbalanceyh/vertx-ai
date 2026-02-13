@@ -8,7 +8,7 @@ const yaml = require("js-yaml");
 const inquirer = require("inquirer");
 const { v4: uuidv4 } = require("uuid");
 
-const CONFIG_PATH = ".r2mo/task/command/ex-crud.yaml";
+const CONFIG_DIR = ".r2mo/task/command/ex-crud";
 const REQUIRED_ENV_DB = ["Z_DB_TYPE", "Z_DB_HOST", "Z_DB_PORT", "Z_DBS_INSTANCE", "Z_DB_APP_USER", "Z_DB_APP_PASS"];
 const REQUIRED_ENV_APP = ["Z_APP_ID", "Z_TENANT", "Z_SIGMA"];
 
@@ -261,23 +261,35 @@ async function copyTemplateWithReplace(templateDir, destDir, meta, skipNames) {
     }
 }
 
-/** 解析 ex-crud.yaml 路径：先 cwd，再上级目录（与 ex-api 一致，便于在 -api 子目录执行时找到带 target 的配置） */
-function resolveExCrudConfigPath(cwd) {
-    const primary = path.resolve(cwd, CONFIG_PATH);
-    if (fs.existsSync(primary)) return primary;
-    const parent = path.resolve(cwd, "..", CONFIG_PATH);
-    if (fs.existsSync(parent)) return parent;
-    const grand = path.resolve(cwd, "..", "..", CONFIG_PATH);
-    if (fs.existsSync(grand)) return grand;
+/** 校验 ex-crud metadata：至少 keyword、identifier 非空 */
+function validateExCrudMetadata(config) {
+    if (!config || !config.metadata || typeof config.metadata !== "object") return { valid: false, error: "缺少 metadata" };
+    const m = config.metadata;
+    const keyword = m.keyword != null ? String(m.keyword).trim() : "";
+    const identifier = m.identifier != null ? String(m.identifier).trim() : "";
+    if (!keyword) return { valid: false, error: "metadata.keyword 为空" };
+    if (!identifier) return { valid: false, error: "metadata.identifier 为空" };
+    if (!/^[a-zA-Z0-9._-]+$/.test(identifier)) return { valid: false, error: "metadata.identifier 仅允许字母数字、点、下划线、横线" };
+    return { valid: true };
+}
+
+/** 解析 ex-crud 配置目录：cwd / 上级 / 上上级 */
+function resolveExCrudConfigDir(cwd) {
+    const primary = path.resolve(cwd, CONFIG_DIR);
+    if (fs.existsSync(primary) && fs.statSync(primary).isDirectory()) return primary;
+    const parent = path.resolve(cwd, "..", CONFIG_DIR);
+    if (fs.existsSync(parent) && fs.statSync(parent).isDirectory()) return parent;
+    const grand = path.resolve(cwd, "..", "..", CONFIG_DIR);
+    if (fs.existsSync(grand) && fs.statSync(grand).isDirectory()) return grand;
     return primary;
 }
 
 module.exports = async (options) => {
     const cwd = process.cwd();
-    const configFullPath = resolveExCrudConfigPath(cwd);
-    if (!fs.existsSync(configFullPath)) {
-        const configDir = path.dirname(configFullPath);
-        if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
+    const configDir = resolveExCrudConfigDir(cwd);
+    if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+        const templatePath = path.join(configDir, "ex-crud.yaml");
         const template = `# ai ex-crud 使用此配置，请按项目修改
 metadata:
   keyword: "log"
@@ -290,56 +302,45 @@ metadata:
 #   root: "ZERO_MODULE"
 #   module: "ambient"
 `;
-        fs.writeFileSync(configFullPath, template, "utf-8");
-        Ec.info("配置文件缺失，已在下列路径写入模板：" + configFullPath);
+        fs.writeFileSync(templatePath, template, "utf-8");
+        Ec.info("配置目录缺失，已创建并写入模板：" + templatePath);
         Ec.info("请编辑后重新执行：  ai ex-crud");
         process.exit(1);
     }
 
-    let config;
-    try {
-        config = yaml.load(fs.readFileSync(configFullPath, "utf-8"));
-    } catch (e) {
-        Ec.error("ex-crud.yaml 解析失败：" + e.message);
-        process.exit(1);
+    const backupDir = path.join(configDir, "backup");
+    const allEntries = fs.readdirSync(configDir, { withFileTypes: true });
+    const yamlFiles = allEntries.filter((e) => !e.isDirectory() && e.isFile() && (e.name.endsWith(".yaml") || e.name.endsWith(".yml")));
+    const entries = [];
+    for (const e of yamlFiles) {
+        const f = e.name;
+        const full = path.join(configDir, f);
+        try {
+            const config = yaml.load(fs.readFileSync(full, "utf-8"));
+            const valid = validateExCrudMetadata(config);
+            if (!valid.valid) {
+                Ec.info("[ex-crud] 警告（metadata 不合法，已跳过）：" + f + "，" + (valid.error || ""));
+                continue;
+            }
+            const label = (config.metadata.identifier || f) + " | " + (config.metadata.keyword || "") + (config.metadata.name ? " " + config.metadata.name : "");
+            entries.push({ path: full, config, label });
+        } catch (err) {
+            Ec.info("[ex-crud] 跳过（解析失败）：" + f + "，" + (err && err.message));
+        }
     }
-    if (!config || !config.metadata) {
-        Ec.error("ex-crud.yaml 需包含 metadata 节点");
+
+    if (entries.length === 0) {
+        Ec.error("[ex-crud] 无有效配置：请在 " + configDir + " 下添加含合法 metadata（keyword、identifier）的 yaml");
         process.exit(1);
     }
 
-    const metadata = config.metadata;
-    // target 与 ex-api 一致：root + module 存在时分流到 zero-exmodule-{module}
-    let target = config.target;
-    if (target && typeof target === "object") {
-        const root = target.root != null ? String(target.root).trim() : "";
-        const moduleName = target.module != null ? String(target.module).trim() : "";
-        if (root && moduleName) target = { root, module: moduleName };
-        else target = null;
-    } else {
-        target = null;
-    }
-    Ec.info("[ex-crud] 配置：" + configFullPath + (target ? "，target=" + target.module : "，无 target"));
-    const meta = {
-        keyword: metadata.keyword != null ? String(metadata.keyword).trim() : "",
-        identifier: metadata.identifier != null ? String(metadata.identifier).trim() : "",
-        actor: metadata.actor != null ? String(metadata.actor).trim() : "",
-        name: metadata.name != null ? String(metadata.name).trim() : "",
-        type: metadata.type != null ? String(metadata.type).trim() : ""
-    };
-
-    if (target) {
-        const zeroModule = process.env.ZERO_MODULE;
-        if (!zeroModule || !String(zeroModule).trim()) {
-            Ec.error("存在 target 配置时，环境变量 ZERO_MODULE 必须已设置");
-            process.exit(1);
-        }
-        const dpaRoot = path.resolve(zeroModule || "", `zero-exmodule-${target.module}`);
-        if (!fs.existsSync(dpaRoot) || !isDpaRoot(dpaRoot)) {
-            Ec.error(`ZERO_MODULE 下 DPA 目录不是标准架构：${dpaRoot}`);
-            Ec.info("需存在 pom.xml 且包含 xxx-api、xxx-domain 子目录");
-            process.exit(1);
-        }
+    const answer = await inquirer.prompt([
+        { type: "checkbox", name: "selected", message: "选择要执行的 CRUD 配置（多选）", choices: entries.map((e) => ({ name: e.label, value: e.path })) }
+    ]);
+    const selectedPaths = answer && answer.selected && Array.isArray(answer.selected) ? answer.selected : [];
+    if (selectedPaths.length === 0) {
+        Ec.info("未选择任何项，退出");
+        process.exit(0);
     }
 
     const parsed = Ut.parseArgument(options);
@@ -358,8 +359,27 @@ metadata:
 
     Ec.execute("ai ex-crud：配置已加载。");
 
-    // 1. 模板目录（R2MO-INIT 包内）与输出目录（与 ex-api 一致：有 target 时分流到 zero-exmodule-{module}，无 target 时为 zero-launcher-configuration）
     const templateDir = path.resolve(__dirname, "..", "_template", "EXCEL", "ex-crud");
+    const loadedConfigs = selectedPaths.map((p) => ({ path: p, config: yaml.load(fs.readFileSync(p, "utf-8")) }));
+    const first = loadedConfigs[0];
+    let target = first.config && first.config.target && typeof first.config.target === "object"
+        ? (first.config.target.root && first.config.target.module ? { root: String(first.config.target.root).trim(), module: String(first.config.target.module).trim() } : null)
+        : null;
+
+    if (target) {
+        const zeroModule = process.env.ZERO_MODULE;
+        if (!zeroModule || !String(zeroModule).trim()) {
+            Ec.error("存在 target 配置时，环境变量 ZERO_MODULE 必须已设置");
+            process.exit(1);
+        }
+        const dpaRoot = path.resolve(zeroModule || "", `zero-exmodule-${target.module}`);
+        if (!fs.existsSync(dpaRoot) || !isDpaRoot(dpaRoot)) {
+            Ec.error(`ZERO_MODULE 下 DPA 目录不是标准架构：${dpaRoot}`);
+            Ec.info("需存在 pom.xml 且包含 xxx-api、xxx-domain 子目录");
+            process.exit(1);
+        }
+    }
+
     const excelRoot = resolveExcelRoot(cwd, target);
     const domainName = target && target.module ? `zero-exmodule-${target.module}-domain` : null;
     const pluginsBase = domainName
@@ -376,7 +396,31 @@ metadata:
     Ec.info("[ex-crud] RBAC_CRUD：" + rbacCrudDir);
     Ec.info("[ex-crud] RBAC_ROLE ：" + rbacRoleDir);
 
-    await copyTemplateWithReplace(templateDir, rbacCrudDir, meta, ["ex-crud.yaml", "README.md", "template-RBAC_ROLE.xlsx", ".DS_Store"]);
+    for (const { path: configPath, config } of loadedConfigs) {
+        const valid = validateExCrudMetadata(config);
+        if (!valid.valid) {
+            Ec.info("[ex-crud] 警告（metadata 不合法，跳过执行）：" + path.basename(configPath) + "，" + (valid.error || ""));
+            continue;
+        }
+        const metadata = config.metadata;
+        const meta = {
+            keyword: metadata.keyword != null ? String(metadata.keyword).trim() : "",
+            identifier: metadata.identifier != null ? String(metadata.identifier).trim() : "",
+            actor: metadata.actor != null ? String(metadata.actor).trim() : "",
+            name: metadata.name != null ? String(metadata.name).trim() : "",
+            type: metadata.type != null ? String(metadata.type).trim() : ""
+        };
+        Ec.info("[ex-crud] 处理：" + (metadata.identifier || path.basename(configPath)));
+        try {
+            await copyTemplateWithReplace(templateDir, rbacCrudDir, meta, ["ex-crud.yaml", "README.md", "template-RBAC_ROLE.xlsx", ".DS_Store"]);
+            if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+            const bakPath = path.join(backupDir, path.basename(configPath) + ".bak");
+            fs.renameSync(configPath, bakPath);
+            Ec.info("[ex-crud] 已备份：" + path.basename(configPath) + " -> backup/" + path.basename(configPath) + ".bak");
+        } catch (err) {
+            Ec.info("[ex-crud] 生成或备份失败（未备份）：" + path.basename(configPath) + "，" + (err && err.message));
+        }
+    }
 
     Ec.info("[ex-crud] 已生成 CRUD 文件到 RBAC_CRUD");
 
@@ -436,7 +480,7 @@ metadata:
                 const rolePermsToWrite = roleIds.flatMap((rid) => permissionIds.map((pid) => ({ ROLE_ID: rid, PERM_ID: pid })));
                 if (!fs.existsSync(rbacRoleDir)) fs.mkdirSync(rbacRoleDir, { recursive: true });
                 const ExcelJS = require("exceljs");
-                const roleFileName = "falcon-crud-" + (meta.identifier || "default").replace(/[^a-zA-Z0-9._-]/g, "_") + ".xlsx";
+                const roleFileName = "falcon-crud-" + (first.config.metadata && first.config.metadata.identifier ? String(first.config.metadata.identifier) : "batch").replace(/[^a-zA-Z0-9._-]/g, "_") + ".xlsx";
                 const outRolePath = path.join(rbacRoleDir, roleFileName);
                 const templatePath = path.resolve(__dirname, "..", "_template", "EXCEL", "ex-crud", "template-RBAC_ROLE.xlsx");
                 let roleWorkbook;
