@@ -1,0 +1,13 @@
+# 复制为 ex-api.yaml 后按项目修改
+# ai ex-api 使用 .r2mo/task/command/ex-api.yaml
+metadata:
+  identifier: "核心标识符"
+  brief: "接口描述"
+  resource: "resource.ambient"
+  level: 1
+  ptype: "权限集 S_PERM_SET 类型"
+  pname: "权限集 S_PERM_SET 名称"
+# target 可选；存在时需配置 ZERO_MODULE 且 DPA 目录 zero-exmodule-{module} 存在
+# target:
+#   root: "ZERO_MODULE"
+#   module: "ambient"
