@@ -94,6 +94,7 @@ module.exports = async (options) => {
                 type: "checkbox",
                 name: "selectedFiles",
                 message: "请选择要安装的规则文件：",
+                loop: false,
                 choices: ruleFiles.map(file => ({
                     name: file,
                     value: file,
@@ -112,6 +113,7 @@ module.exports = async (options) => {
                 type: "checkbox",
                 name: "selectedTargets",
                 message: "请选择输出目标（选几个就输出几个）：",
+                loop: false,
                 choices: [
                     { name: "Cursor：.cursor/rules（.mdc）", value: "cursor", checked: true },
                     { name: "Trae：.trae/rules（.md）", value: "trae", checked: true },

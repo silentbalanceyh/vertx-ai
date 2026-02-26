@@ -92,10 +92,10 @@ const executeLocal = (actual = {}, options = {}) => {
 }
 
 /**
- * 逆向拷贝：从当前项目将 COMMANDS 所列内容拷贝到 Z_ZERO_UI 指定目录
+ * 逆向拷贝：从当前项目将 COMMANDS 所列内容拷贝到 Z_AI_SYNC 指定的骨架项目本地副本
  */
 const executeReverse = (targetBase, options = {}) => {
-    Ec.info(`逆向拷贝目标：${targetBase}`);
+    Ec.info(`逆向拷贝目标（骨架项目本地副本）：${targetBase}`);
     Ec.info(`开始逆向拷贝主框架（与正向 sync 相同内容）：......`.yellow);
     COMMANDS.forEach((command) => {
         Ec.info(`处理：${command.green}`);
@@ -145,21 +145,22 @@ module.exports = (options) => {
         process.argv.splice(3 + flagIdx + 1, 0, "true");
     }
     const parsed = Ut.parseArgument(options);
-    // 1. 环境检查
-    if (!Ec.isExist(".git")) {
-        Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
-        return;
-    }
 
-    // 逆向拷贝：-r 时从当前项目拷贝到 Z_ZERO_UI
+    // 逆向拷贝：-r 时从当前项目拷贝到 Z_AI_SYNC 指定的骨架项目本地副本
     if (parsed.reverse) {
-        const targetBase = process.env.Z_ZERO_UI;
+        const targetBase = process.env.Z_AI_SYNC;
         if (!targetBase || !targetBase.trim()) {
-            Ec.error("逆向拷贝需要设置环境变量 Z_ZERO_UI（拷贝目标地址），未设置则退出。");
+            Ec.error("逆向拷贝需要设置环境变量 Z_AI_SYNC（骨架项目本地副本路径），未设置则退出。");
             process.exit(1);
         }
         const resolved = path.resolve(targetBase.trim());
         executeReverse(resolved, optionsWait);
+        return;
+    }
+
+    // 1. 环境检查（仅正向同步需要）
+    if (!Ec.isExist(".git")) {
+        Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
         return;
     }
 

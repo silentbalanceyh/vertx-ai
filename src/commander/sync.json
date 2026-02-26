@@ -5,6 +5,6 @@
     "options": [
         {"name": "path", "alias": "p", "description": "本地配置文件路径，默认 .zero", "default": ".zero"},
         {"name": "mode", "alias": "m", "description": "指定同步模块的模式，是否本地同步", "default": false},
-        {"name": "reverse", "alias": "r", "type": "boolean", "description": "逆向拷贝：从当前项目拷贝到 Z_ZERO_UI 指定目录", "default": false}
+        {"name": "reverse", "alias": "r", "type": "boolean", "description": "逆向拷贝：从当前项目拷贝到 Z_AI_SYNC 指定的骨架项目本地副本", "default": false}
     ]
 }
