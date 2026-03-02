@@ -11,6 +11,7 @@ const executeApply = require('./fn.source.apply');
 const executeExPerm = require('./fn.ex.perm');
 const executeExApi = require('./fn.ex.api');
 const executeExCrud = require('./fn.ex.crud');
+const executeExApp = require('./fn.ex.app');
 const exported = {
     executeUuid,                // ai uuid
     executeString,              // ai str
@@ -27,6 +28,7 @@ const exported = {
     executeExPerm,              // ai ex-perm
     executeExApi,               // ai ex-api
     executeExCrud,              // ai ex-crud
+    executeExApp,               // ai ex-app
 };
 module.exports = exported;
 /**

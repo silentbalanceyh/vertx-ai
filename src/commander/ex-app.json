@@ -1,0 +1,6 @@
+{
+    "executor": "executeExApp",
+    "description": "清理缓存目录中不存在于数据库的应用实例",
+    "command": "ex-app",
+    "options": []
+}
