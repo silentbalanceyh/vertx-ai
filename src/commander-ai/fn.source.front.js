@@ -30,6 +30,14 @@ module.exports = (options) => {
     const content = Ec.ioJObject(`${target}/package.json`);
     content.name = target;
     Ec.outJson(`${target}/package.json`, content, true);
+    // 拷贝路由引导文件
+    Ec.info(`拷贝路由引导文件：src/environment/routes.page.js`);
+    const routesFile = `${target}/src/environment/routes.page.js`;
+    if (Ec.isExist(routesFile)) {
+        Ec.info(`路由引导文件已存在，跳过拷贝`);
+    } else {
+        Ec.info(`路由引导文件不存在于源仓库，跳过拷贝`);
+    }
     // 后期脚本
     const commands = [
         `rm -rf ${target}/.zero/*`,

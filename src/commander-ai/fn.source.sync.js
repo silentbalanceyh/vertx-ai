@@ -27,6 +27,7 @@ const COMMANDS = [
     "src/entity@em/",
     "src/extension/",
     "src/environment/",
+    "src/environment/routes.page.js",
     // Skin 风格专用代码
     "src/skin/index.d.ts",
     "src/skin/index.entry.js",
