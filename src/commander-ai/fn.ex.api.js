@@ -812,7 +812,7 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
             permissionId: permissionId || "—",
             roleCount: roleIds ? roleIds.length : 0,
             outResPath: outResPath || "—",
-            outRolePath: outRolePath || "—",
+            outRolePaths: roleWritePaths || [],
             ok: true
         };
     } catch (err) {
