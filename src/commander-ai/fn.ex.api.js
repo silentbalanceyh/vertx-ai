@@ -385,34 +385,45 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
 
         let roleIds = [];
         let roleIdToCode = {}; // roleId -> CODE，供输出路径分流使用
+        let roleIdToName = {}; // roleId -> NAME，供汇总输出使用
         if (!skip) {
             const [roleRows] = await conn.execute("SELECT ID, NAME, CODE FROM S_ROLE ORDER BY NAME");
             if (!roleRows || roleRows.length === 0) {
                 Ec.info("[ex-api] S_ROLE 中无角色，跳过授权");
             } else {
-                const answer = await inquirer.prompt([
-                    {
-                        type: "checkbox",
-                        name: "selectedRoles",
-                        message: "选择要授权当前 API 的角色（可多选）",
-                        choices: roleRows.map((r) => ({ name: `${r.NAME || r.CODE} (${r.CODE || '-'})`, value: String(r.ID != null ? r.ID : r.id) })),
-                        pageSize: 999
-                    }
-                ]);
-                const raw = answer.selectedRoles;
-                if (Array.isArray(raw)) {
-                    roleIds = raw.map((id) => (id != null ? String(id) : id));
-                } else if (raw != null && raw !== "") {
-                    roleIds = [String(raw)];
-                } else {
-                    roleIds = [];
-                }
-                // 建立 roleId -> CODE 映射
+                // 建立 roleId -> CODE/NAME 映射（所有角色）
                 roleRows.forEach((r) => {
                     const id = String(r.ID != null ? r.ID : r.id);
                     roleIdToCode[id] = r.CODE || "";
+                    roleIdToName[id] = r.NAME || "";
                 });
-                Ec.info("[ex-api] 已选角色数：" + roleIds.length + (roleIds.length > 0 ? "，ID=" + roleIds.slice(0, 5).join(",") + (roleIds.length > 5 ? "..." : "") : ""));
+
+                // 过滤掉超级管理员角色（固定输出，不需要用户选择）
+                const selectableRoles = roleRows.filter((r) => {
+                    const id = String(r.ID != null ? r.ID : r.id);
+                    return id !== REFERENCE_ROLE_ID;
+                });
+
+                if (selectableRoles.length > 0) {
+                    const answer = await inquirer.prompt([
+                        {
+                            type: "checkbox",
+                            name: "selectedRoles",
+                            message: "选择要授权当前 API 的角色（可多选，超级管理员已自动包含）",
+                            choices: selectableRoles.map((r) => ({ name: `${r.NAME || r.CODE} (${r.CODE || '-'})`, value: String(r.ID != null ? r.ID : r.id) })),
+                            pageSize: 999
+                        }
+                    ]);
+                    const raw = answer.selectedRoles;
+                    if (Array.isArray(raw)) {
+                        roleIds = raw.map((id) => (id != null ? String(id) : id));
+                    } else if (raw != null && raw !== "") {
+                        roleIds = [String(raw)];
+                    } else {
+                        roleIds = [];
+                    }
+                }
+                Ec.info("[ex-api] 已选角色数（不含超级管理员）：" + roleIds.length + (roleIds.length > 0 ? "，ID=" + roleIds.slice(0, 5).join(",") + (roleIds.length > 5 ? "..." : "") : ""));
             }
         }
 
@@ -455,6 +466,10 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                     }));
                 }
             } catch (e) {
+                Ec.info("[ex-api] R_ROLE_PERM 查询失败: " + e.message);
+            }
+        }
+
                 Ec.info("[ex-api] R_ROLE_PERM 查询失败: " + e.message);
             }
         }
@@ -506,38 +521,51 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                 type: (metadata.ptype != null && metadata.ptype !== "") ? metadata.ptype : resRow.TYPE
             }
             : null;
-        // 写入 Excel 的数据（仅用于写 Excel，不写库）：有 permissionId + 本次选中的 roleIds 则用其组合；否则用本次插入的；否则用库中已有的
-        let rolePermsToWrite =
-            permissionId && roleIds && roleIds.length > 0
-                ? roleIds.map((rid) => ({ ROLE_ID: rid, PERM_ID: permissionId }))
-                : insertedRolePerms.length > 0
-                ? insertedRolePerms
-                : existingRolePerms.length > 0
-                ? existingRolePerms
-                : [];
+        // 写入 Excel 的数据（仅用于写 Excel，不写库）：
+        // 1. 超级管理员角色（REFERENCE_ROLE_ID）始终包含（如果有 permissionId）
+        // 2. 用户选中的其他角色
+        let rolePermsToWrite = [];
+
+        // 始终添加超级管理员角色
+        if (permissionId) {
+            rolePermsToWrite.push({ ROLE_ID: REFERENCE_ROLE_ID, PERM_ID: permissionId });
+        }
+
+        // 添加用户选中的角色
+        if (permissionId && roleIds && roleIds.length > 0) {
+            roleIds.forEach((rid) => {
+                rolePermsToWrite.push({ ROLE_ID: rid, PERM_ID: permissionId });
+            });
+        }
+
+        // 如果本次有插入记录（R_ROLE_PERM），也合并进来（去重）
+        if (insertedRolePerms.length > 0) {
+            insertedRolePerms.forEach((rp) => {
+                const rid = rp.ROLE_ID != null ? String(rp.ROLE_ID) : String(rp.role_id);
+                const pid = rp.PERM_ID != null ? String(rp.PERM_ID) : String(rp.perm_id);
+                const exists = rolePermsToWrite.some((p) => String(p.ROLE_ID) === rid && String(p.PERM_ID) === pid);
+                if (!exists) {
+                    rolePermsToWrite.push({ ROLE_ID: rid, PERM_ID: pid });
+                }
+            });
+        }
+
+        // 如果库中已有记录（existingRolePerms），也合并进来（去重）
+        if (existingRolePerms.length > 0) {
+            existingRolePerms.forEach((rp) => {
+                const rid = rp.ROLE_ID != null ? String(rp.ROLE_ID) : String(rp.role_id);
+                const pid = rp.PERM_ID != null ? String(rp.PERM_ID) : String(rp.perm_id);
+                const exists = rolePermsToWrite.some((p) => String(p.ROLE_ID) === rid && String(p.PERM_ID) === pid);
+                if (!exists) {
+                    rolePermsToWrite.push({ ROLE_ID: rid, PERM_ID: pid });
+                }
+            });
+        }
+
         rolePermsToWrite = rolePermsToWrite.map((p) => ({
             ROLE_ID: p.ROLE_ID != null ? p.ROLE_ID : p.role_id,
             PERM_ID: p.PERM_ID != null ? p.PERM_ID : p.perm_id
         }));
-        // 有 permissionId 但仍无一条可写时，从 S_ROLE 取一个角色，保证 Excel 至少有一行（仅写 Excel，不写库）；优先超级管理员
-        if (permissionId && rolePermsToWrite.length === 0) {
-            try {
-                let [oneRole] = await conn.execute(
-                    "SELECT ID FROM S_ROLE WHERE NAME = ? OR CODE = ? OR CODE = ? LIMIT 1",
-                    ["超级管理员", "ADMIN.SUPER", "ADMIN_SUPER"]
-                );
-                if (!oneRole || !oneRole[0]) {
-                    [oneRole] = await conn.execute("SELECT ID FROM S_ROLE ORDER BY NAME LIMIT 1", []);
-                }
-                if (oneRole && oneRole[0]) {
-                    const rid = oneRole[0].ID != null ? String(oneRole[0].ID) : String(oneRole[0].id);
-                    rolePermsToWrite = [{ ROLE_ID: rid, PERM_ID: permissionId }];
-                    Ec.info("[ex-api] R_ROLE_PERM 无选中/库中记录，已用 S_ROLE 补一条写 Excel（ROLE_ID=" + rid + "）");
-                }
-            } catch (e) {
-                Ec.info("[ex-api] S_ROLE 取角色失败: " + e.message);
-            }
-        }
 
         Ec.info("[ex-api] 📋 R_ROLE_PERM 写入前数据：");
         Ec.info("[ex-api]   insertedRolePerms.length = " + insertedRolePerms.length);
@@ -759,7 +787,26 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
         Ec.info("[ex-api]   🔑 ACTION_ID     = " + (actionId || "—"));
         Ec.info("[ex-api]   🔑 RESOURCE_ID  = " + (resourceId || "—"));
         Ec.info("[ex-api]   🔑 PERMISSION_ID = " + (permissionId || "—"));
-        Ec.info("[ex-api]   👥 授权角色数   = " + (roleIds ? roleIds.length : 0));
+        Ec.info("[ex-api]   👥 授权角色总数 = " + (rolePermsToWrite.length > 0 ? rolePermsToWrite.length : 0));
+
+        // 固定输出：超级管理员角色
+        const refRoleName = roleIdToName[REFERENCE_ROLE_ID] || "超级管理员";
+        const refRoleCode = roleIdToCode[REFERENCE_ROLE_ID] || "ADMIN.SUPER";
+        Ec.info("[ex-api]   🔒 固定输出角色：");
+        Ec.info("[ex-api]      [1] " + refRoleName + " (CODE: " + refRoleCode + ", ID: " + REFERENCE_ROLE_ID + ")");
+
+        // 用户选择的角色
+        if (roleIds && roleIds.length > 0) {
+            Ec.info("[ex-api]   👤 用户选择角色：");
+            roleIds.forEach((rid, idx) => {
+                const code = roleIdToCode[rid] || "—";
+                const name = roleIdToName[rid] || "—";
+                Ec.info("[ex-api]      [" + (idx + 1) + "] " + name + " (CODE: " + code + ", ID: " + rid + ")");
+            });
+        } else {
+            Ec.info("[ex-api]   👤 用户选择角色：无");
+        }
+
         Ec.info("[ex-api]   📁 RBAC_RESOURCE = " + outResPath);
         roleWritePaths.forEach((p) => Ec.info("[ex-api]   📁 RBAC_ROLE     = " + p));
         if (insertedResource) {

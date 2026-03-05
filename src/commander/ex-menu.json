@@ -1,0 +1,6 @@
+{
+    "executor": "executeExMenu",
+    "description": "从数据库 X_MENU 表生成角色菜单权限 JSON 文件（NAME 数组 + 层级文本数组）",
+    "command": "ex-menu",
+    "options": []
+}
