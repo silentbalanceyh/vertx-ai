@@ -469,10 +469,6 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                 Ec.info("[ex-api] R_ROLE_PERM 查询失败: " + e.message);
             }
         }
-
-                Ec.info("[ex-api] R_ROLE_PERM 查询失败: " + e.message);
-            }
-        }
         // 四张表行数据（Excel 列名与模板英文表头一致）；S_PERM_SET 的 name/type 来自配置 pname/ptype
         const resRow = resourceId && (insertedResource || existingResource) ? (insertedResource || existingResource) : null;
         const actRow = actionId && (insertedAction || existingAction) ? (insertedAction || existingAction) : null;
