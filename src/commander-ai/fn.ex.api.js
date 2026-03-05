@@ -12,6 +12,7 @@ const CONFIG_DIR = ".r2mo/task/command/ex-api";
 const REQUIRED_ENV_DB = ["Z_DB_TYPE", "Z_DB_HOST", "Z_DB_PORT", "Z_DBS_INSTANCE", "Z_DB_APP_USER", "Z_DB_APP_PASS"];
 const REQUIRED_ENV_APP = ["Z_APP_ID", "Z_TENANT", "Z_SIGMA"];
 const R2_BY_UUID = "9a0d5018-33ad-4c64-80bf-8ae7947c482f";
+const REFERENCE_ROLE_ID = "e501b47a-c08b-4c83-b12b-95ad82873e96";
 
 /** 全局列（开发时按 RBAC Flyway 建表固定，执行时仅 DML，不查元数据）：S_RESOURCE/S_ACTION/S_PERMISSION 写入，Excel 不写入 */
 const GLOBAL_COLUMNS = [
@@ -383,6 +384,7 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
         }
 
         let roleIds = [];
+        let roleIdToCode = {}; // roleId -> CODE，供输出路径分流使用
         if (!skip) {
             const [roleRows] = await conn.execute("SELECT ID, NAME, CODE FROM S_ROLE ORDER BY NAME");
             if (!roleRows || roleRows.length === 0) {
@@ -393,7 +395,8 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                         type: "checkbox",
                         name: "selectedRoles",
                         message: "选择要授权当前 API 的角色（可多选）",
-                        choices: roleRows.map((r) => ({ name: `${r.NAME || r.CODE} (${r.ID})`, value: String(r.ID != null ? r.ID : r.id) }))
+                        choices: roleRows.map((r) => ({ name: `${r.NAME || r.CODE} (${r.CODE || '-'})`, value: String(r.ID != null ? r.ID : r.id) })),
+                        pageSize: 999
                     }
                 ]);
                 const raw = answer.selectedRoles;
@@ -404,6 +407,11 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                 } else {
                     roleIds = [];
                 }
+                // 建立 roleId -> CODE 映射
+                roleRows.forEach((r) => {
+                    const id = String(r.ID != null ? r.ID : r.id);
+                    roleIdToCode[id] = r.CODE || "";
+                });
                 Ec.info("[ex-api] 已选角色数：" + roleIds.length + (roleIds.length > 0 ? "，ID=" + roleIds.slice(0, 5).join(",") + (roleIds.length > 5 ? "..." : "") : ""));
             }
         }
@@ -489,11 +497,11 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                 identifier: permRow.IDENTIFIER
             }
             : null;
-        // S_PERM_SET：name/type 必须从配置 pname/ptype 提取，key/code 与资源一致
-        const rowS_PERM_SET = resourceId && resRow
+        // S_PERM_SET：name/type 必须从配置 pname/ptype 提取，key 与资源一致，code 与权限一致
+        const rowS_PERM_SET = resourceId && resRow && permRow
             ? {
                 key: resourceId,
-                code: resRow.CODE,
+                code: permRow.CODE,
                 name: (metadata.pname != null && metadata.pname !== "") ? metadata.pname : resRow.NAME,
                 type: (metadata.ptype != null && metadata.ptype !== "") ? metadata.ptype : resRow.TYPE
             }
@@ -649,59 +657,107 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
         await workbook.xlsx.writeFile(outResPath);
         Ec.info("[ex-api] 已写入 RBAC_RESOURCE：" + outResPath);
 
-        let roleWorkbook;
-        if (fs.existsSync(templateRolePath)) {
-            roleWorkbook = await new ExcelJS.Workbook().xlsx.readFile(templateRolePath);
-            const wsRole = roleWorkbook.getWorksheet(defRole.sheetName || "DATA-PERM") || roleWorkbook.worksheets[0];
-            if (wsRole) {
-                const regionsRole = scanTableRegions(wsRole);
-                Ec.info("[ex-api] 📋 R_ROLE_PERM 模板区域：");
-                Ec.info("[ex-api]   templateRolePath = " + templateRolePath);
-                Ec.info("[ex-api]   sheetName = " + (defRole.sheetName || "DATA-PERM"));
-                Ec.info("[ex-api]   tableNameRole(查找用) = " + tableNameRole);
-                Ec.info("[ex-api]   regionsRole.length = " + regionsRole.length);
-                regionsRole.forEach((r, i) => {
-                    Ec.info("[ex-api]   regionsRole[" + i + "].tableName = " + JSON.stringify(r.tableName) + ", dataStartRow = " + r.dataStartRow + ", columnIndex keys = " + (r.columnIndex ? Object.keys(r.columnIndex).join(", ") : "—"));
-                });
-                const region = regionsRole.find((r) => String(r.tableName).trim() === String(tableNameRole).trim());
-                if (region) {
-                    const colRole = region.columnIndex["roleId"] || region.columnIndex["ROLE_ID"] || 1;
-                    const colPerm = region.columnIndex["permId"] || region.columnIndex["PERM_ID"] || 2;
-                    Ec.info("[ex-api]   找到 R_ROLE_PERM 区域：dataStartRow = " + region.dataStartRow + ", colRole = " + colRole + ", colPerm = " + colPerm);
-                    if (rolePermsToWrite.length > 0) {
-                        Ec.info("[ex-api]   即将写入 " + rolePermsToWrite.length + " 行到 wsRole 行 " + region.dataStartRow + " 起，列 " + colRole + "(ROLE_ID)、" + colPerm + "(PERM_ID)");
-                        rolePermsToWrite.forEach((pair, idx) => {
-                            const row = wsRole.getRow(region.dataStartRow + idx);
-                            const roleId = pair.ROLE_ID != null ? pair.ROLE_ID : pair.role_id;
-                            const permId = pair.PERM_ID != null ? pair.PERM_ID : pair.perm_id;
-                            row.getCell(colRole).value = roleId;
-                            row.getCell(colPerm).value = permId;
-                            if (idx < 3) Ec.info("[ex-api]      row[" + (region.dataStartRow + idx) + "] 已设 列" + colRole + "=" + roleId + " 列" + colPerm + "=" + permId);
-                        });
-                        const checkRow = wsRole.getRow(region.dataStartRow);
-                        Ec.info("[ex-api] 已写入 R_ROLE_PERM " + rolePermsToWrite.length + " 行（dataStartRow=" + region.dataStartRow + "）；写回读首行 列" + colRole + "=" + (checkRow.getCell(colRole).value) + " 列" + colPerm + "=" + (checkRow.getCell(colPerm).value));
-                    } else {
-                        Ec.info("[ex-api] R_ROLE_PERM 无数据可写（rolePermsToWrite.length=0，permissionId=" + (permissionId || "—") + "）");
+        const roleFileName = "falcon-" + fileName;
+        const roleWritePaths = [];
+
+        // 固定参考角色输出：维持原目录规则
+        const hasReferenceRole = rolePermsToWrite.some((p) => String(p.ROLE_ID) === REFERENCE_ROLE_ID);
+        if (hasReferenceRole) {
+            const refPerms = rolePermsToWrite.filter((p) => String(p.ROLE_ID) === REFERENCE_ROLE_ID);
+            if (refPerms.length > 0) {
+                let refWorkbook;
+                if (fs.existsSync(templateRolePath)) {
+                    refWorkbook = await new ExcelJS.Workbook().xlsx.readFile(templateRolePath);
+                    const wsRole = refWorkbook.getWorksheet(defRole.sheetName || "DATA-PERM") || refWorkbook.worksheets[0];
+                    if (wsRole) {
+                        const regionsRole = scanTableRegions(wsRole);
+                        const region = regionsRole.find((r) => String(r.tableName).trim() === String(tableNameRole).trim());
+                        if (region) {
+                            const colRole = region.columnIndex["roleId"] || region.columnIndex["ROLE_ID"] || 1;
+                            const colPerm = region.columnIndex["permId"] || region.columnIndex["PERM_ID"] || 2;
+                            refPerms.forEach((pair, idx) => {
+                                const row = wsRole.getRow(region.dataStartRow + idx);
+                                row.getCell(colRole).value = pair.ROLE_ID;
+                                row.getCell(colPerm).value = pair.PERM_ID;
+                            });
+                        }
                     }
                 } else {
-                    Ec.info("[ex-api] 未找到 R_ROLE_PERM 区域（tableName=" + tableNameRole + "），跳过写入");
+                    refWorkbook = new ExcelJS.Workbook();
+                    const wsRole = refWorkbook.addWorksheet(defRole.sheetName || "DATA-PERM");
+                    wsRole.addRow([]);
+                    wsRole.addRow([]);
+                    wsRole.addRow(["{TABLE}", tableNameRole, "角色和权限关系", "", ""]);
+                    wsRole.addRow(["角色ID", "权限ID"]);
+                    wsRole.addRow(["roleId", "permId"]);
+                    refPerms.forEach((p) => wsRole.addRow([p.ROLE_ID, p.PERM_ID]));
                 }
+                const outRefRolePath = path.join(rbacRoleDir, roleFileName);
+                await refWorkbook.xlsx.writeFile(outRefRolePath);
+                roleWritePaths.push(outRefRolePath);
+                Ec.info("[ex-api] 已写入 RBAC_ROLE/ADMIN.SUPER（参考角色）:" + outRefRolePath);
             }
-        } else {
-            Ec.info("[ex-api] 未找到模板 " + templateRolePath + "，使用固定表头格式（可被解析）");
-            roleWorkbook = new ExcelJS.Workbook();
-            const wsRole = roleWorkbook.addWorksheet(defRole.sheetName || "DATA-PERM");
-            wsRole.addRow([]);
-            wsRole.addRow([]);
-            wsRole.addRow(["{TABLE}", tableNameRole, "角色和权限关系", "", ""]);
-            wsRole.addRow(["角色ID", "权限ID"]);
-            wsRole.addRow(["roleId", "permId"]);
-            rolePermsToWrite.forEach((p) => wsRole.addRow([p.ROLE_ID, p.PERM_ID]));
         }
-        const roleFileName = "falcon-" + fileName;
-        const outRolePath = path.join(rbacRoleDir, roleFileName);
-        await roleWorkbook.xlsx.writeFile(outRolePath);
-        Ec.info("[ex-api] 已写入 RBAC_ROLE/ADMIN.SUPER：" + outRolePath);
+
+        // 其他角色输出：当前工作目录下按 CODE 找目录，找不到仅警告
+        const nonReferenceRoleIds = roleIds.filter((rid) => String(rid) !== REFERENCE_ROLE_ID);
+        for (const rid of nonReferenceRoleIds) {
+            const code = roleIdToCode[String(rid)] || "";
+            if (!code) {
+                Ec.info("[ex-api] ⚠️ 警告：角色 ID=" + rid + " 缺少 CODE，跳过输出");
+                continue;
+            }
+            const roleCodeDir = path.join(cwd, code);
+            if (!fs.existsSync(roleCodeDir) || !fs.statSync(roleCodeDir).isDirectory()) {
+                Ec.info("[ex-api] ⚠️ 警告：未找到角色目录 " + roleCodeDir + "，跳过输出");
+                continue;
+            }
+            const targetRoleDir = path.join(roleCodeDir, "security", "RBAC_ROLE", "ADMIN.SUPER");
+            if (!fs.existsSync(targetRoleDir)) {
+                Ec.info("[ex-api] ⚠️ 警告：未找到输出目录 " + targetRoleDir + "，跳过输出");
+                continue;
+            }
+
+            const oneRolePerms = rolePermsToWrite.filter((p) => String(p.ROLE_ID) === String(rid));
+            if (oneRolePerms.length === 0) continue;
+
+            let oneRoleWorkbook;
+            if (fs.existsSync(templateRolePath)) {
+                oneRoleWorkbook = await new ExcelJS.Workbook().xlsx.readFile(templateRolePath);
+                const wsRole = oneRoleWorkbook.getWorksheet(defRole.sheetName || "DATA-PERM") || oneRoleWorkbook.worksheets[0];
+                if (wsRole) {
+                    const regionsRole = scanTableRegions(wsRole);
+                    const region = regionsRole.find((r) => String(r.tableName).trim() === String(tableNameRole).trim());
+                    if (region) {
+                        const colRole = region.columnIndex["roleId"] || region.columnIndex["ROLE_ID"] || 1;
+                        const colPerm = region.columnIndex["permId"] || region.columnIndex["PERM_ID"] || 2;
+                        oneRolePerms.forEach((pair, idx) => {
+                            const row = wsRole.getRow(region.dataStartRow + idx);
+                            row.getCell(colRole).value = pair.ROLE_ID;
+                            row.getCell(colPerm).value = pair.PERM_ID;
+                        });
+                    }
+                }
+            } else {
+                oneRoleWorkbook = new ExcelJS.Workbook();
+                const wsRole = oneRoleWorkbook.addWorksheet(defRole.sheetName || "DATA-PERM");
+                wsRole.addRow([]);
+                wsRole.addRow([]);
+                wsRole.addRow(["{TABLE}", tableNameRole, "角色和权限关系", "", ""]);
+                wsRole.addRow(["角色ID", "权限ID"]);
+                wsRole.addRow(["roleId", "permId"]);
+                oneRolePerms.forEach((p) => wsRole.addRow([p.ROLE_ID, p.PERM_ID]));
+            }
+
+            const outOneRolePath = path.join(targetRoleDir, roleFileName);
+            await oneRoleWorkbook.xlsx.writeFile(outOneRolePath);
+            roleWritePaths.push(outOneRolePath);
+            Ec.info("[ex-api] 已写入角色目录（" + code + "）:" + outOneRolePath);
+        }
+
+        if (roleWritePaths.length === 0) {
+            Ec.info("[ex-api] RBAC_ROLE 未输出任何文件（可能角色未选中或目标目录不存在）");
+        }
 
         Ec.info("[ex-api] ✅ 执行完成（幂等）");
         Ec.info("[ex-api] 📋 汇总：");
@@ -710,7 +766,7 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
         Ec.info("[ex-api]   🔑 PERMISSION_ID = " + (permissionId || "—"));
         Ec.info("[ex-api]   👥 授权角色数   = " + (roleIds ? roleIds.length : 0));
         Ec.info("[ex-api]   📁 RBAC_RESOURCE = " + outResPath);
-        Ec.info("[ex-api]   📁 RBAC_ROLE     = " + outRolePath);
+        roleWritePaths.forEach((p) => Ec.info("[ex-api]   📁 RBAC_ROLE     = " + p));
         if (insertedResource) {
             Ec.info("[ex-api]   📦 S_RESOURCE 本次插入字段：");
             Object.keys(insertedResource).forEach((k) => Ec.info("[ex-api]      " + k + " = " + (insertedResource[k] != null ? insertedResource[k] : "—")));
