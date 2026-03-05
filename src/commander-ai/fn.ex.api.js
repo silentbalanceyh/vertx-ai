@@ -699,7 +699,7 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
             }
         }
 
-        // 其他角色输出：当前工作目录下按 CODE 找目录，找不到仅警告
+        // 其他角色输出：当前工作目录下 src/main/resources/init/oob/role/{CODE}/ 目录
         const nonReferenceRoleIds = roleIds.filter((rid) => String(rid) !== REFERENCE_ROLE_ID);
         for (const rid of nonReferenceRoleIds) {
             const code = roleIdToCode[String(rid)] || "";
@@ -707,12 +707,7 @@ async function runOneExApi(cwd, conn, config, requestRaw, skip) {
                 Ec.info("[ex-api] ⚠️ 警告：角色 ID=" + rid + " 缺少 CODE，跳过输出");
                 continue;
             }
-            const roleCodeDir = path.join(cwd, code);
-            if (!fs.existsSync(roleCodeDir) || !fs.statSync(roleCodeDir).isDirectory()) {
-                Ec.info("[ex-api] ⚠️ 警告：未找到角色目录 " + roleCodeDir + "，跳过输出");
-                continue;
-            }
-            const targetRoleDir = path.join(roleCodeDir, "security", "RBAC_ROLE", "ADMIN.SUPER");
+            const targetRoleDir = path.join(cwd, "src", "main", "resources", "init", "oob", "role", code);
             if (!fs.existsSync(targetRoleDir)) {
                 Ec.info("[ex-api] ⚠️ 警告：未找到输出目录 " + targetRoleDir + "，跳过输出");
                 continue;
