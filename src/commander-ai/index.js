@@ -8,9 +8,7 @@ const executeWeb = require('./fn.source.front');
 const executeSpring = require('./fn.source.spring');
 const executeZero = require('./fn.source.zero');
 const executeApply = require('./fn.source.apply');
-const executeExPerm = require('./fn.ex.perm');
-const executeExApi = require('./fn.ex.api');
-const executeExCrud = require('./fn.ex.crud');
+const executeAuth = require('./fn.ex.auth');
 const executeExApp = require('./fn.ex.app');
 const executeExMenu = require('./fn.ex.menu');
 const exported = {
@@ -26,9 +24,7 @@ const exported = {
     executeZero,                // ai zero
     // Cursor 规则安装
     executeApply,               // ai apply
-    executeExPerm,              // ai ex-perm
-    executeExApi,               // ai ex-api
-    executeExCrud,              // ai ex-crud
+    executeAuth,                // ai auth
     executeExApp,               // ai ex-app
     executeExMenu,              // ai ex-menu
 };
