@@ -89,24 +89,71 @@ module.exports = async (options) => {
             Ec.info(`  ${index + 1}. ${file}`);
         });
 
-        const { selectedFiles } = await inquirer.prompt([
+        // 按前缀分组 MDC 文件
+        const prefixGroups = [
+            { prefix: "r2-spec-",           label: "核心规范" },
+            { prefix: "r2-go-",             label: "GoLang全栈开发" },
+            { prefix: "r2-rust-",           label: "Rust前端开发" },
+            { prefix: "r2-ui",              label: "AntD前端开发" },
+            { prefix: "r2-backend-spring-", label: "Spring后端开发" },
+            { prefix: "r2-backend-zero-",   label: "Zero后端开发" },
+        ];
+
+        const groupedFiles = {};
+        const matchedFiles = new Set();
+        prefixGroups.forEach(({ prefix }) => {
+            const matched = ruleFiles.filter(f => f.startsWith(prefix));
+            if (matched.length > 0) {
+                groupedFiles[prefix] = matched;
+                matched.forEach(f => matchedFiles.add(f));
+            }
+        });
+
+        const ungroupedFiles = ruleFiles.filter(f => !matchedFiles.has(f));
+
+        // 构造选择列表：前缀组（显示中文标签+数量）+ 未匹配文件并排
+        const mdcChoices = [];
+        prefixGroups.forEach(({ prefix, label }) => {
+            if (groupedFiles[prefix]) {
+                mdcChoices.push({
+                    name: `${label}（${groupedFiles[prefix].length} 个文件）`,
+                    value: { type: "group", prefix },
+                    checked: false,
+                });
+            }
+        });
+        ungroupedFiles.forEach(file => {
+            mdcChoices.push({
+                name: file,
+                value: { type: "single", file },
+                checked: false,
+            });
+        });
+
+        const { selectedChoices } = await inquirer.prompt([
             {
                 type: "checkbox",
-                name: "selectedFiles",
+                name: "selectedChoices",
                 message: "请选择要安装的规则文件：",
                 loop: false,
-                choices: ruleFiles.map(file => ({
-                    name: file,
-                    value: file,
-                    checked: false
-                }))
+                choices: mdcChoices,
             }
         ]);
 
-        if (selectedFiles.length === 0) {
+        if (selectedChoices.length === 0) {
             Ec.info(`未选择任何文件，操作取消。`);
             process.exit(0);
         }
+
+        // 展开所选项为最终文件列表
+        const selectedFiles = [];
+        selectedChoices.forEach(choice => {
+            if (choice.type === "group") {
+                groupedFiles[choice.prefix].forEach(f => selectedFiles.push(f));
+            } else {
+                selectedFiles.push(choice.file);
+            }
+        });
 
         const { selectedTargets } = await inquirer.prompt([
             {
