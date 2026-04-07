@@ -160,11 +160,10 @@ module.exports = (options) => {
     }
 
     // 1. 环境检查（仅正向同步需要）
-    if (!Ec.isExist(".git")) {
-        Ec.error("请选择带`.git`或`vertx-ui`的目录执行当前命令！");
+    if (!fs.existsSync("package.json")) {
+        Ec.error("当前目录不包含 package.json，请在前端项目根目录执行此命令！");
         return;
     }
-
     let pathSource;
     if (parsed.mode) {
         // 本地模式
@@ -200,12 +199,28 @@ module.exports = (options) => {
         COMMANDS.forEach(command => {
             Ec.info(`处理目录：${command.green}`);
             if (command.endsWith("/")) {
-                if (!Ec.isExist(command)) {
-                    child.execSync(`mkdir -p ${command}`, optionsWait);
+                const srcDir = `${pathSource}/${command}`;
+                if (!fs.existsSync(srcDir)) {
+                    Ec.info(`源目录不存在，跳过：${srcDir}`);
+                    return;
                 }
-                child.execSync(`cp -rf ${pathSource}/${command}* ./${command}`, optionsWait);
+                const destDir = path.resolve(outputBase, command);
+                if (!fs.existsSync(destDir)) {
+                    fs.mkdirSync(destDir, { recursive: true });
+                }
+                child.execSync(`cp -rf "${srcDir}"/. "${destDir}"`, optionsWait);
             } else {
-                child.execSync(`cp -rf ${pathSource}/${command} ./${command}`, optionsWait);
+                const srcFile = `${pathSource}/${command}`;
+                if (!fs.existsSync(srcFile)) {
+                    Ec.info(`源文件不存在，跳过：${srcFile}`);
+                    return;
+                }
+                const destFile = path.resolve(outputBase, command);
+                const destDir = path.dirname(destFile);
+                if (!fs.existsSync(destDir)) {
+                    fs.mkdirSync(destDir, { recursive: true });
+                }
+                child.execSync(`cp -rf "${srcFile}" "${destFile}"`, optionsWait);
             }
         });
         Ec.info(`主框架更新完成：${pathSource}！`.help);

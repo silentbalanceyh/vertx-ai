@@ -1,0 +1,151 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774749690808,
+  "projectRoot": "/Users/lang/zero-cloud/app-zero/r2mo-matrix/r2mo-init",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": "npm test",
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {
+      "test": "src/index.test.js"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "docs",
+      "src",
+      "test"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "_layouts": {
+      "path": "_layouts",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774749690773,
+      "keyFiles": [
+        "default.html"
+      ]
+    },
+    "_sass": {
+      "path": "_sass",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1774749690773,
+      "keyFiles": [
+        "jekyll-theme-dinky.scss",
+        "rouge-github.scss"
+      ]
+    },
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 0,
+      "lastAccessed": 1774749690781,
+      "keyFiles": []
+    },
+    "configs": {
+      "path": "configs",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774749690784,
+      "keyFiles": [
+        "sorts.json"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1774749690784,
+      "keyFiles": []
+    },
+    "document": {
+      "path": "document",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774749690788,
+      "keyFiles": []
+    },
+    "script": {
+      "path": "script",
+      "purpose": null,
+      "fileCount": 12,
+      "lastAccessed": 1774749690794,
+      "keyFiles": [
+        "bootstrap",
+        "cibuild",
+        "clear-excel-template-data.js",
+        "create-ex-api-templates.js",
+        "inspect-excel-templates.js"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 1,
+      "lastAccessed": 1774749690799,
+      "keyFiles": [
+        "ai.js"
+      ]
+    },
+    "test": {
+      "path": "test",
+      "purpose": "Test files",
+      "fileCount": 5,
+      "lastAccessed": 1774749690800,
+      "keyFiles": [
+        "csv.json",
+        "csv.zero",
+        "data.zero",
+        "key.json",
+        "uk.json"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src/commander-ai/index.js",
+      "accessCount": 1,
+      "lastAccessed": 1774750534170,
+      "type": "file"
+    },
+    {
+      "path": "src/epic/index.js",
+      "accessCount": 1,
+      "lastAccessed": 1774750534369,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
