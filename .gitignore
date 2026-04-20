@@ -66,3 +66,4 @@ typings/
 backup
 package-lock.json
 .r2mo/repo/
+.omc/
